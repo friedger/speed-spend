@@ -9,9 +9,12 @@ import {
   createStacksPublicKey,
   addressToString,
 } from '@blockstack/stacks-transactions';
-import { getPublicKeyFromPrivate } from 'blockstack';
+import { getPublicKeyFromPrivate, AppConfig, UserSession } from 'blockstack';
 
 // Landing page demonstrating Blockstack connect for registration
+
+const appConfig = new AppConfig(['store_write', 'publish_data']);
+const userSession = new UserSession(appConfig);
 
 const connectOptions = {
   finished: ({ userSession }) => {
@@ -37,6 +40,7 @@ const connectOptions = {
     name: 'Speed Spend',
     icon: 'https://https://zen-kowalevski-913521.netlify.app/speedspend.png',
   },
+  userSession,
 };
 
 export default function Landing(props) {

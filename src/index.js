@@ -10,8 +10,8 @@ import Auth from './Auth.js';
 import 'bootstrap/dist/css/bootstrap.css';
 import './styles/style.css';
 
-const appConfig = new AppConfig();
-const blockstack = ReactBlockstack(appConfig);
+const appConfig = new AppConfig(['store_write', 'publish_data']);
+const blockstack = ReactBlockstack({ appConfig });
 
 ReactDOM.render(
   <Router>
