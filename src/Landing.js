@@ -38,7 +38,7 @@ const connectOptions = {
   },
   appDetails: {
     name: 'Speed Spend',
-    icon: 'https://https://zen-kowalevski-913521.netlify.app/speedspend.png',
+    icon: 'https://speed-spend.netlify.app/speedspend.png',
   },
   userSession,
 };
