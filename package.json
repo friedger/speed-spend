@@ -1,12 +1,12 @@
 {
-  "name": "hello-react-blockstack",
+  "name": "speed-spend",
   "version": "0.0.1",
-  "description": "A simple Blockstack app using ReactJS",
-  "author": "",
+  "description": "Send STX tokens as quickly as possible",
+  "author": "Friedger Müffke",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/njordhov/react-blockstack.git"
+    "url": "git+https://github.com/friedger/speed-spend.git"
   },
   "dependencies": {
     "@blockstack/connect": "^2.3.1",
