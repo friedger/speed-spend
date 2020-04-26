@@ -1,0 +1,13 @@
+{
+  "name": "Speed Spend",
+  "description": "Send tokens to as quickly as possible",
+  "icons": [
+    {
+      "src": "speedspend.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "./index.html",
+  "display": "standalone"
+}

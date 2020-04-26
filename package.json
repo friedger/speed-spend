@@ -1,0 +1,51 @@
+{
+  "name": "hello-react-blockstack",
+  "version": "0.0.1",
+  "description": "A simple Blockstack app using ReactJS",
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/njordhov/react-blockstack.git"
+  },
+  "dependencies": {
+    "@blockstack/connect": "^2.3.1",
+    "@blockstack/stacks-transactions": "0.3.0-alpha.5",
+    "blockstack": "^21.0.0",
+    "bn.js": "^5.1.1",
+    "react": "^16.13.0",
+    "react-blockstack": "^0.6.8",
+    "react-blockstack-button": "^0.1.0",
+    "react-dom": "^16.13.0",
+    "react-router-dom": "^5.1.2"
+  },
+  "prettier": "@blockstack/prettier-config",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts build",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@blockstack/prettier-config": "0.0.4",
+    "bootstrap": "^4.3.1",
+    "prettier": "^1.19.1",
+    "react-scripts": "^3.1.1",
+    "react-test-renderer": "^16.8.6"
+  }
+}
