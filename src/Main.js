@@ -1,14 +1,14 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useFile, useBlockstack } from 'react-blockstack';
 import Profile from './Profile';
 import {
   makeSTXTokenTransfer,
   TransactionVersion,
   ChainID,
-  FungibleConditionCode,
 } from '@blockstack/stacks-transactions';
-import { makeStandardSTXPostCondition } from '@blockstack/stacks-transactions/lib/src/builders';
 const BigNum = require('bn.js');
+
+const STACK_API_URL = 'http://neon.blockstack.org:20443/v2/transactions';
 
 function NoteField({ title, path, placeholder }) {
   const { userSession } = useBlockstack();
@@ -16,9 +16,10 @@ function NoteField({ title, path, placeholder }) {
   const textfield = useRef();
   const nonceField = useRef();
   const spinner = useRef();
+  const [status, setStatus] = useState();
+
   const saveAction = async () => {
     spinner.current.classList.remove('d-none');
-    setTimeout(() => spinner.current.classList.add('d-none'), 1500);
     const recipient = await userSession
       .getFile('stx.json', {
         decrypt: false,
@@ -27,6 +28,10 @@ function NoteField({ title, path, placeholder }) {
       .then(r => JSON.parse(r))
       .catch(e => console.log(e));
     if (!recipient) {
+      setStatus(
+        `Recipient ${textfield.current.value} has not yet used the app`
+      );
+      spinner.current.classList.add('d-none');
       return;
     }
     const nonceInt = parseInt(nonceField.current.value);
@@ -34,27 +39,25 @@ function NoteField({ title, path, placeholder }) {
     console.log('STX address of recipient ' + recipient.address);
     try {
       const transaction = makeSTXTokenTransfer(
-        'ST1T220B88WSF0ZYNS8V7B33DCZEY23FY7V83GDW',
+        recipient.address,
         new BigNum(1000),
         new BigNum(1000),
-        '994d526b3b3409def4d3e481f9c4b3debaf9535cffed0769a7543601e1efa3c501',
+        userSession.loadUserData().appPrivateKey,
         {
           nonce: new BigNum(nonceInt),
           version: TransactionVersion.Testnet,
           chainId: ChainID.Testnet,
-          postConditions: [
-            makeStandardSTXPostCondition(
-              'ST2P4S7Q4PHGQE9VGG6X8Z54MQQMN1E5047ZHVAF7',
-              FungibleConditionCode.Less,
-              new BigNum(2000)
-            ),
-          ],
         }
       );
-      console.log(transaction.serialize().toString('hex'));
-      setNonce(String(nonce + 1));
+      setStatus('Sending transaction');
+      console.log(await transaction.broadcast(STACK_API_URL));
+      setNonce(String(nonceInt + 1));
+      spinner.current.classList.add('d-none');
+      setStatus(undefined);
     } catch (e) {
       console.log(e);
+      setStatus(e.toString());
+      spinner.current.classList.add('d-none');
     }
   };
 
@@ -65,7 +68,7 @@ function NoteField({ title, path, placeholder }) {
         type="number"
         ref={nonceField}
         className="form-control"
-        defaultValue={'0'}
+        defaultValue={nonce | '0'}
       />
       Send Test STXs
       <div className="NoteField input-group ">
@@ -80,6 +83,9 @@ function NoteField({ title, path, placeholder }) {
           placeholder={placeholder}
           onKeyUp={e => {
             if (e.key === 'Enter') saveAction();
+          }}
+          onBlur={e => {
+            setStatus(undefined);
           }}
         />
         <div className="input-group-append">
@@ -96,6 +102,7 @@ function NoteField({ title, path, placeholder }) {
             Send
           </button>
         </div>
+        {status && <div color="red">{status}</div>}
       </div>
     </div>
   );
