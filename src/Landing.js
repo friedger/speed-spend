@@ -1,50 +1,14 @@
 import React, { useCallback } from 'react';
 import { BlockstackButton } from 'react-blockstack-button';
-import { didConnect, useConnectOptions } from 'react-blockstack';
+import { useConnectOptions, useBlockstack } from 'react-blockstack';
 import { showBlockstackConnect } from '@blockstack/connect';
-import {
-  addressFromPublicKeys,
-  AddressVersion,
-  AddressHashMode,
-  createStacksPublicKey,
-  addressToString,
-} from '@blockstack/stacks-transactions';
-import { getPublicKeyFromPrivate, AppConfig, UserSession } from 'blockstack';
+import { connectOptions } from './UserSession';
 
 // Landing page demonstrating Blockstack connect for registration
 
-const appConfig = new AppConfig(['store_write', 'publish_data']);
-const userSession = new UserSession(appConfig);
-
-const connectOptions = {
-  finished: ({ userSession }) => {
-    didConnect({ userSession });
-    const userData = userSession.loadUserData();
-    const address = addressFromPublicKeys(
-      AddressVersion.TestnetSingleSig,
-      AddressHashMode.SerializeP2PKH,
-      1,
-      [createStacksPublicKey(getPublicKeyFromPrivate(userData.appPrivateKey))]
-    );
-    console.log(JSON.stringify({ address: addressToString(address) }));
-    userSession
-      .putFile(
-        'stx.json',
-        JSON.stringify({ address: addressToString(address) }),
-        { encrypt: false }
-      )
-      .then(r => console.log('STX address published'))
-      .catch(r => console.log(r));
-  },
-  appDetails: {
-    name: 'Speed Spend',
-    icon: 'https://speed-spend.netlify.app/speedspend.png',
-  },
-  userSession,
-};
-
 export default function Landing(props) {
-  const authOptions = useConnectOptions(connectOptions);
+  const { userSession } = useBlockstack();
+  const authOptions = useConnectOptions(connectOptions(userSession));
   const signIn = useCallback(() => {
     showBlockstackConnect(authOptions);
   }, [authOptions]);

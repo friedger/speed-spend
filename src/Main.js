@@ -110,7 +110,7 @@ export default function Main(props) {
         </div>
       </div>
       <div className="lead row mt-5">
-        <div className="mx-auto col col-xs-10 col-md-8 px-4">
+        <div className="col-xs-10 col-md-8 mx-auto px-4">
           <NoteField
             title="Send 1000 uSTX to"
             path="note"
@@ -118,7 +118,7 @@ export default function Main(props) {
           />
         </div>
 
-        <div className="card col col-sm-10 col-md-8 mx-auto mt-5 text-center px-0 border-warning">
+        <div className="card col-md-8 mx-auto mt-5 text-center px-0 border-warning">
           <div className="card-header">
             <h5 className="card-title">Instructions</h5>
           </div>
