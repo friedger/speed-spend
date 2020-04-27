@@ -103,14 +103,14 @@ function NoteField({ title, path, placeholder }) {
 
 export default function Main(props) {
   return (
-    <main className="panel-welcome mt-5">
+    <main className="panel-welcome mt-5 container">
       <div className="row">
         <div className="mx-auto col-sm-10 col-md-8 px-4">
           <Profile />
         </div>
       </div>
       <div className="lead row mt-5">
-        <div className="mx-auto col col-sm-10 col-md-8 px-4">
+        <div className="mx-auto col col-xs-10 col-md-8 px-4">
           <NoteField
             title="Send 1000 uSTX to"
             path="note"
