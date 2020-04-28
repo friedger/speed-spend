@@ -68,7 +68,7 @@ function NoteField({ title, path, placeholder }) {
         type="number"
         ref={nonceField}
         className="form-control"
-        defaultValue={nonce | '0'}
+        defaultValue={nonce || '0'}
       />
       Send Test STXs
       <div className="NoteField input-group ">
@@ -79,7 +79,7 @@ function NoteField({ title, path, placeholder }) {
           type="text"
           ref={textfield}
           className="form-control"
-          defaultValue={nonce || ''}
+          defaultValue={''}
           placeholder={placeholder}
           onKeyUp={e => {
             if (e.key === 'Enter') saveAction();
