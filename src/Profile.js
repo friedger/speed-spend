@@ -21,7 +21,7 @@ export default class Profile extends Component {
     const { userData } = this.context;
 
     const { address } = getStacksAccount(userData.appPrivateKey);
-    const balanceUrl = `http://neon.blockstack.org:20443/v2/accounts/${addressToString(
+    const balanceUrl = ` https://crashy-stacky.zone117x.com/v2/accounts/${addressToString(
       address
     )}`;
     this.setState({ address, balanceUrl });
