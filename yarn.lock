@@ -1024,10 +1024,9 @@
   resolved "https://registry.yarnpkg.com/@blockstack/prettier-config/-/prettier-config-0.0.4.tgz#b051cd5eb66ff9ec61b0776f0eecc5a8437196d7"
   integrity sha512-fiDOBRLpm/Sv34qx9GsNer38qyTkp+rDRs74rrVd9Nn0JZVHoV97W98o81+6E9Bd+xvnY6JV+g1gA1P60RBCYA==
 
-"@blockstack/stacks-transactions@0.3.0-alpha.5":
+"@blockstack/stacks-transactions@blockstack/stacks-transactions-js#master":
   version "0.3.0-alpha.5"
-  resolved "https://registry.yarnpkg.com/@blockstack/stacks-transactions/-/stacks-transactions-0.3.0-alpha.5.tgz#86ae67291413865e60da450166477dfd6db2cd6d"
-  integrity sha512-kq4FlQ4XWqacuPqkMS1mtA3m4BZ6d7ajJqKyZnDeTajDPbuP2cKZrzg40Gu/M4ixzvXB5CGMhfMmBpL773WM+A==
+  resolved "https://codeload.github.com/blockstack/stacks-transactions-js/tar.gz/5a721de3bc3923bd1b95952f90516dacf4ef1dd0"
   dependencies:
     "@types/bn.js" "^4.11.6"
     "@types/elliptic" "^6.4.12"
