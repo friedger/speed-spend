@@ -1,5 +1,5 @@
 [build]
-  command = "npm install --save https://github.com/blockstack/stacks-transactions-js#master && npm run build"
+  command = "yarn add https://github.com/blockstack/stacks-transactions-js#master --force && yarn build"
   publish = "build"
 
 [[redirects]]
