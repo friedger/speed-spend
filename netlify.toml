@@ -1,5 +1,5 @@
 [build]
-  command = "npm run build"
+  command = "npm install --save https://github.com/blockstack/stacks-transactions-js#master && npm run build"
   publish = "build"
 
 [[redirects]]
