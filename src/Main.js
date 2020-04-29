@@ -1,14 +1,28 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useFile, useBlockstack } from 'react-blockstack';
 import Profile from './Profile';
 import {
   makeSTXTokenTransfer,
   TransactionVersion,
   ChainID,
+  privateKeyToString,
+  addressToString,
 } from '@blockstack/stacks-transactions';
+import { getStacksAccount } from './StacksAccount';
 const BigNum = require('bn.js');
 
 const STACK_API_URL = 'http://neon.blockstack.org:20443/v2/transactions';
+const STACKS_API_ACCOUNTS_URL = 'http://neon.blockstack.org:20443/v2/accounts';
+
+async function getUserAddress(userSession, username) {
+  return userSession
+    .getFile('stx.json', {
+      decrypt: false,
+      username: username,
+    })
+    .then(r => JSON.parse(r))
+    .catch(e => console.log(e));
+}
 
 function NoteField({ title, path, placeholder }) {
   const { userSession } = useBlockstack();
@@ -17,16 +31,30 @@ function NoteField({ title, path, placeholder }) {
   const nonceField = useRef();
   const spinner = useRef();
   const [status, setStatus] = useState();
+  const [account, setAccount] = useState();
+  const [privateKey, setPrivateKey] = useState();
+
+  useEffect(() => {
+    const appPrivateKey = userSession.loadUserData().appPrivateKey;
+    const { address, privateKey } = getStacksAccount(appPrivateKey);
+    setPrivateKey(privateKey);
+    fetch(`${STACKS_API_ACCOUNTS_URL}/${addressToString(address)}`)
+      .then(r => r.json())
+      .catch(e => {
+        setStatus('Failed to access your account', e);
+        console.log(e);
+      })
+      .then(acc => setAccount(acc));
+  }, [userSession]);
 
   const saveAction = async () => {
     spinner.current.classList.remove('d-none');
-    const recipient = await userSession
-      .getFile('stx.json', {
-        decrypt: false,
-        username: textfield.current.value,
-      })
-      .then(r => JSON.parse(r))
-      .catch(e => console.log(e));
+
+    // check recipient
+    const recipient = await getUserAddress(
+      userSession,
+      textfield.current.value
+    );
     if (!recipient) {
       setStatus(
         `Recipient ${textfield.current.value} has not yet used the app`
@@ -34,7 +62,18 @@ function NoteField({ title, path, placeholder }) {
       spinner.current.classList.add('d-none');
       return;
     }
-    const nonceInt = parseInt(nonceField.current.value);
+
+    // check nonce and balance
+    console.log({ account });
+    const nonceInt = account
+      ? account.nonce
+      : parseInt(nonceField.current.value);
+    const balance = account ? parseInt(account.balance, 16) : 0;
+    if (balance < 1000) {
+      setStatus('Your balance is below 1000 uSTX');
+      spinner.current.classList.add('d-none');
+      return;
+    }
 
     console.log('STX address of recipient ' + recipient.address);
     try {
@@ -42,14 +81,14 @@ function NoteField({ title, path, placeholder }) {
         recipient.address,
         new BigNum(1000),
         new BigNum(1000),
-        userSession.loadUserData().appPrivateKey,
+        privateKeyToString(privateKey),
         {
           nonce: new BigNum(nonceInt),
           version: TransactionVersion.Testnet,
           chainId: ChainID.Testnet,
         }
       );
-      setStatus('Sending transaction');
+      setStatus(`Sending transaction using nonce ${nonceInt}`);
       console.log(await transaction.broadcast(STACK_API_URL));
       setNonce(String(nonceInt + 1));
       spinner.current.classList.add('d-none');
@@ -81,6 +120,7 @@ function NoteField({ title, path, placeholder }) {
           className="form-control"
           defaultValue={''}
           placeholder={placeholder}
+          disabled={!account}
           onKeyUp={e => {
             if (e.key === 'Enter') saveAction();
           }}
