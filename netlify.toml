@@ -1,5 +1,5 @@
 [build]
-  command = "yarn add https://github.com/blockstack/stacks-transactions-js#master --force && yarn build"
+  command = "yarn build"
   publish = "build"
 
 [[redirects]]
