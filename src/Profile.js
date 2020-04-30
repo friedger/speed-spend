@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
 import BlockstackContext from 'react-blockstack/dist/context';
 import { addressToString } from '@blockstack/stacks-transactions';
-import { getStacksAccount } from './StacksAccount';
+import {
+  getStacksAccount,
+  STACKS_API_ACCOUNTS_URL,
+  STACKS_API_ACCOUNTS_BROWSER_URL,
+} from './StacksAccount';
 
 // Demonstrating BlockstackContext for legacy React Class Components.
 
@@ -10,7 +14,7 @@ export default class Profile extends Component {
   state = {
     account: undefined,
     address: undefined,
-    balanceUrl: undefined,
+    balanceBrowserUrl: undefined,
   };
 
   componentDidMount() {
@@ -21,11 +25,12 @@ export default class Profile extends Component {
     const { userData } = this.context;
 
     const { address } = getStacksAccount(userData.appPrivateKey);
-    const balanceUrl = ` https://crashy-stacky.zone117x.com/v2/accounts/${addressToString(
-      address
-    )}`;
-    this.setState({ address, balanceUrl });
-    console.log('fetching account');
+    const addressAsString = addressToString(address);
+    const balanceUrl = `${STACKS_API_ACCOUNTS_URL}/${addressAsString}`;
+    this.setState({
+      address,
+      balanceBrowserUrl: `${STACKS_API_ACCOUNTS_BROWSER_URL}/${addressAsString}`,
+    });
     fetch(balanceUrl)
       .then(r => r.json())
       .then(acc => {
@@ -39,7 +44,7 @@ export default class Profile extends Component {
       'https://s3.amazonaws.com/onename/avatar-placeholder.png';
     const proxyUrl = url => '/proxy/' + url.replace(/^https?:\/\//i, '');
 
-    const { account, address, balanceUrl } = this.state;
+    const { account, address, balanceBrowserUrl } = this.state;
     return (
       <div className="Profile">
         <div className="avatar-section text-center">
@@ -70,7 +75,7 @@ export default class Profile extends Component {
             <br />
           </>
         )}
-        <a href={balanceUrl} target="_blank" rel="noopener noreferrer">
+        <a href={balanceBrowserUrl} target="_blank" rel="noopener noreferrer">
           Check Balance
         </a>
         {' | '}

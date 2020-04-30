@@ -7,6 +7,7 @@ import {
   createStacksPublicKey,
   addressToString,
 } from '@blockstack/stacks-transactions';
+import { getStacksAccount } from './StacksAccount';
 
 export const appConfig = new AppConfig(['store_write', 'publish_data']);
 export const connectOptions = session => {
@@ -14,12 +15,7 @@ export const connectOptions = session => {
     finished: ({ userSession }) => {
       didConnect({ userSession });
       const userData = userSession.loadUserData();
-      const address = addressFromPublicKeys(
-        AddressVersion.TestnetSingleSig,
-        AddressHashMode.SerializeP2PKH,
-        1,
-        [createStacksPublicKey(getPublicKeyFromPrivate(userData.appPrivateKey))]
-      );
+      const address = getStacksAccount(userData.appPrivateKey);
       console.log(JSON.stringify({ address: addressToString(address) }));
       userSession
         .putFile(
