@@ -52,7 +52,7 @@ function NoteField({ title, path, placeholder }) {
     // check recipient
     const recipient = await getUserAddress(
       userSession,
-      textfield.current.value
+      textfield.current.value.trim()
     );
     if (!recipient) {
       setStatus(
