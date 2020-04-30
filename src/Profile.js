@@ -3,8 +3,8 @@ import BlockstackContext from 'react-blockstack/dist/context';
 import { addressToString } from '@blockstack/stacks-transactions';
 import {
   getStacksAccount,
-  STACKS_API_ACCOUNTS_URL,
   STACKS_API_ACCOUNTS_BROWSER_URL,
+  fetchAccount,
 } from './StacksAccount';
 
 // Demonstrating BlockstackContext for legacy React Class Components.
@@ -38,19 +38,13 @@ export default class Profile extends Component {
       address,
       balanceBrowserUrl: `${STACKS_API_ACCOUNTS_BROWSER_URL}/${addressAsString}`,
     });
-    this.fetchAccount(addressAsString);
+    this.onRefreshBalance(addressAsString);
   }
 
-  fetchAccount(addressAsString) {
+  onRefreshBalance(addressAsString) {
     this.setState({ status: undefined });
     this.spinner.current.classList.remove('d-none');
-    console.log('Checking account');
-    const balanceUrl = `${STACKS_API_ACCOUNTS_URL}/${addressAsString}`;
-    fetch(balanceUrl)
-      .then(r => {
-        console.log({ r });
-        return r.json();
-      })
+    fetchAccount(addressAsString)
       .then(acc => {
         console.log(acc);
         this.setState({ account: acc });
@@ -133,7 +127,7 @@ export default class Profile extends Component {
         <button
           className="btn btn-outline-secondary mt-1"
           onClick={e => {
-            this.fetchAccount(addressToString(address));
+            this.onRefreshBalance(addressToString(address));
           }}
         >
           <div

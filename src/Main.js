@@ -8,11 +8,7 @@ import {
   privateKeyToString,
   addressToString,
 } from '@blockstack/stacks-transactions';
-import {
-  getStacksAccount,
-  STACKS_API_ACCOUNTS_URL,
-  STACK_API_URL,
-} from './StacksAccount';
+import { getStacksAccount, STACK_API_URL, fetchAccount } from './StacksAccount';
 
 import { getUserAddress } from './StacksAccount';
 const BigNum = require('bn.js');
@@ -24,21 +20,21 @@ function NoteField({ title, path, placeholder }) {
   const spinner = useRef();
   const [status, setStatus] = useState();
   const [account, setAccount] = useState();
-  const [privateKey, setPrivateKey] = useState();
+  const [identity, setIdentity] = useState();
 
   useEffect(() => {
     const userData = userSession.loadUserData();
     const appPrivateKey = userData.appPrivateKey;
-    const { address, privateKey } = getStacksAccount(appPrivateKey);
-    setPrivateKey(privateKey);
-    fetch(`${STACKS_API_ACCOUNTS_URL}/${addressToString(address)}`)
-      .then(r => r.json())
+    const id = getStacksAccount(appPrivateKey);
+    setIdentity(id);
+    fetchAccount(addressToString(id.address))
       .catch(e => {
         setStatus('Failed to access your account', e);
         console.log(e);
       })
       .then(async acc => {
         setAccount(acc);
+        console.log({ acc });
         const address = await getUserAddress(userSession, userData.username);
         console.log(address);
 
@@ -67,9 +63,9 @@ function NoteField({ title, path, placeholder }) {
     }
 
     // check nonce and balance
-    console.log({ account });
-    const nonceInt = account ? account.nonce : 0;
-    const balance = account ? parseInt(account.balance, 16) : 0;
+    const acc = await fetchAccount(addressToString(identity.address));
+    const nonceInt = acc ? acc.nonce : 0;
+    const balance = acc ? parseInt(acc.balance, 16) : 0;
     if (balance < 1000) {
       setStatus('Your balance is below 1000 uSTX');
       spinner.current.classList.add('d-none');
@@ -81,8 +77,8 @@ function NoteField({ title, path, placeholder }) {
       const transaction = makeSTXTokenTransfer(
         recipient.address,
         new BigNum(1000),
-        new BigNum(1000),
-        privateKeyToString(privateKey),
+        new BigNum(180),
+        privateKeyToString(identity.privateKey),
         {
           nonce: new BigNum(nonceInt),
           version: TransactionVersion.Testnet,
@@ -90,10 +86,11 @@ function NoteField({ title, path, placeholder }) {
         }
       );
       setStatus(`Sending transaction using nonce ${nonceInt}`);
-      console.log(await transaction.broadcast(STACK_API_URL));
+      const result = await transaction.broadcast(STACK_API_URL);
+      console.log(result);
       setNonce(String(nonceInt + 1));
       spinner.current.classList.add('d-none');
-      setStatus(undefined);
+      setStatus(result);
     } catch (e) {
       console.log(e);
       setStatus(e.toString());

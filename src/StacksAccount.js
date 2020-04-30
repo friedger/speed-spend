@@ -34,3 +34,12 @@ export async function getUserAddress(userSession, username) {
     .then(r => JSON.parse(r))
     .catch(e => console.log(e));
 }
+
+export function fetchAccount(addressAsString) {
+  console.log('Checking account');
+  const balanceUrl = `${STACKS_API_ACCOUNTS_URL}/${addressAsString}`;
+  return fetch(balanceUrl).then(r => {
+    console.log({ r });
+    return r.json();
+  });
+}
