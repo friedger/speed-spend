@@ -8,9 +8,12 @@ import {
   privateKeyToString,
   addressToString,
 } from '@blockstack/stacks-transactions';
-import { getStacksAccount } from './StacksAccount';
+import {
+  getStacksAccount,
+  STACKS_API_ACCOUNTS_URL,
+  STACK_API_URL,
+} from './StacksAccount';
 const BigNum = require('bn.js');
-
 
 async function getUserAddress(userSession, username) {
   return userSession
