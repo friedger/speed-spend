@@ -5,6 +5,7 @@ import {
   AddressVersion,
   AddressHashMode,
 } from '@blockstack/stacks-transactions';
+import { STX_JSON_PATH } from './UserSession';
 
 export const STACK_API_URL =
   'https://crashy-stacky.zone117x.com/v2/transactions';
@@ -27,7 +28,7 @@ export function getStacksAccount(appPrivateKey) {
 
 export async function getUserAddress(userSession, username) {
   return userSession
-    .getFile('stx.json', {
+    .getFile(STX_JSON_PATH, {
       decrypt: false,
       username: username,
     })

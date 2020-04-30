@@ -4,6 +4,7 @@ import { addressToString } from '@blockstack/stacks-transactions';
 import { getStacksAccount } from './StacksAccount';
 
 export const appConfig = new AppConfig(['store_write', 'publish_data']);
+export const STX_JSON_PATH = '/stx.json';
 
 async function afterSTXAddressPublished() {
   console.log('STX address published');
@@ -19,7 +20,7 @@ export const connectOptions = session => {
       console.log(JSON.stringify({ address: addressToString(address) }));
       userSession
         .putFile(
-          'stx.json',
+          STX_JSON_PATH,
           JSON.stringify({ address: addressToString(address) }),
           { encrypt: false }
         )
@@ -27,10 +28,10 @@ export const connectOptions = session => {
         .catch(r => {
           console.log('STX address NOT published, retrying');
           console.log(r);
-          userSession.deleteFile('stx.json').then(() => {
+          userSession.deleteFile(STX_JSON_PATH).then(() => {
             userSession
               .putFile(
-                'stx.json',
+                STX_JSON_PATH,
                 JSON.stringify({ address: addressToString(address) }),
                 { encrypt: false }
               )
