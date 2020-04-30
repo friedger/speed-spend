@@ -136,7 +136,12 @@ function NoteField({ title, path, placeholder }) {
             Send
           </button>
         </div>
-        {status && <div color="red">{status}</div>}
+        {status && (
+          <>
+            <br />
+            <div>{status}</div>
+          </>
+        )}
       </div>
     </div>
   );
