@@ -1,21 +1,21 @@
-import { AppConfig, getPublicKeyFromPrivate } from 'blockstack';
+import { AppConfig } from 'blockstack';
 import { didConnect } from 'react-blockstack';
-import {
-  addressFromPublicKeys,
-  AddressVersion,
-  AddressHashMode,
-  createStacksPublicKey,
-  addressToString,
-} from '@blockstack/stacks-transactions';
+import { addressToString } from '@blockstack/stacks-transactions';
 import { getStacksAccount } from './StacksAccount';
 
 export const appConfig = new AppConfig(['store_write', 'publish_data']);
+
+async function afterSTXAddressPublished() {
+  console.log('STX address published');
+}
+
 export const connectOptions = session => {
   return {
     finished: ({ userSession }) => {
       didConnect({ userSession });
+
       const userData = userSession.loadUserData();
-      const address = getStacksAccount(userData.appPrivateKey);
+      const { address } = getStacksAccount(userData.appPrivateKey);
       console.log(JSON.stringify({ address: addressToString(address) }));
       userSession
         .putFile(
@@ -23,7 +23,7 @@ export const connectOptions = session => {
           JSON.stringify({ address: addressToString(address) }),
           { encrypt: false }
         )
-        .then(r => console.log('STX address published'))
+        .then(r => afterSTXAddressPublished())
         .catch(r => {
           console.log('STX address NOT published, retrying');
           console.log(r);
@@ -34,7 +34,7 @@ export const connectOptions = session => {
                 JSON.stringify({ address: addressToString(address) }),
                 { encrypt: false }
               )
-              .then(r => console.log('STX address published'))
+              .then(r => afterSTXAddressPublished())
               .catch(r => {
                 console.log('STX address NOT published');
                 console.log(r);

@@ -24,3 +24,13 @@ export function getStacksAccount(appPrivateKey) {
   );
   return { privateKey, address };
 }
+
+export async function getUserAddress(userSession, username) {
+  return userSession
+    .getFile('stx.json', {
+      decrypt: false,
+      username: username,
+    })
+    .then(r => JSON.parse(r))
+    .catch(e => console.log(e));
+}

@@ -21,7 +21,7 @@ export default class Profile extends Component {
     this.onContextChanged();
   }
 
-  onContextChanged() {
+  async onContextChanged() {
     const { userData } = this.context;
 
     const { address } = getStacksAccount(userData.appPrivateKey);

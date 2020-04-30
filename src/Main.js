@@ -13,17 +13,9 @@ import {
   STACKS_API_ACCOUNTS_URL,
   STACK_API_URL,
 } from './StacksAccount';
-const BigNum = require('bn.js');
 
-async function getUserAddress(userSession, username) {
-  return userSession
-    .getFile('stx.json', {
-      decrypt: false,
-      username: username,
-    })
-    .then(r => JSON.parse(r))
-    .catch(e => console.log(e));
-}
+import { getUserAddress } from './StacksAccount';
+const BigNum = require('bn.js');
 
 function NoteField({ title, path, placeholder }) {
   const { userSession } = useBlockstack();
@@ -35,7 +27,8 @@ function NoteField({ title, path, placeholder }) {
   const [privateKey, setPrivateKey] = useState();
 
   useEffect(() => {
-    const appPrivateKey = userSession.loadUserData().appPrivateKey;
+    const userData = userSession.loadUserData();
+    const appPrivateKey = userData.appPrivateKey;
     const { address, privateKey } = getStacksAccount(appPrivateKey);
     setPrivateKey(privateKey);
     fetch(`${STACKS_API_ACCOUNTS_URL}/${addressToString(address)}`)
@@ -44,7 +37,17 @@ function NoteField({ title, path, placeholder }) {
         setStatus('Failed to access your account', e);
         console.log(e);
       })
-      .then(acc => setAccount(acc));
+      .then(async acc => {
+        setAccount(acc);
+        const address = await getUserAddress(userSession, userData.username);
+        console.log(address);
+
+        if (!address) {
+          setStatus(
+            'Warning: Your STX was not published. Try re-signin or contact your "Secret Key" provider!'
+          );
+        }
+      });
   }, [userSession]);
 
   const saveAction = async () => {
