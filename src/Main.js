@@ -29,7 +29,6 @@ function NoteField({ title, path, placeholder }) {
   const { userSession } = useBlockstack();
   const [nonce, setNonce] = useFile('nonce.txt');
   const textfield = useRef();
-  const nonceField = useRef();
   const spinner = useRef();
   const [status, setStatus] = useState();
   const [account, setAccount] = useState();
@@ -66,9 +65,7 @@ function NoteField({ title, path, placeholder }) {
 
     // check nonce and balance
     console.log({ account });
-    const nonceInt = account
-      ? account.nonce
-      : parseInt(nonceField.current.value);
+    const nonceInt = account ? account.nonce : 0;
     const balance = account ? parseInt(account.balance, 16) : 0;
     if (balance < 1000) {
       setStatus('Your balance is below 1000 uSTX');
@@ -103,13 +100,6 @@ function NoteField({ title, path, placeholder }) {
 
   return (
     <div>
-      Nonce:
-      <input
-        type="number"
-        ref={nonceField}
-        className="form-control"
-        defaultValue={nonce || '0'}
-      />
       Send Test STXs
       <div className="NoteField input-group ">
         <div className="input-group-prepend">
