@@ -6,7 +6,7 @@ import { getStacksAccount } from './StacksAccount';
 export const appConfig = new AppConfig(['store_write', 'publish_data']);
 export const STX_JSON_PATH = 'stx.json';
 
-async function afterSTXAddressPublished() {
+function afterSTXAddressPublished() {
   console.log('STX address published');
 }
 
@@ -24,10 +24,10 @@ export const connectOptions = session => {
           JSON.stringify({ address: addressToString(address) }),
           { encrypt: false }
         )
-        .then(r => afterSTXAddressPublished())
+        .then(() => afterSTXAddressPublished())
         .catch(r => {
-          console.log('STX address NOT published, retrying');
           console.log(r);
+          console.log('STX address NOT published, retrying');
           userSession.deleteFile(STX_JSON_PATH).then(() => {
             userSession
               .putFile(
@@ -35,7 +35,7 @@ export const connectOptions = session => {
                 JSON.stringify({ address: addressToString(address) }),
                 { encrypt: false }
               )
-              .then(r => afterSTXAddressPublished())
+              .then(() => afterSTXAddressPublished())
               .catch(r => {
                 console.log('STX address NOT published');
                 console.log(r);
