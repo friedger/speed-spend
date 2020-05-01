@@ -48,15 +48,17 @@ function NoteField({ title, path, placeholder }) {
   const saveAction = async () => {
     spinner.current.classList.remove('d-none');
 
+    var username = textfield.current.value.trim();
+    var usernameString = username;
+    if (username.indexOf('.') < 0) {
+      usernameString = `${username} (${username}.id.blockstack)`;
+      username = `${username}.id.blockstack`;
+    }
+
     // check recipient
-    const recipient = await getUserAddress(
-      userSession,
-      textfield.current.value.trim()
-    );
+    const recipient = await getUserAddress(userSession, username);
     if (!recipient) {
-      setStatus(
-        `Recipient ${textfield.current.value} has not yet used the app`
-      );
+      setStatus(`Recipient ${usernameString} has not yet used the app`);
       spinner.current.classList.add('d-none');
       return;
     }
@@ -131,13 +133,12 @@ function NoteField({ title, path, placeholder }) {
             Send
           </button>
         </div>
-        {status && (
-          <>
-            <br />
-            <div>{status}</div>
-          </>
-        )}
       </div>
+      {status && (
+        <>
+          <div>{status}</div>
+        </>
+      )}
     </div>
   );
 }
