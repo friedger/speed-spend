@@ -68,7 +68,7 @@ export default function Landing(props) {
                   (using your app private key) and published using your Gaia
                   storage. Get some tokens for this address from the faucet and
                   send them as quickly as possible by entering a blockstack
-                  username of a friend (that as already published their STX
+                  username of a friend (who has already published the STX
                   address).
                 </p>
               </div>
