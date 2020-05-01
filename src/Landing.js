@@ -62,7 +62,7 @@ export default function Landing(props) {
                 <h5 className="card-title">Speed Spend</h5>
               </div>
               <div className="card-body">
-                <p className="card-text mb-3 mt-4 mx-5 px-5">
+                <p className="card-text mb-3">
                   Distribute your money as quickly as possible.
                   <br />A STX address is created automatically after login
                   (using your app private key) and published using your Gaia
