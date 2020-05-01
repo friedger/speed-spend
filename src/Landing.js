@@ -78,7 +78,7 @@ export default function Landing(props) {
               </p>
 
               <div className="card-footer text-info">
-                <strong>Help testing the Stacks Testnet.</strong>
+                <strong>Help testing the Stacks Testnet!</strong>
               </div>
             </div>
           </div>

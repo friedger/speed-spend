@@ -160,7 +160,7 @@ export default function Main(props) {
           />
         </div>
 
-        <div className="card col-md-8 mx-auto mt-5 text-center px-0 border-warning">
+        <div className="card col-md-8 mx-auto mt-5 mb-5 text-center px-0 border-warning">
           <div className="card-header">
             <h5 className="card-title">Instructions</h5>
           </div>
@@ -174,8 +174,11 @@ export default function Main(props) {
             <li className="list-group-item">
               Enter the blockstack username of a friend (that signed in to this
               app already). Examples are
-              <em>openintents</em> (which is the same as{' '}
-              <em>openintents.id.blockstack</em>) or <em>friedger.id</em>
+              <br />
+              <em>openintents</em> <br />
+              (which is the same as <em>openintents.id.blockstack</em>) <br />
+              or
+              <br /> <em>friedger.id</em>
             </li>
             <li className="list-group-item">
               Press the <i>Enter</i> key or click the <i>Send</i> button to send
