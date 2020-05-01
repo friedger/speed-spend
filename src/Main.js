@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { useFile, useBlockstack } from 'react-blockstack';
+import { useBlockstack } from 'react-blockstack';
 import Profile from './Profile';
 import {
   makeSTXTokenTransfer,
@@ -15,7 +15,6 @@ const BigNum = require('bn.js');
 
 function NoteField({ title, path, placeholder }) {
   const { userSession } = useBlockstack();
-  const [nonce, setNonce] = useFile('nonce.txt');
   const textfield = useRef();
   const spinner = useRef();
   const [status, setStatus] = useState();
@@ -88,7 +87,6 @@ function NoteField({ title, path, placeholder }) {
       setStatus(`Sending transaction using nonce ${nonceInt}`);
       const result = await transaction.broadcast(STACK_API_URL);
       console.log(result);
-      setNonce(String(nonceInt + 1));
       spinner.current.classList.add('d-none');
       setStatus(result);
     } catch (e) {
@@ -167,12 +165,14 @@ export default function Main(props) {
           </div>
           <ul className="list-group list-group-flush">
             <li className="list-group-item">
-              Copy STX address and visit faucet to get 10k uSTX (testnet
-              tokens).
+              Claim test tokens from the faucet to get 10k uSTX.
             </li>
             <li className="list-group-item">
-              Enter the blockstack id of a friend (that signed in to this app
-              already)
+              Wait a few minutes and refresh the account balance.
+            </li>
+            <li className="list-group-item">
+              Enter the blockstack username of a friend (that signed in to this
+              app already)
             </li>
             <li className="list-group-item">
               Press the <i>Enter</i> key or click the <i>Send</i> button to send
@@ -180,7 +180,7 @@ export default function Main(props) {
             </li>
             <li className="list-group-item">
               Check the balance again (after a few seconds) to see whether
-              tokens were send.
+              tokens were sent.
             </li>
           </ul>
         </div>

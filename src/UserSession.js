@@ -4,7 +4,7 @@ import { addressToString } from '@blockstack/stacks-transactions';
 import { getStacksAccount } from './StacksAccount';
 
 export const appConfig = new AppConfig(['store_write', 'publish_data']);
-export const STX_JSON_PATH = '/stx.json';
+export const STX_JSON_PATH = 'stx.json';
 
 async function afterSTXAddressPublished() {
   console.log('STX address published');
