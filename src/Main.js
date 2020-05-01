@@ -173,7 +173,9 @@ export default function Main(props) {
             </li>
             <li className="list-group-item">
               Enter the blockstack username of a friend (that signed in to this
-              app already)
+              app already). Examples are
+              <em>openintents</em> (which is the same as{' '}
+              <em>openintents.id.blockstack</em>) or <em>friedger.id</em>
             </li>
             <li className="list-group-item">
               Press the <i>Enter</i> key or click the <i>Send</i> button to send
