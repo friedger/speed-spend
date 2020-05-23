@@ -3,15 +3,157 @@ import { useBlockstack } from 'react-blockstack';
 import Profile from './Profile';
 import {
   makeSTXTokenTransfer,
+  makeContractCall,
   TransactionVersion,
   ChainID,
   privateKeyToString,
   addressToString,
+  trueCV,
+  falseCV,
+  StacksTestnet,
 } from '@blockstack/stacks-transactions';
-import { getStacksAccount, STACK_API_URL, fetchAccount } from './StacksAccount';
+import Switch from 'react-input-switch';
 
+import { getStacksAccount, STACK_API_URL, fetchAccount } from './StacksAccount';
 import { getUserAddress } from './StacksAccount';
 const BigNum = require('bn.js');
+
+const network = new StacksTestnet();
+network.coreApiUrl = 'http://neon.blockstack.org:20443';
+
+function BetButton() {
+  const { userSession } = useBlockstack();
+  const spinner = useRef();
+  const [betValue, setBetValue] = useState(0);
+  const [status, setStatus] = useState();
+  const [account, setAccount] = useState();
+  const [identity, setIdentity] = useState();
+
+  useEffect(() => {
+    const userData = userSession.loadUserData();
+    const appPrivateKey = userData.appPrivateKey;
+    const id = getStacksAccount(appPrivateKey);
+    setIdentity(id);
+    fetchAccount(addressToString(id.address))
+      .catch(e => {
+        setStatus('Failed to access your account', e);
+        console.log(e);
+      })
+      .then(async acc => {
+        setAccount(acc);
+        console.log({ acc });
+      });
+  }, [userSession]);
+
+  const betAction = async () => {
+    spinner.current.classList.remove('d-none');
+
+    // check nonce and balance
+    const acc = await fetchAccount(addressToString(identity.address));
+    const balance = acc ? parseInt(acc.balance, 16) : 0;
+    if (balance < 1000) {
+      setStatus('Your balance is below 1000 uSTX');
+      spinner.current.classList.add('d-none');
+      return;
+    }
+
+    console.log(`Betting on ${betValue}`);
+    try {
+      const transaction = makeContractCall({
+        contractAddress: 'ST12EY99GS4YKP0CP2CFW6SEPWQ2CGVRWK5GHKDRV',
+        contractName: 'flip-coin',
+        functionName: 'bet',
+        functionArgs: [betValue ? trueCV() : falseCV()],
+        senderKey: privateKeyToString(identity.privateKey),
+        network,
+      });
+      const result = await transaction.broadcast(STACK_API_URL);
+      console.log(result);
+      spinner.current.classList.add('d-none');
+      setStatus(result);
+    } catch (e) {
+      console.log(e);
+      setStatus(e.toString());
+      spinner.current.classList.add('d-none');
+    }
+  };
+
+  return (
+    <div>
+      Bet 1000mSTX on "True" or "False" and get upto twice as much plus the
+      jackpot or loose your money.
+      <div className="input-group ">
+        <div className="input-group-prepend">
+          <span className="input-group-text">
+            Your bet is {betValue ? '"True"' : '"False"'}
+          </span>
+        </div>
+        <div className="mx-auto">
+          <Switch
+            styles={{
+              track: {
+                backgroundColor: 'yellow',
+                borderRadius: 14,
+              },
+              trackChecked: {
+                backgroundColor: 'blue',
+              },
+              button: {
+                backgroundColor: 'blue',
+                borderRadius: 18,
+              },
+              buttonChecked: {
+                backgroundColor: 'yellow',
+              },
+              container: {
+                position: 'relative',
+                display: 'inline-block',
+                width: 40,
+                height: 28,
+                verticalAlign: 'middle',
+                cursor: 'pointer',
+                userSelect: 'none',
+              },
+            }}
+            theme={{ primaryColor: 'blue', secondaryColor: 'green' }}
+            value={betValue}
+            disabled={!account}
+            onKeyUp={e => {
+              if (e.key === 'Enter') betAction();
+            }}
+            onBlur={e => {
+              setStatus(undefined);
+            }}
+            onChange={value => {
+              console.log(value);
+              setBetValue(value);
+            }}
+          />
+        </div>
+
+        <div className="input-group-append">
+          <button
+            className="btn btn-outline-secondary"
+            type="button"
+            onClick={betAction}
+          >
+            <div
+              ref={spinner}
+              role="status"
+              className="d-none spinner-border spinner-border-sm text-info align-text-top mr-2"
+            />
+            Bet Now
+          </button>
+        </div>
+      </div>
+      {status && (
+        <>
+          <div>{status}</div>
+        </>
+      )}
+    </div>
+  );
+}
 
 function NoteField({ title, path, placeholder }) {
   const { userSession } = useBlockstack();
@@ -187,6 +329,40 @@ export default function Main(props) {
             <li className="list-group-item">
               Check the balance again (after a few seconds) to see whether
               tokens were sent.
+            </li>
+          </ul>
+        </div>
+
+        <div className="col-xs-10 col-md-8 mx-auto  px-4">
+          <hr />
+        </div>
+
+        <div className="col-xs-10 col-md-8 mx-auto mb-4 px-4">
+          <BetButton />
+        </div>
+
+        <div className="card col-md-8 mx-auto mt-5 mb-5 text-center px-0 border-warning">
+          <div className="card-header">
+            <h5 className="card-title">Instructions</h5>
+          </div>
+          <ul className="list-group list-group-flush">
+            <li className="list-group-item">
+              Claim test tokens from the faucet to get 10k uSTX.
+            </li>
+            <li className="list-group-item">
+              Wait a few minutes and refresh the account balance.
+            </li>
+            <li className="list-group-item">
+              Toggle the switch. Yellow on blue means "True", Blue on yellow
+              means "False"
+            </li>
+            <li className="list-group-item">
+              Press the <i>Enter</i> key or click the <i>Bet Now</i> button to
+              bet 1000 mSTX.
+            </li>
+            <li className="list-group-item">
+              Ask somebody else to bet and then check the balance again to see
+              whether you won.
             </li>
           </ul>
         </div>

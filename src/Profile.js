@@ -68,15 +68,18 @@ export default class Profile extends Component {
     this.setState({ status: undefined });
     this.faucetSpinner.current.classList.remove('d-none');
 
-    fetch('https://crashy-stacky.zone117x.com/sidecar/v1/debug/faucet', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-      },
-      body: `address=${addressAsString}`,
-    })
+    fetch(
+      `https://sidecar.staging.blockstack.xyz/sidecar/v1/debug/faucet?address=${addressAsString}`,
+      {
+        method: 'POST',
+      }
+    )
       .then(r => {
-        this.setStatus('Tokens will arrive soon.');
+        if (r.status === 200) {
+          this.setStatus('Tokens will arrive soon.');
+        } else {
+          this.setStatus('Claiming tokens failed.');
+        }
         console.log(r);
         this.faucetSpinner.current.classList.add('d-none');
       })
