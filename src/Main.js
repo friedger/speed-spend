@@ -11,6 +11,10 @@ import {
   trueCV,
   falseCV,
   StacksTestnet,
+  broadcastTransaction,
+  makeStandardSTXPostCondition,
+  FungibleConditionCode,
+  makeContractSTXPostCondition,
 } from '@blockstack/stacks-transactions';
 import Switch from 'react-input-switch';
 
@@ -21,7 +25,7 @@ const BigNum = require('bn.js');
 const network = new StacksTestnet();
 network.coreApiUrl = 'http://neon.blockstack.org:20443';
 
-function BetButton() {
+function BetButton({ jackpot }) {
   const { userSession } = useBlockstack();
   const spinner = useRef();
   const [betValue, setBetValue] = useState(0);
@@ -57,17 +61,31 @@ function BetButton() {
       return;
     }
 
-    console.log(`Betting on ${betValue}`);
+    console.log(`Betting on ${betValue} using jackpot ${jackpot}`);
     try {
-      const transaction = makeContractCall({
+      const transaction = await makeContractCall({
         contractAddress: 'ST12EY99GS4YKP0CP2CFW6SEPWQ2CGVRWK5GHKDRV',
-        contractName: 'flip-coin',
+        contractName: jackpot ? 'flip-coin-jackpot' : 'flip-coin-at-two',
         functionName: 'bet',
         functionArgs: [betValue ? trueCV() : falseCV()],
         senderKey: privateKeyToString(identity.privateKey),
         network,
+        postConditions: [
+          makeStandardSTXPostCondition(
+            addressToString(identity.address),
+            FungibleConditionCode.LessEqual,
+            new BigNum(1000)
+          ),
+          makeContractSTXPostCondition(
+            'ST12EY99GS4YKP0CP2CFW6SEPWQ2CGVRWK5GHKDRV',
+            jackpot ? 'flip-coin-jackpot' : 'flip-coin-at-two',
+            FungibleConditionCode.GreaterEqual,
+            new BigNum(0)
+          ),
+        ],
       });
-      const result = await transaction.broadcast(STACK_API_URL);
+      console.log(transaction);
+      const result = await broadcastTransaction(transaction, network);
       console.log(result);
       spinner.current.classList.add('d-none');
       setStatus(result);
@@ -80,12 +98,13 @@ function BetButton() {
 
   return (
     <div>
-      Bet 1000mSTX on "True" or "False" and get upto twice as much plus the
-      jackpot or loose your money.
+      Bet 1000mSTX on "HEADS" ("true") or "TAILS" ("false") and{' '}
+      {jackpot ? <>get the jackpot</> : <>win against somebody else</>} or loose
+      your money.
       <div className="input-group ">
         <div className="input-group-prepend">
           <span className="input-group-text">
-            Your bet is {betValue ? '"True"' : '"False"'}
+            Your bet is {betValue ? '"HEADS"' : '"TAILS"'}
           </span>
         </div>
         <div className="mx-auto">
@@ -142,7 +161,7 @@ function BetButton() {
               role="status"
               className="d-none spinner-border spinner-border-sm text-info align-text-top mr-2"
             />
-            Bet Now
+            {jackpot ? <>Bet Now</> : <>Bet against somebody</>}
           </button>
         </div>
       </div>
@@ -155,7 +174,7 @@ function BetButton() {
   );
 }
 
-function NoteField({ title, path, placeholder }) {
+function SpendField({ title, path, placeholder }) {
   const { userSession } = useBlockstack();
   const textfield = useRef();
   const spinner = useRef();
@@ -217,17 +236,12 @@ function NoteField({ title, path, placeholder }) {
 
     console.log('STX address of recipient ' + recipient.address);
     try {
-      const transaction = makeSTXTokenTransfer(
-        recipient.address,
-        new BigNum(1000),
-        new BigNum(180),
-        privateKeyToString(identity.privateKey),
-        {
-          nonce: new BigNum(nonceInt),
-          version: TransactionVersion.Testnet,
-          chainId: ChainID.Testnet,
-        }
-      );
+      const transaction = makeSTXTokenTransfer({
+        recipient: recipient.address,
+        amount: new BigNum(1000),
+        senderKey: privateKeyToString(identity.privateKey),
+        network: network,
+      });
       setStatus(`Sending transaction using nonce ${nonceInt}`);
       const result = await transaction.broadcast(STACK_API_URL);
       console.log(result);
@@ -295,7 +309,7 @@ export default function Main(props) {
       </div>
       <div className="lead row mt-5">
         <div className="col-xs-10 col-md-8 mx-auto px-4">
-          <NoteField
+          <SpendField
             title="Send 1000 uSTX to"
             path="note"
             placeholder="Username"
@@ -308,7 +322,7 @@ export default function Main(props) {
           </div>
           <ul className="list-group list-group-flush">
             <li className="list-group-item">
-              Claim test tokens from the faucet to get 10k uSTX.
+              Claim test tokens from the faucet to get 500k uSTX.
             </li>
             <li className="list-group-item">
               Wait a few minutes and refresh the account balance.
@@ -338,7 +352,11 @@ export default function Main(props) {
         </div>
 
         <div className="col-xs-10 col-md-8 mx-auto mb-4 px-4">
-          <BetButton />
+          <BetButton jackpot={true} />
+        </div>
+
+        <div className="col-xs-10 col-md-8 mx-auto mb-4 px-4">
+          <BetButton jackpot={false} />
         </div>
 
         <div className="card col-md-8 mx-auto mt-5 mb-5 text-center px-0 border-warning">
@@ -352,14 +370,14 @@ export default function Main(props) {
           </div>
           <ul className="list-group list-group-flush">
             <li className="list-group-item">
-              Claim test tokens from the faucet to get 10k uSTX.
+              Claim test tokens from the faucet to get 500k uSTX.
             </li>
             <li className="list-group-item">
               Wait a few minutes and refresh the account balance.
             </li>
             <li className="list-group-item">
-              Toggle the switch. Yellow on blue means "True", Blue on yellow
-              means "False"
+              Toggle the switch. Yellow on blue means "HEADS", Blue on yellow
+              means "TAILS"
             </li>
             <li className="list-group-item">
               Press the <i>Enter</i> key or click the <i>Bet Now</i> button to

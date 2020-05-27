@@ -8,9 +8,9 @@ import {
 import { STX_JSON_PATH } from './UserSession';
 
 export const STACK_API_URL =
-  'https://crashy-stacky.zone117x.com/v2/transactions';
+  'https://sidecar.staging.blockstack.xyz/v2/transactions';
 export const STACKS_API_ACCOUNTS_URL =
-  'https://crashy-stacky.zone117x.com/v2/accounts';
+  'https://sidecar.staging.blockstack.xyz/v2/accounts';
 export const STACKS_API_ACCOUNTS_BROWSER_URL =
   'http://neon.blockstack.org:20443/v2/accounts';
 
