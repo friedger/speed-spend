@@ -380,12 +380,16 @@ export default function Main(props) {
               means "TAILS"
             </li>
             <li className="list-group-item">
-              Press the <i>Enter</i> key or click the <i>Bet Now</i> button to
+              Press the <i>Enter</i> key or click the <i>Bet ..</i> button to
               bet 1000 mSTX.
             </li>
             <li className="list-group-item">
-              Ask somebody else to bet and then check the balance again to see
-              whether you won.
+              Wait a few minutes and refresh the account balance.
+            </li>
+            <li className="list-group-item">
+              Ask somebody else to play the same game (same button) and then
+              after a few minutes check the balance again to see whether you
+              won.
             </li>
           </ul>
         </div>
