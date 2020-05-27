@@ -23,7 +23,7 @@ import { getUserAddress } from './StacksAccount';
 const BigNum = require('bn.js');
 
 const network = new StacksTestnet();
-network.coreApiUrl = 'http://neon.blockstack.org:20443';
+network.coreApiUrl = 'https://sidecar.staging.blockstack.xyz';
 
 function BetButton({ jackpot }) {
   const { userSession } = useBlockstack();
