@@ -43,7 +43,6 @@ export const connectOptions = session => {
           });
         });
     },
-    authOrigin: 'http://localhost:8080',
     appDetails: {
       name: 'Speed Spend',
       icon: 'https://speed-spend.netlify.app/speedspend.png',

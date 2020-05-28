@@ -4,8 +4,6 @@ import Profile from './Profile';
 import {
   makeSTXTokenTransfer,
   makeContractCall,
-  TransactionVersion,
-  ChainID,
   privateKeyToString,
   addressToString,
   trueCV,
@@ -15,6 +13,7 @@ import {
   makeStandardSTXPostCondition,
   FungibleConditionCode,
   makeContractSTXPostCondition,
+  deserializeCV,
 } from '@blockstack/stacks-transactions';
 import Switch from 'react-input-switch';
 
@@ -32,6 +31,7 @@ function BetButton({ jackpot }) {
   const [status, setStatus] = useState();
   const [account, setAccount] = useState();
   const [identity, setIdentity] = useState();
+  const [jackpotValue, setJackpotValue] = useState();
 
   useEffect(() => {
     const userData = userSession.loadUserData();
@@ -46,6 +46,29 @@ function BetButton({ jackpot }) {
       .then(async acc => {
         setAccount(acc);
         console.log({ acc });
+      });
+    fetch(
+      `${network.coreApiUrl}/v2/contracts/call-read/ST12EY99GS4YKP0CP2CFW6SEPWQ2CGVRWK5GHKDRV/flip-coin-jackpot/get-jackpot`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: `{"sender":"${addressToString(id.address)}","arguments":[]}`,
+      }
+    )
+      .then(response => response.json())
+      .then(jackpot => {
+        console.log({ jackpot });
+        if (jackpot.okay) {
+          const cv = deserializeCV(
+            Buffer.from(jackpot.result.substr(2), 'hex')
+          );
+
+          if (cv.value) {
+            setJackpotValue(cv.value);
+          }
+        }
       });
   }, [userSession]);
 
@@ -62,6 +85,7 @@ function BetButton({ jackpot }) {
     }
 
     console.log(`Betting on ${betValue} using jackpot ${jackpot}`);
+
     try {
       const transaction = await makeContractCall({
         contractAddress: 'ST12EY99GS4YKP0CP2CFW6SEPWQ2CGVRWK5GHKDRV',
@@ -99,8 +123,15 @@ function BetButton({ jackpot }) {
   return (
     <div>
       Bet 1000mSTX on "HEADS" ("true") or "TAILS" ("false") and{' '}
-      {jackpot ? <>get the jackpot</> : <>win against somebody else</>} or loose
-      your money.
+      {jackpot ? (
+        <>
+          get the jackpot{' '}
+          {jackpotValue ? <> of {jackpotValue.toString(10)}</> : null}
+        </>
+      ) : (
+        <>win against somebody else</>
+      )}{' '}
+      or loose your money.
       <div className="input-group ">
         <div className="input-group-prepend">
           <span className="input-group-text">
