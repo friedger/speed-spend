@@ -114,12 +114,13 @@ function BetButton({ jackpot }) {
       const result = await broadcastTransaction(transaction, network);
       console.log(result);
       spinner.current.classList.add('d-none');
-      if (result.length === 64) {
+      if (result.startsWith('"') && result.length === 66) {
+        const txid = result.substr(1, 64);
         setStatus(
           <>
             Check transaction status:
-            <a href={`https://testnet-explorer.blockstack.org/txid/${result}`}>
-              {result}
+            <a href={`https://testnet-explorer.blockstack.org/txid/0x${txid}`}>
+              {txid}
             </a>
           </>
         );
