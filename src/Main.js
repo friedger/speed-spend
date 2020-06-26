@@ -24,6 +24,8 @@ const BigNum = require('bn.js');
 const network = new StacksTestnet();
 network.coreApiUrl = 'https://sidecar.staging.blockstack.xyz';
 
+const contractAddress = 'ST12EY99GS4YKP0CP2CFW6SEPWQ2CGVRWK5GHKDRV';
+
 function BetButton({ jackpot }) {
   const { userSession } = useBlockstack();
   const spinner = useRef();
@@ -48,7 +50,7 @@ function BetButton({ jackpot }) {
         console.log({ acc });
       });
     fetch(
-      `${network.coreApiUrl}/v2/contracts/call-read/ST12EY99GS4YKP0CP2CFW6SEPWQ2CGVRWK5GHKDRV/flip-coin-jackpot/get-jackpot`,
+      `${network.coreApiUrl}/v2/contracts/call-read/${contractAddress}/flip-coin-jackpot/get-jackpot`,
       {
         method: 'POST',
         headers: {
@@ -88,7 +90,7 @@ function BetButton({ jackpot }) {
 
     try {
       const transaction = await makeContractCall({
-        contractAddress: 'ST12EY99GS4YKP0CP2CFW6SEPWQ2CGVRWK5GHKDRV',
+        contractAddress,
         contractName: jackpot ? 'flip-coin-jackpot' : 'flip-coin-at-two',
         functionName: 'bet',
         functionArgs: [betValue ? trueCV() : falseCV()],
@@ -101,7 +103,7 @@ function BetButton({ jackpot }) {
             new BigNum(1000)
           ),
           makeContractSTXPostCondition(
-            'ST12EY99GS4YKP0CP2CFW6SEPWQ2CGVRWK5GHKDRV',
+            contractAddress,
             jackpot ? 'flip-coin-jackpot' : 'flip-coin-at-two',
             FungibleConditionCode.GreaterEqual,
             new BigNum(0)
@@ -112,7 +114,18 @@ function BetButton({ jackpot }) {
       const result = await broadcastTransaction(transaction, network);
       console.log(result);
       spinner.current.classList.add('d-none');
-      setStatus(result);
+      if (result.length === 64) {
+        setStatus(
+          <>
+            Check transaction status:
+            <a href={`https://testnet-explorer.blockstack.org/txid/${result}`}>
+              {result}
+            </a>
+          </>
+        );
+      } else {
+        setStatus(result);
+      }
     } catch (e) {
       console.log(e);
       setStatus(e.toString());

@@ -12,7 +12,7 @@ export const STACK_API_URL =
 export const STACKS_API_ACCOUNTS_URL =
   'https://sidecar.staging.blockstack.xyz/v2/accounts';
 export const STACKS_API_ACCOUNTS_BROWSER_URL =
-  'http://neon.blockstack.org:20443/v2/accounts';
+  'http://testnet-master.blockstack.org:20443/v2/accounts';
 
 export function getStacksAccount(appPrivateKey) {
   const privateKey = createStacksPrivateKey(appPrivateKey);
