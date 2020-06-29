@@ -1,11 +1,7 @@
 import React, { Component } from 'react';
 import BlockstackContext from 'react-blockstack/dist/context';
 import { addressToString } from '@blockstack/stacks-transactions';
-import {
-  getStacksAccount,
-  STACKS_API_ACCOUNTS_BROWSER_URL,
-  fetchAccount,
-} from './StacksAccount';
+import { getStacksAccount, STACKS_API_ACCOUNTS_BROWSER_URL, fetchAccount } from './StacksAccount';
 
 // Demonstrating BlockstackContext for legacy React Class Components.
 
@@ -69,7 +65,7 @@ export default class Profile extends Component {
     this.faucetSpinner.current.classList.remove('d-none');
 
     fetch(
-      `https://sidecar.staging.blockstack.xyz/sidecar/v1/debug/faucet?address=${addressAsString}`,
+      `https://sidecar.staging.blockstack.xyz/sidecar/v1/faucets/stx?address=${addressAsString}`,
       {
         method: 'POST',
       }
@@ -92,8 +88,7 @@ export default class Profile extends Component {
 
   render() {
     const { person } = this.context;
-    const avatarFallbackImage =
-      'https://s3.amazonaws.com/onename/avatar-placeholder.png';
+    const avatarFallbackImage = 'https://s3.amazonaws.com/onename/avatar-placeholder.png';
     const proxyUrl = url => '/proxy/' + url.replace(/^https?:\/\//i, '');
 
     const { account, address, status } = this.state;
@@ -101,20 +96,14 @@ export default class Profile extends Component {
       <div className="Profile">
         <div className="avatar-section text-center">
           <img
-            src={proxyUrl(
-              (person && person.avatarUrl()) || avatarFallbackImage
-            )}
+            src={proxyUrl((person && person.avatarUrl()) || avatarFallbackImage)}
             className="img-rounded avatar"
             id="avatar-image"
             alt="Avatar"
           />
         </div>
         <h1 className="text-center mt-2">
-          Hello,{' '}
-          <span id="heading-name">
-            {(person && person.name()) || 'Stacks Tester'}
-          </span>
-          !
+          Hello, <span id="heading-name">{(person && person.name()) || 'Stacks Tester'}</span>!
         </h1>
         {address && (
           <>
