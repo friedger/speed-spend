@@ -87,7 +87,7 @@ export default class Profile extends Component {
   }
 
   render() {
-    const { person } = this.context;
+    const { person, username } = this.context;
     const avatarFallbackImage = 'https://s3.amazonaws.com/onename/avatar-placeholder.png';
     const proxyUrl = url => '/proxy/' + url.replace(/^https?:\/\//i, '');
 
@@ -105,6 +105,11 @@ export default class Profile extends Component {
         <h1 className="text-center mt-2">
           Hello, <span id="heading-name">{(person && person.name()) || 'Stacks Tester'}</span>!
         </h1>
+        {username && (
+          <>
+            Your Blockstack username is {username} <br />
+          </>
+        )}
         {address && (
           <>
             Your STX address: {addressToString(address)} <br />
