@@ -266,7 +266,7 @@ function SpendField({ title, path, placeholder }) {
 
     console.log('STX address of recipient ' + recipient.address);
     try {
-      const transaction = makeSTXTokenTransfer({
+      const transaction = await makeSTXTokenTransfer({
         recipient: recipient.address,
         amount: new BigNum(1000),
         senderKey: privateKeyToString(identity.privateKey),
