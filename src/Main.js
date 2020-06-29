@@ -12,7 +12,13 @@ export default function Main(props) {
           <Profile />
         </div>
       </div>
+      <div className="col-xs-10 col-md-8 mx-auto  px-4">
+        <hr />
+      </div>
       <div className="lead row mt-5">
+        <div className="col-xs-10 col-md-8 mx-auto px-4">
+          <h5 className="card-title">Speed Spend</h5>
+        </div>
         <div className="col-xs-10 col-md-8 mx-auto px-4">
           <SpendField title="Send 1000 uSTX to" path="note" placeholder="Username" />
         </div>
@@ -46,6 +52,9 @@ export default function Main(props) {
           <hr />
         </div>
 
+        <div className="col-xs-10 col-md-8 mx-auto px-4">
+          <h5 className="card-title">Flip Coin with Jackpot</h5>
+        </div>
         <div className="col-xs-10 col-md-8 mx-auto mb-4 px-4">
           <BetButton jackpot={true} />
         </div>
@@ -71,27 +80,33 @@ export default function Main(props) {
               Toggle the switch. Yellow on blue means "HEADS", Blue on yellow means "TAILS"
             </li>
             <li className="list-group-item">
-              Press the <i>Enter</i> key or click the <i>Bet ..</i> button to bet 1000 uSTX.
+              Click the <i>Bet ..</i> button to bet 1000 uSTX.
             </li>
             <li className="list-group-item">
               Wait a few minutes and refresh the account balance. You should see 1000 uSTX less in
               your account.
             </li>
             <li className="list-group-item">
-              Ask somebody else to play the same game (same button) and then after a few minutes
-              check the balance again to see whether you won.
+              Ask somebody else to play the same game (Flip Coin with Jackpot) and then after a few
+              minutes check the balance again to see whether you won.
             </li>
             <li className="list-group-item">
               You can also search for your transcation at the
-              [https://testnet-explorer.blockstack.org/transactions](Testnet Explorer) and check the
-              flip-coin-jackpot transaction above your transaction. If it contains two transfer
-              events you won the jackpot!
+              <a href="https://testnet-explorer.blockstack.org/transactions">
+                Testnet Explorer
+              </a>{' '}
+              and check the flip-coin-jackpot transaction above your transaction. If it contains two
+              transfer events you won the jackpot!
             </li>
           </ul>
         </div>
 
         <div className="col-xs-10 col-md-8 mx-auto  px-4">
           <hr />
+        </div>
+
+        <div className="col-xs-10 col-md-8 mx-auto px-4">
+          <h5 className="card-title">Flip Coin At Two</h5>
         </div>
 
         <div className="col-xs-10 col-md-8 mx-auto mb-4 px-4">
@@ -116,24 +131,32 @@ export default function Main(props) {
               on your account.
             </li>
             <li className="list-group-item">
+              Find a friend to play against in real life and share the link to this game. Agree who
+              bets on "HEADS" and who on "TAILS".
+            </li>
+            <li className="list-group-item">
               Toggle the switch. Yellow on blue means "HEADS", Blue on yellow means "TAILS"
             </li>
             <li className="list-group-item">
-              Press the <i>Enter</i> key or click the <i>Bet ..</i> button to bet 1000 uSTX.
+              Click the <i>Bet ..</i> button to bet 1000 uSTX.
             </li>
             <li className="list-group-item">
-              Wait a few minutes and refresh the account balance. You should see 1000 uSTX less in
-              your account.
+              Wait until your friend played as well and refresh the account balance. You should see
+              1000 uSTX less in your account.
             </li>
             <li className="list-group-item">
-              Ask somebody else to play the same game (same button) and then after a few minutes
-              check the balance again to see whether you won.
+              Ask somebody else to play the same game (Flip Coin At Two) and then after a few
+              minutes check the balance again to see whether you won.
             </li>
             <li className="list-group-item">
-              You can also search for your transcation at the
-              [https://testnet-explorer.blockstack.org/transactions](Testnet Explorer) and check the
-              flip-coin-jackpot transaction above your transaction. If it contains two transfer
-              events you won the jackpot!
+              You can also search for your transcation and your friend's transaction at the
+              <a href="https://testnet-explorer.blockstack.org/transactions">
+                Testnet Explorer
+              </a>{' '}
+              and check the next flip-coin-at-two transaction above your transactions. It contains
+              three transfers: One is the transfer of the player (1000uSTX), one is a fee paid into
+              the jackpot of Flip Coin with Jackpot game and one is either a transfer to you or to
+              your friend.
             </li>
           </ul>
         </div>
