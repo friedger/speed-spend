@@ -63,9 +63,7 @@ function BetButton({ jackpot }) {
       .then(jackpot => {
         console.log({ jackpot });
         if (jackpot.okay) {
-          const cv = deserializeCV(
-            Buffer.from(jackpot.result.substr(2), 'hex')
-          );
+          const cv = deserializeCV(Buffer.from(jackpot.result.substr(2), 'hex'));
 
           if (cv.value) {
             setJackpotValue(cv.value);
@@ -77,7 +75,7 @@ function BetButton({ jackpot }) {
   const betAction = async () => {
     spinner.current.classList.remove('d-none');
 
-    // check nonce and balance
+    // check balance
     const acc = await fetchAccount(addressToString(identity.address));
     const balance = acc ? parseInt(acc.balance, 16) : 0;
     if (balance < 1000) {
@@ -119,9 +117,7 @@ function BetButton({ jackpot }) {
         setStatus(
           <>
             Check transaction status:
-            <a href={`https://testnet-explorer.blockstack.org/txid/0x${txid}`}>
-              {txid}
-            </a>
+            <a href={`https://testnet-explorer.blockstack.org/txid/0x${txid}`}>{txid}</a>
           </>
         );
       } else {
@@ -138,19 +134,14 @@ function BetButton({ jackpot }) {
     <div>
       Bet 1000mSTX on "HEADS" ("true") or "TAILS" ("false") and{' '}
       {jackpot ? (
-        <>
-          get the jackpot{' '}
-          {jackpotValue ? <> of {jackpotValue.toString(10)}</> : null}
-        </>
+        <>get the jackpot {jackpotValue ? <> of {jackpotValue.toString(10)}</> : null}</>
       ) : (
         <>win against somebody else</>
       )}{' '}
       or loose your money.
       <div className="input-group ">
         <div className="input-group-prepend">
-          <span className="input-group-text">
-            Your bet is {betValue ? '"HEADS"' : '"TAILS"'}
-          </span>
+          <span className="input-group-text">Your bet is {betValue ? '"HEADS"' : '"TAILS"'}</span>
         </div>
         <div className="mx-auto">
           <Switch
@@ -196,11 +187,7 @@ function BetButton({ jackpot }) {
         </div>
 
         <div className="input-group-append">
-          <button
-            className="btn btn-outline-secondary"
-            type="button"
-            onClick={betAction}
-          >
+          <button className="btn btn-outline-secondary" type="button" onClick={betAction}>
             <div
               ref={spinner}
               role="status"
@@ -269,9 +256,8 @@ function SpendField({ title, path, placeholder }) {
       return;
     }
 
-    // check nonce and balance
+    // check balance
     const acc = await fetchAccount(addressToString(identity.address));
-    const nonceInt = acc ? acc.nonce : 0;
     const balance = acc ? parseInt(acc.balance, 16) : 0;
     if (balance < 1000) {
       setStatus('Your balance is below 1000 uSTX');
@@ -287,8 +273,9 @@ function SpendField({ title, path, placeholder }) {
         senderKey: privateKeyToString(identity.privateKey),
         network: network,
       });
-      setStatus(`Sending transaction using nonce ${nonceInt}`);
-      const result = await transaction.broadcast(STACK_API_URL);
+      setStatus(`Sending transaction`);
+
+      const result = await broadcastTransaction(transaction, network);
       console.log(result);
       spinner.current.classList.add('d-none');
       setStatus(result);
@@ -321,11 +308,7 @@ function SpendField({ title, path, placeholder }) {
           }}
         />
         <div className="input-group-append">
-          <button
-            className="btn btn-outline-secondary"
-            type="button"
-            onClick={saveAction}
-          >
+          <button className="btn btn-outline-secondary" type="button" onClick={saveAction}>
             <div
               ref={spinner}
               role="status"
@@ -354,11 +337,7 @@ export default function Main(props) {
       </div>
       <div className="lead row mt-5">
         <div className="col-xs-10 col-md-8 mx-auto px-4">
-          <SpendField
-            title="Send 1000 uSTX to"
-            path="note"
-            placeholder="Username"
-          />
+          <SpendField title="Send 1000 uSTX to" path="note" placeholder="Username" />
         </div>
 
         <div className="card col-md-8 mx-auto mt-5 mb-5 text-center px-0 border-warning">
@@ -366,15 +345,11 @@ export default function Main(props) {
             <h5 className="card-title">Instructions</h5>
           </div>
           <ul className="list-group list-group-flush">
+            <li className="list-group-item">Claim test tokens from the faucet to get 500k uSTX.</li>
+            <li className="list-group-item">Wait a few minutes and refresh the account balance.</li>
             <li className="list-group-item">
-              Claim test tokens from the faucet to get 500k uSTX.
-            </li>
-            <li className="list-group-item">
-              Wait a few minutes and refresh the account balance.
-            </li>
-            <li className="list-group-item">
-              Enter the blockstack username of a friend (that signed in to this
-              app already). Examples are
+              Enter the blockstack username of a friend (that signed in to this app already).
+              Examples are
               <br />
               <em>openintents</em> <br />
               (which is the same as <em>openintents.id.blockstack</em>) <br />
@@ -382,12 +357,10 @@ export default function Main(props) {
               <br /> <em>friedger.id</em>
             </li>
             <li className="list-group-item">
-              Press the <i>Enter</i> key or click the <i>Send</i> button to send
-              off the tokens.
+              Press the <i>Enter</i> key or click the <i>Send</i> button to send off the tokens.
             </li>
             <li className="list-group-item">
-              Check the balance again (after a few seconds) to see whether
-              tokens were sent.
+              Check the balance again (after a few seconds) to see whether tokens were sent.
             </li>
           </ul>
         </div>
@@ -414,27 +387,18 @@ export default function Main(props) {
             .)
           </div>
           <ul className="list-group list-group-flush">
+            <li className="list-group-item">Claim test tokens from the faucet to get 500k uSTX.</li>
+            <li className="list-group-item">Wait a few minutes and refresh the account balance.</li>
             <li className="list-group-item">
-              Claim test tokens from the faucet to get 500k uSTX.
+              Toggle the switch. Yellow on blue means "HEADS", Blue on yellow means "TAILS"
             </li>
             <li className="list-group-item">
-              Wait a few minutes and refresh the account balance.
+              Press the <i>Enter</i> key or click the <i>Bet ..</i> button to bet 1000 mSTX.
             </li>
+            <li className="list-group-item">Wait a few minutes and refresh the account balance.</li>
             <li className="list-group-item">
-              Toggle the switch. Yellow on blue means "HEADS", Blue on yellow
-              means "TAILS"
-            </li>
-            <li className="list-group-item">
-              Press the <i>Enter</i> key or click the <i>Bet ..</i> button to
-              bet 1000 mSTX.
-            </li>
-            <li className="list-group-item">
-              Wait a few minutes and refresh the account balance.
-            </li>
-            <li className="list-group-item">
-              Ask somebody else to play the same game (same button) and then
-              after a few minutes check the balance again to see whether you
-              won.
+              Ask somebody else to play the same game (same button) and then after a few minutes
+              check the balance again to see whether you won.
             </li>
           </ul>
         </div>
