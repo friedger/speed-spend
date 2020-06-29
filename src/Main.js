@@ -22,6 +22,7 @@ import { getUserAddress } from './StacksAccount';
 const BigNum = require('bn.js');
 
 const network = new StacksTestnet();
+network.coreApiUrl = 'https://sidecar.staging.blockstack.xyz';
 
 const contractAddress = 'ST12EY99GS4YKP0CP2CFW6SEPWQ2CGVRWK5GHKDRV';
 
