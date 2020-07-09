@@ -1,18 +1,17 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useBlockstack } from 'react-blockstack';
-import {
-  makeSTXTokenTransfer,
-  privateKeyToString,
-  addressToString,
-  broadcastTransaction,
-} from '@blockstack/stacks-transactions';
+import { privateKeyToString, addressToString } from '@blockstack/stacks-transactions';
 
-import { getStacksAccount, fetchAccount, NETWORK, resultToStatus } from './StacksAccount';
+import { getStacksAccount, fetchAccount, resultToStatus } from './StacksAccount';
 import { getUserAddress } from './StacksAccount';
+import { useConnect } from '@blockstack/connect/dist/connect.cjs.production.min';
 const BigNum = require('bn.js');
 
-export function SpendField({ title, path, placeholder }) {
+const authOrigin = 'https://deploy-preview-301--stacks-authenticator.netlify.app';
+
+export function OwnerAddressSpendField({ title, path, placeholder }) {
   const { userSession } = useBlockstack();
+  const { doSTXTransfer } = useConnect();
   const textfield = useRef();
   const spinner = useRef();
   const [status, setStatus] = useState();
@@ -72,18 +71,23 @@ export function SpendField({ title, path, placeholder }) {
 
     console.log('STX address of recipient ' + recipient.address);
     try {
-      const transaction = await makeSTXTokenTransfer({
+      setStatus(`Sending transaction`);
+
+      await doSTXTransfer({
         recipient: recipient.address,
         amount: new BigNum(1000),
         senderKey: privateKeyToString(identity.privateKey),
-        network: NETWORK,
+        authOrigin,
+        appDetails: {
+          name: 'Speed Spend',
+          icon: 'https://speed-spend.netlify.app/speedspend.png',
+        },
+        finished: data => {
+          console.log(data);
+          setStatus(resultToStatus(data));
+          spinner.current.classList.add('d-none');
+        },
       });
-      setStatus(`Sending transaction`);
-
-      const result = await broadcastTransaction(transaction, NETWORK);
-      console.log(result);
-      spinner.current.classList.add('d-none');
-      setStatus(resultToStatus(result));
     } catch (e) {
       console.log(e);
       setStatus(e.toString());

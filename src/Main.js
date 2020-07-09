@@ -3,6 +3,7 @@ import Profile from './Profile';
 
 import { SpendField } from './SpendField';
 import { BetButton } from './BetButton';
+import { OwnerAddressSpendField } from './OwnerAddressSpendField';
 
 export default function Main(props) {
   return (
@@ -21,6 +22,9 @@ export default function Main(props) {
         </div>
         <div className="col-xs-10 col-md-8 mx-auto px-4">
           <SpendField title="Send 1000 uSTX to" path="note" placeholder="Username" />
+        </div>
+        <div className="col-xs-10 col-md-8 mx-auto px-4">
+          <OwnerAddressSpendField title="Send 1000 uSTX to" path="note" placeholder="Username" />
         </div>
 
         <div className="card col-md-8 mx-auto mt-5 mb-5 text-center px-0 border-warning">
