@@ -51,7 +51,7 @@ export function fetchAccount(addressAsString) {
 }
 
 export function resultToStatus(result) {
-  if (result.startsWith('"') && result.length === 66) {
+  if (result && result.startsWith('"') && result.length === 66) {
     const txid = result.substr(1, 64);
     return (
       <>
