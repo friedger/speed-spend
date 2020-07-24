@@ -1,38 +1,40 @@
-import React, { useState } from 'react';
-import { useBlockstack } from 'react-blockstack';
-import { Blockstack } from 'react-blockstack/dist/context';
+import React, { useState, useEffect } from 'react';
 import Landing from './Landing';
 import Main from './Main';
 import { Connect } from '@blockstack/connect';
-import { useConnect } from '@blockstack/connect/dist/connect.cjs.production.min';
+import { useBlockstack, useConnectOptions } from 'react-blockstack';
+import { connectOptions } from './UserSession';
 
 export default function App(props) {
   const [userSession, setUserSession] = useState();
-  const authOptions = {
-    redirectTo: '/',
-    finished: ({ userSession }) => {
-      console.log(userSession.loadUserData());
-      setUserSession(userSession);
-    },
-    appDetails: {
-      name: 'Speed Spend',
-      icon: 'https://speed-spend.netlify.app/speedspend.png',
-    },
-  };
+  const { userSession: session } = useBlockstack();
+
+  useEffect(() => {
+    if (session.isUserSignedIn()) {
+      setUserSession(session);
+      console.log({ userData: session.loadUserData() });
+    }
+  }, [session]);
+
   return (
-    <Connect authOptions={authOptions}>
+    <Connect
+      authOptions={useConnectOptions(connectOptions, ({ userSession }) =>
+        setUserSession(userSession)
+      )}
+    >
       <Content userSession={userSession} />
     </Connect>
   );
 }
 
 function Content({ userSession }) {
-  const authenticated = userSession;
-  const person = userSession && userSession.loadUserData().person;
+  const authenticated = userSession && userSession.isUserSignedIn();
+  const decentralizedID =
+    userSession && userSession.isUserSignedIn() && userSession.loadUserData().decentralizedID;
   return (
     <>
       {!authenticated && <Landing />}
-      {person && <Main person={person} />}
+      {decentralizedID && <Main decentralizedID={decentralizedID} />}
     </>
   );
 }

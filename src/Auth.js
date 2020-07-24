@@ -1,24 +1,25 @@
-import React, { useCallback } from 'react';
-import { useBlockstack, useConnectOptions } from 'react-blockstack';
-import { connectOptions } from './UserSession';
-import { showBlockstackConnect } from '@blockstack/connect/dist/connect.cjs.production.min';
+import React from 'react';
+import { useBlockstack } from 'react-blockstack';
 
 // Authentication button adapting to status
 
 export default function Auth(props) {
-  const { signIn, signOut, userSession } = useBlockstack();
-  const authOptions = useConnectOptions(connectOptions(userSession));
-  const buttonAction = useCallback(() => {
-    signIn ? showBlockstackConnect(authOptions) : signOut();
-  }, [signIn, authOptions, signOut]);
+  const { signOut } = useBlockstack();
 
-  return (
-    <button
-      className="btn btn-primary btn-lg"
-      disabled={!signIn && !signOut}
-      onClick={buttonAction}
-    >
-      {signIn ? 'Sign In' : signOut ? 'Log Out' : '...'}
-    </button>
-  );
+  if (signOut) {
+    return (
+      <button
+        className="btn btn-primary btn-lg"
+        disabled={!signOut}
+        onClick={() => {
+          console.log('signOut', signOut);
+          signOut();
+        }}
+      >
+        {signOut ? 'Log Out' : '...'}
+      </button>
+    );
+  } else {
+    return null;
+  }
 }

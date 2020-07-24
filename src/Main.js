@@ -4,13 +4,25 @@ import Profile from './Profile';
 import { SpendField } from './SpendField';
 import { BetButton } from './BetButton';
 import { OwnerAddressSpendField } from './OwnerAddressSpendField';
+import { useBlockstack } from 'react-blockstack';
+import { getStacksAccount } from './StacksAccount';
+import { addressToString } from '@blockstack/stacks-transactions';
 
 export default function Main(props) {
+  const { userData } = useBlockstack();
+  const { address } = getStacksAccount(userData.appPrivateKey);
+  const appStxAddress = addressToString(address);
+  const ownerStxAddress = userData.profile.stxAddress;
   return (
     <main className="panel-welcome mt-5 container">
       <div className="row">
         <div className="mx-auto col-sm-10 col-md-8 px-4">
-          <Profile />
+          <Profile
+            stxAddresses={{
+              appStxAddress: appStxAddress,
+              ownerStxAddress: ownerStxAddress,
+            }}
+          />
         </div>
       </div>
       <div className="col-xs-10 col-md-8 mx-auto  px-4">
@@ -24,7 +36,12 @@ export default function Main(props) {
           <SpendField title="Send 1000 uSTX to" path="note" placeholder="Username" />
         </div>
         <div className="col-xs-10 col-md-8 mx-auto px-4">
-          <OwnerAddressSpendField title="Send 1000 uSTX to" path="note" placeholder="Username" />
+          <OwnerAddressSpendField
+            title="Send 1000 uSTX to"
+            path="note"
+            placeholder="Username"
+            stxAddress={ownerStxAddress}
+          />
         </div>
 
         <div className="card col-md-8 mx-auto mt-5 mb-5 text-center px-0 border-warning">

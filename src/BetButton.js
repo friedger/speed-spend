@@ -33,40 +33,42 @@ export function BetButton({ jackpot }) {
   const [jackpotValue, setJackpotValue] = useState();
 
   useEffect(() => {
-    const userData = userSession.loadUserData();
-    const appPrivateKey = userData.appPrivateKey;
-    const id = getStacksAccount(appPrivateKey);
-    setIdentity(id);
-    fetchAccount(addressToString(id.address))
-      .catch(e => {
-        setStatus('Failed to access your account', e);
-        console.log(e);
-      })
-      .then(async acc => {
-        setAccount(acc);
-        console.log({ acc });
-      });
-    fetch(
-      `${NETWORK.coreApiUrl}/v2/contracts/call-read/${CONTRACT_ADDRESS}/flip-coin-jackpot/get-jackpot`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: `{"sender":"${addressToString(id.address)}","arguments":[]}`,
-      }
-    )
-      .then(response => response.json())
-      .then(jackpot => {
-        console.log({ jackpot });
-        if (jackpot.okay) {
-          const cv = deserializeCV(Buffer.from(jackpot.result.substr(2), 'hex'));
-
-          if (cv.value) {
-            setJackpotValue(cv.value);
-          }
+    if (userSession.isUserSignedIn()) {
+      const userData = userSession.loadUserData();
+      const appPrivateKey = userData.appPrivateKey;
+      const id = getStacksAccount(appPrivateKey);
+      setIdentity(id);
+      fetchAccount(addressToString(id.address))
+        .catch(e => {
+          setStatus('Failed to access your account', e);
+          console.log(e);
+        })
+        .then(async acc => {
+          setAccount(acc);
+          console.log({ acc });
+        });
+      fetch(
+        `${NETWORK.coreApiUrl}/v2/contracts/call-read/${CONTRACT_ADDRESS}/flip-coin-jackpot/get-jackpot`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: `{"sender":"${addressToString(id.address)}","arguments":[]}`,
         }
-      });
+      )
+        .then(response => response.json())
+        .then(jackpot => {
+          console.log({ jackpot });
+          if (jackpot.okay) {
+            const cv = deserializeCV(Buffer.from(jackpot.result.substr(2), 'hex'));
+
+            if (cv.value) {
+              setJackpotValue(cv.value);
+            }
+          }
+        });
+    }
   }, [userSession]);
 
   const betAction = async () => {

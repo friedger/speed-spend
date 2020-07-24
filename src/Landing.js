@@ -1,17 +1,11 @@
-import React, { useCallback } from 'react';
-import { BlockstackButton } from 'react-blockstack-button';
-import { useConnectOptions, useBlockstack } from 'react-blockstack';
-import { showBlockstackConnect } from '@blockstack/connect';
-import { connectOptions } from './UserSession';
+import React from 'react';
+import { useConnect } from '@blockstack/connect';
 
 // Landing page demonstrating Blockstack connect for registration
 
 export default function Landing(props) {
-  const { userSession } = useBlockstack();
-  const authOptions = useConnectOptions(connectOptions(userSession));
-  const signIn = useCallback(() => {
-    showBlockstackConnect(authOptions);
-  }, [authOptions]);
+  const { doOpenAuth } = useConnect();
+
   return (
     <div className="Landing">
       <div className="jumbotron jumbotron-fluid pt-3 mb-0">
@@ -30,14 +24,12 @@ export default function Landing(props) {
                 open source
               </a>{' '}
               web app with the purpose of{' '}
-              <strong>
-                helping everybody quickly test the Stacks Testnet.
-              </strong>
+              <strong>helping everybody quickly test the Stacks Testnet.</strong>
             </p>
 
             <div className="card mt-4 border-info">
               <div className="card-header">
-                <h5 className="card-title">About Stacks Testnet (Neon)</h5>
+                <h5 className="card-title">About Stacks Testnet (Argon)</h5>
               </div>
               <div className="row">
                 <div className="col col-md-12 p-4">
@@ -48,11 +40,10 @@ export default function Landing(props) {
                   >
                     Stack Testnet
                   </a>{' '}
-                  is blockchain based on Proof of Transfer. The testnet is
-                  initiated by Blockstack PBC, a New York based public benefit
-                  corporation. In the current phase <i>Neon</i> all nodes
-                  validate the network, only one node is mining new blocks and
-                  all nodes connect to the same bitcoin regtest node.
+                  is blockchain based on Proof of Transfer. The testnet is initiated by Blockstack
+                  PBC, a New York based public benefit corporation. In the current phase{' '}
+                  <i>Argon</i> all nodes validate the network, only one node is mining new blocks
+                  and all nodes connect to the same bitcoin regtest node.
                 </div>
               </div>
             </div>
@@ -64,17 +55,17 @@ export default function Landing(props) {
               <div className="card-body">
                 <p className="card-text mb-3">
                   Distribute your money as quickly as possible.
-                  <br />A STX address is created automatically after login
-                  (using your app private key) and published using your Gaia
-                  storage. Get some tokens for this address from the faucet and
-                  send them as quickly as possible by entering a blockstack
-                  username of a friend (who has already published the STX
-                  address).
+                  <br />A STX address is created automatically after login (using your app private
+                  key) and published using your Gaia storage. Get some tokens for this address from
+                  the faucet and send them as quickly as possible by entering a blockstack username
+                  of a friend (who has already published the STX address).
                 </p>
               </div>
 
               <p className="card-link mb-5">
-                <BlockstackButton onClick={signIn} />
+                <button className="btn btn-outline-primary" type="button" onClick={doOpenAuth}>
+                  Start now
+                </button>
               </p>
 
               <div className="card-footer text-info">

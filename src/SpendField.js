@@ -93,7 +93,7 @@ export function SpendField({ title, path, placeholder }) {
 
   return (
     <div>
-      Send Test STXs
+      Send Test STXs (from your app Stacks address)
       <div className="NoteField input-group ">
         <div className="input-group-prepend">
           <span className="input-group-text">{title}</span>
