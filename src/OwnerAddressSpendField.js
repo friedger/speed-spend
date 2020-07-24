@@ -37,9 +37,7 @@ export function OwnerAddressSpendField({ title, path, placeholder, stxAddress })
     }
 
     // check recipient
-    const recipient = (await getUserAddress(userSession, username)) || {
-      address: 'ST12EY99GS4YKP0CP2CFW6SEPWQ2CGVRWK5GHKDRV',
-    };
+    const recipient = await getUserAddress(userSession, username);
     if (!recipient) {
       setStatus(`Recipient ${usernameString} has not yet used the app`);
       spinner.current.classList.add('d-none');

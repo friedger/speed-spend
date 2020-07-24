@@ -10,16 +10,9 @@ function afterSTXAddressPublished() {
   console.log('STX address published');
 }
 
-export const finished = onDidConnect => ({ userSession }) => {
-  didConnect({ userSession });
-  onDidConnect({ userSession });
-  console.log(userSession.loadUserData());
-
-  const userData = userSession.loadUserData();
-  const { address } = getStacksAccount(userData.appPrivateKey);
-  console.log(JSON.stringify({ address: addressToString(address) }));
+export function putStxAddress(userSession, address) {
   userSession
-    .putFile(STX_JSON_PATH, JSON.stringify({ address: addressToString(address) }), {
+    .putFile(STX_JSON_PATH, JSON.stringify({ address }), {
       encrypt: false,
     })
     .then(() => afterSTXAddressPublished())
@@ -28,7 +21,7 @@ export const finished = onDidConnect => ({ userSession }) => {
       console.log('STX address NOT published, retrying');
       userSession.deleteFile(STX_JSON_PATH).then(() => {
         userSession
-          .putFile(STX_JSON_PATH, JSON.stringify({ address: addressToString(address) }), {
+          .putFile(STX_JSON_PATH, JSON.stringify({ address }), {
             encrypt: false,
           })
           .then(() => afterSTXAddressPublished())
@@ -38,6 +31,17 @@ export const finished = onDidConnect => ({ userSession }) => {
           });
       });
     });
+}
+
+export const finished = onDidConnect => ({ userSession }) => {
+  didConnect({ userSession });
+  onDidConnect({ userSession });
+  console.log(userSession.loadUserData());
+
+  const userData = userSession.loadUserData();
+  const { address } = getStacksAccount(userData.appPrivateKey);
+  console.log(JSON.stringify({ address: addressToString(address) }));
+  putStxAddress(userSession, addressToString(address));
 };
 
 export const connectOptions = onDidConnect => {

@@ -9,6 +9,7 @@ import {
 
 import { getStacksAccount, fetchAccount, NETWORK, resultToStatus } from './StacksAccount';
 import { getUserAddress } from './StacksAccount';
+import { putStxAddress } from './UserSession';
 const BigNum = require('bn.js');
 
 export function SpendField({ title, path, placeholder }) {
@@ -23,8 +24,9 @@ export function SpendField({ title, path, placeholder }) {
     const userData = userSession.loadUserData();
     const appPrivateKey = userData.appPrivateKey;
     const id = getStacksAccount(appPrivateKey);
+    const addrAsString = addressToString(id.address);
     setIdentity(id);
-    fetchAccount(addressToString(id.address))
+    fetchAccount(addrAsString)
       .catch(e => {
         setStatus('Failed to access your account', e);
         console.log(e);
@@ -36,9 +38,7 @@ export function SpendField({ title, path, placeholder }) {
         console.log(address);
 
         if (!address) {
-          setStatus(
-            'Warning: Your STX was not published. Try re-signin or contact your "Secret Key" provider!'
-          );
+          putStxAddress(userSession, addrAsString);
         }
       });
   }, [userSession]);
