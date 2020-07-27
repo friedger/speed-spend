@@ -28,7 +28,7 @@ export default function Jackpot(props) {
       </div>
       <div className="lead row mt-5">
         <div className="col-xs-10 col-md-8 mx-auto px-4">
-          <h5 className="card-title">Flip Coin with Jackpot</h5>
+          <h1 className="card-title">Flip Coin with Jackpot</h1>
         </div>
         <div className="col-xs-10 col-md-8 mx-auto mb-4 px-4">
           <BetButton jackpot={true} ownerStxAddress={ownerStxAddress} />

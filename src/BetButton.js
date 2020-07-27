@@ -78,12 +78,12 @@ export function BetButton({ jackpot, ownerStxAddress }) {
     const acc = await fetchAccount(addressToString(identity.address));
     const balance = acc ? parseInt(acc.balance, 16) : 0;
     if (balance < 1000) {
-      setStatus('Your balance is below 1000 uSTX');
+      setStatus('Your hodl balance is below 1000 uSTX');
       spinner.current.classList.add('d-none');
       return;
     }
 
-    console.log(`Betting on ${betValue} using jackpot ${jackpot} ${ownerStxAddress}`);
+    console.log(`Betting on ${betValue} using jackpot ${jackpot}`);
 
     try {
       doContractCall({
@@ -121,6 +121,7 @@ export function BetButton({ jackpot, ownerStxAddress }) {
 
   return (
     <div>
+      <div className="pb-4">Note, you need to hodl 1000uSTX or more!</div>
       Bet 1000uSTX on "HEADS" ("true") or "TAILS" ("false") and{' '}
       {jackpot ? (
         <>get the jackpot {jackpotValue ? <> of {jackpotValue.toString(10)}</> : null}</>

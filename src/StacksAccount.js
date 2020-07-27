@@ -62,7 +62,7 @@ export function resultToStatus(result) {
 export function txIdToStatus(txId) {
   return (
     <>
-      Check transaction status:
+      Check transaction status:{' '}
       <a href={`https://testnet-explorer.blockstack.org/txid/0x${txId}`}>{txId}</a>
     </>
   );

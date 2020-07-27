@@ -80,7 +80,7 @@ export function UnHodlButton({ title, placeholder, ownerStxAddress }) {
 
   return (
     <div>
-      Unhodl (from your app address to your own address)
+      Unhodl (from your app hodl address to your own address)
       <div className="NoteField input-group ">
         <input
           type="decimal"

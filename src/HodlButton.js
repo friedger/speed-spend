@@ -61,7 +61,7 @@ export function HodlButton({ title, path, placeholder, ownerStxAddress, appStxAd
 
   return (
     <div>
-      Hodl (from your own address to your app address)
+      Hodl (from your own address to your app hodl address)
       <div className="NoteField input-group ">
         <input
           type="decimal"

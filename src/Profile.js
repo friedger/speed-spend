@@ -29,10 +29,10 @@ export default function Profile({ stxAddresses }) {
           alt="Avatar"
         />
       </div>
-      <h1 className="text-center mt-2">
+      <div className="text-center mt-2">
         Hello,{' '}
         <span id="heading-name">{(person && person.name()) || username || 'Stacks Tester'}</span>!
-      </h1>
+      </div>
       {username && (
         <>
           Your Blockstack username is {username} <br />

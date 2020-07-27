@@ -29,7 +29,7 @@ export default function Main(props) {
       </div>
       <div className="lead row mt-5">
         <div className="col-xs-10 col-md-8 mx-auto px-4">
-          <h5 className="card-title">Speed Spend</h5>
+          <h1 className="card-title">Speed Spend</h1>
         </div>
         <div className="col-xs-10 col-md-8 mx-auto px-4">
           <SpendField title="Send 1000 uSTX to" path="note" placeholder="Username" />
