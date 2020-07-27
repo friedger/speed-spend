@@ -12,7 +12,7 @@ import { getUserAddress } from './StacksAccount';
 import { putStxAddress } from './UserSession';
 const BigNum = require('bn.js');
 
-export function SpendField({ title, path, placeholder }) {
+export function UnHodlButton({ title, placeholder, ownerStxAddress }) {
   const { userSession } = useBlockstack();
   const textfield = useRef();
   const spinner = useRef();
@@ -46,35 +46,22 @@ export function SpendField({ title, path, placeholder }) {
   const sendAction = async () => {
     spinner.current.classList.remove('d-none');
 
-    var username = textfield.current.value.trim();
-    var usernameString = username;
-    if (username.indexOf('.') < 0) {
-      usernameString = `${username} (${username}.id.blockstack)`;
-      username = `${username}.id.blockstack`;
-    }
-
-    // check recipient
-    const recipient = await getUserAddress(userSession, username);
-    if (!recipient) {
-      setStatus(`Recipient ${usernameString} has not yet used the app`);
-      spinner.current.classList.add('d-none');
-      return;
-    }
+    var amountString = textfield.current.value.trim();
+    const amount = parseInt(amountString);
 
     // check balance
     const acc = await fetchAccount(addressToString(identity.address));
     const balance = acc ? parseInt(acc.balance, 16) : 0;
-    if (balance < 1000) {
-      setStatus('Your balance is below 1000 uSTX');
+    if (balance < amount) {
+      setStatus(`Your balance is below ${amount} uSTX`);
       spinner.current.classList.add('d-none');
       return;
     }
 
-    console.log('STX address of recipient ' + recipient.address);
     try {
       const transaction = await makeSTXTokenTransfer({
-        recipient: recipient.address,
-        amount: new BigNum(1000),
+        recipient: ownerStxAddress,
+        amount: new BigNum(amount),
         senderKey: privateKeyToString(identity.privateKey),
         network: NETWORK,
       });
@@ -93,13 +80,10 @@ export function SpendField({ title, path, placeholder }) {
 
   return (
     <div>
-      Send Test STXs (from your app Stacks address)
+      Unhodl (from your app address to your own address)
       <div className="NoteField input-group ">
-        <div className="input-group-prepend">
-          <span className="input-group-text">{title}</span>
-        </div>
         <input
-          type="text"
+          type="decimal"
           ref={textfield}
           className="form-control"
           defaultValue={''}
@@ -119,7 +103,7 @@ export function SpendField({ title, path, placeholder }) {
               role="status"
               className="d-none spinner-border spinner-border-sm text-info align-text-top mr-2"
             />
-            Send
+            UnHold
           </button>
         </div>
       </div>

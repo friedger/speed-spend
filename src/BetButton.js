@@ -1,16 +1,14 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useBlockstack } from 'react-blockstack';
 import {
-  makeContractCall,
-  privateKeyToString,
   addressToString,
   trueCV,
   falseCV,
-  broadcastTransaction,
   makeStandardSTXPostCondition,
   FungibleConditionCode,
   makeContractSTXPostCondition,
   deserializeCV,
+  PostConditionMode,
 } from '@blockstack/stacks-transactions';
 import Switch from 'react-input-switch';
 
@@ -19,12 +17,14 @@ import {
   fetchAccount,
   NETWORK,
   CONTRACT_ADDRESS,
-  resultToStatus,
+  txIdToStatus,
 } from './StacksAccount';
+import { useConnect } from '@blockstack/connect';
 const BigNum = require('bn.js');
 
-export function BetButton({ jackpot }) {
+export function BetButton({ jackpot, ownerStxAddress }) {
   const { userSession } = useBlockstack();
+  const { doContractCall } = useConnect();
   const spinner = useRef();
   const [betValue, setBetValue] = useState(0);
   const [status, setStatus] = useState();
@@ -83,19 +83,18 @@ export function BetButton({ jackpot }) {
       return;
     }
 
-    console.log(`Betting on ${betValue} using jackpot ${jackpot}`);
+    console.log(`Betting on ${betValue} using jackpot ${jackpot} ${ownerStxAddress}`);
 
     try {
-      const transaction = await makeContractCall({
+      doContractCall({
         contractAddress: CONTRACT_ADDRESS,
         contractName: jackpot ? 'flip-coin-jackpot' : 'flip-coin-at-two',
         functionName: 'bet',
         functionArgs: [betValue ? trueCV() : falseCV()],
-        senderKey: privateKeyToString(identity.privateKey),
         network: NETWORK,
         postConditions: [
           makeStandardSTXPostCondition(
-            addressToString(identity.address),
+            ownerStxAddress,
             FungibleConditionCode.LessEqual,
             new BigNum(1000)
           ),
@@ -106,12 +105,13 @@ export function BetButton({ jackpot }) {
             new BigNum(0)
           ),
         ],
+        postConditionMode: PostConditionMode.Deny,
+        finished: result => {
+          console.log(result);
+          spinner.current.classList.add('d-none');
+          setStatus(txIdToStatus(result.txId));
+        },
       });
-      console.log(transaction);
-      const result = await broadcastTransaction(transaction, NETWORK);
-      console.log(result);
-      spinner.current.classList.add('d-none');
-      setStatus(resultToStatus(result));
     } catch (e) {
       console.log(e);
       setStatus(e.toString());

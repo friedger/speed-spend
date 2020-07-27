@@ -37,16 +37,23 @@ export default function Profile({ stxAddresses }) {
           Your Blockstack username is {username} <br />
         </>
       )}
-      Your app Stacks address:
-      <br />
-      <StxProfile stxAddress={stxAddresses.appStxAddress} updateStatus={updateStatus}></StxProfile>
-      <br />
-      Your own Stacks address:
-      <br />
-      <StxProfile
-        stxAddress={stxAddresses.ownerStxAddress}
-        updateStatus={updateStatus}
-      ></StxProfile>
+      <div className="pt-4">
+        Your Hodl amount for Speed Spend app:
+        <br />
+        <StxProfile
+          stxAddress={stxAddresses.appStxAddress}
+          updateStatus={updateStatus}
+        ></StxProfile>
+      </div>
+      <div className="pt-4">
+        Your own Stacks address:
+        <br />
+        <StxProfile
+          stxAddress={stxAddresses.ownerStxAddress}
+          updateStatus={updateStatus}
+          showAddress
+        ></StxProfile>
+      </div>
       {status && (
         <>
           <br />
@@ -57,7 +64,7 @@ export default function Profile({ stxAddresses }) {
   );
 }
 
-function StxProfile({ stxAddress, updateStatus }) {
+function StxProfile({ stxAddress, updateStatus, showAddress }) {
   const spinner = useRef();
   const faucetSpinner = useRef();
 
@@ -110,7 +117,7 @@ function StxProfile({ stxAddress, updateStatus }) {
 
   return (
     <>
-      {stxAddress && (
+      {stxAddress && showAddress && (
         <>
           {stxAddress} <br />
         </>
@@ -133,20 +140,22 @@ function StxProfile({ stxAddress, updateStatus }) {
           className="d-none spinner-border spinner-border-sm text-info align-text-top mr-2"
         />
         Refresh balance
-      </button>{' '}
-      <button
-        className="btn btn-outline-secondary mt-1"
-        onClick={() => {
-          claimTestTokens(stxAddress);
-        }}
-      >
-        <div
-          ref={faucetSpinner}
-          role="status"
-          className="d-none spinner-border spinner-border-sm text-info align-text-top mr-2"
-        />
-        Claim test tokens from faucet
       </button>
+      {showAddress && (
+        <button
+          className="btn btn-outline-secondary mt-1"
+          onClick={() => {
+            claimTestTokens(stxAddress);
+          }}
+        >
+          <div
+            ref={faucetSpinner}
+            role="status"
+            className="d-none spinner-border spinner-border-sm text-info align-text-top mr-2"
+          />
+          Claim test tokens from faucet
+        </button>
+      )}
     </>
   );
 }

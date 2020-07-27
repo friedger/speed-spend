@@ -7,6 +7,8 @@ import { OwnerAddressSpendField } from './OwnerAddressSpendField';
 import { useBlockstack } from 'react-blockstack';
 import { getStacksAccount } from './StacksAccount';
 import { addressToString } from '@blockstack/stacks-transactions';
+import { UnHodlButton } from './UnHodlButton';
+import { HodlButton } from './HodlButton';
 
 export default function Main(props) {
   const { userData } = useBlockstack();
@@ -43,7 +45,17 @@ export default function Main(props) {
             stxAddress={ownerStxAddress}
           />
         </div>
-
+        <div className="col-xs-10 col-md-8 mx-auto px-4">
+          <h5 className="card-title pt-4">Hodl - Send between your own accounts</h5>
+        </div>
+        <div className="col-xs-10 col-md-8 mx-auto px-4">
+          <HodlButton
+            placeholder="amount"
+            ownerStxAddress={ownerStxAddress}
+            appStxAddress={appStxAddress}
+          />
+          <UnHodlButton placeholder="amount" ownerStxAddress={ownerStxAddress} />
+        </div>
         <div className="card col-md-8 mx-auto mt-5 mb-5 text-center px-0 border-warning">
           <div className="card-header">
             <h5 className="card-title">Instructions</h5>
@@ -77,7 +89,7 @@ export default function Main(props) {
           <h5 className="card-title">Flip Coin with Jackpot</h5>
         </div>
         <div className="col-xs-10 col-md-8 mx-auto mb-4 px-4">
-          <BetButton jackpot={true} />
+          <BetButton jackpot={true} ownerStxAddress={ownerStxAddress} />
         </div>
 
         <div className="card col-md-8 mx-auto mt-5 mb-5 text-center px-0 border-warning">
@@ -131,7 +143,7 @@ export default function Main(props) {
         </div>
 
         <div className="col-xs-10 col-md-8 mx-auto mb-4 px-4">
-          <BetButton jackpot={false} />
+          <BetButton jackpot={false} ownerStxAddress={ownerStxAddress} />
         </div>
 
         <div className="card col-md-8 mx-auto mt-5 mb-5 text-center px-0 border-warning">

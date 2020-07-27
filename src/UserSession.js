@@ -8,32 +8,39 @@ export const STX_JSON_PATH = 'stx.json';
 
 function afterSTXAddressPublished() {
   console.log('STX address published');
+  stxAddressSemaphore.putting = false;
 }
 
+const stxAddressSemaphore = { putting: false };
 export function putStxAddress(userSession, address) {
-  userSession
-    .putFile(STX_JSON_PATH, JSON.stringify({ address }), {
-      encrypt: false,
-    })
-    .then(() => afterSTXAddressPublished())
-    .catch(r => {
-      console.log(r);
-      console.log('STX address NOT published, retrying');
-      userSession.deleteFile(STX_JSON_PATH).then(() => {
-        userSession
-          .putFile(STX_JSON_PATH, JSON.stringify({ address }), {
-            encrypt: false,
-          })
-          .then(() => afterSTXAddressPublished())
-          .catch(r => {
-            console.log('STX address NOT published');
-            console.log(r);
-          });
+  if (!stxAddressSemaphore.putting) {
+    stxAddressSemaphore.putting = true;
+    userSession
+      .putFile(STX_JSON_PATH, JSON.stringify({ address }), {
+        encrypt: false,
+      })
+      .then(() => afterSTXAddressPublished())
+      .catch(r => {
+        console.log(r);
+        console.log('STX address NOT published, retrying');
+        userSession.getFile(STX_JSON_PATH, { decrypt: false }).then(s => {
+          console.log({ s });
+          userSession
+            .putFile(STX_JSON_PATH, JSON.stringify({ address }), {
+              encrypt: false,
+            })
+            .then(() => afterSTXAddressPublished())
+            .catch(r => {
+              console.log('STX address NOT published');
+              console.log(r);
+              stxAddressSemaphore.putting = false;
+            });
+        });
       });
-    });
+  }
 }
 
-export const finished = onDidConnect => ({ userSession }) => {
+export const finished = async onDidConnect => ({ userSession }) => {
   didConnect({ userSession });
   onDidConnect({ userSession });
   console.log(userSession.loadUserData());

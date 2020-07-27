@@ -38,7 +38,7 @@ export async function getUserAddress(userSession, username) {
       username: username,
     })
     .then(r => JSON.parse(r))
-    .catch(e => console.log(e));
+    .catch(e => console.log(e, username));
 }
 
 export function fetchAccount(addressAsString) {
@@ -52,14 +52,18 @@ export function fetchAccount(addressAsString) {
 
 export function resultToStatus(result) {
   if (result && result.startsWith('"') && result.length === 66) {
-    const txid = result.substr(1, 64);
-    return (
-      <>
-        Check transaction status:
-        <a href={`https://testnet-explorer.blockstack.org/txid/0x${txid}`}>{txid}</a>
-      </>
-    );
+    const txId = result.substr(1, 64);
+    txIdToStatus(txId);
   } else {
     return result;
   }
+}
+
+export function txIdToStatus(txId) {
+  return (
+    <>
+      Check transaction status:
+      <a href={`https://testnet-explorer.blockstack.org/txid/0x${txId}`}>{txId}</a>
+    </>
+  );
 }

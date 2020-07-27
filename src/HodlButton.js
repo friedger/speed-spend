@@ -1,65 +1,47 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { useBlockstack } from 'react-blockstack';
 
 import { fetchAccount, txIdToStatus } from './StacksAccount';
-import { getUserAddress } from './StacksAccount';
 import { useConnect } from '@blockstack/connect';
 const BigNum = require('bn.js');
 
-export function OwnerAddressSpendField({ title, path, placeholder, stxAddress }) {
-  const { userSession } = useBlockstack();
+export function HodlButton({ title, path, placeholder, ownerStxAddress, appStxAddress }) {
   const { doSTXTransfer } = useConnect();
   const textfield = useRef();
   const spinner = useRef();
   const [status, setStatus] = useState();
-  const [account, setAccount] = useState();
 
   useEffect(() => {
-    fetchAccount(stxAddress)
+    fetchAccount(ownerStxAddress)
       .catch(e => {
         setStatus('Failed to access your account', e);
         console.log(e);
       })
       .then(async acc => {
-        setAccount(acc);
         console.log({ acc });
       });
-  }, [stxAddress]);
+  }, [ownerStxAddress]);
 
   const sendAction = async () => {
     spinner.current.classList.remove('d-none');
 
-    var username = textfield.current.value.trim();
-    var usernameString = username;
-    if (username.indexOf('.') < 0) {
-      usernameString = `${username} (${username}.id.blockstack)`;
-      username = `${username}.id.blockstack`;
-    }
-
-    // check recipient
-    const recipient = await getUserAddress(userSession, username);
-    if (!recipient) {
-      setStatus(`Recipient ${usernameString} has not yet used the app`);
-      spinner.current.classList.add('d-none');
-      return;
-    }
+    var amountAsString = textfield.current.value.trim();
+    var amount = parseInt(amountAsString);
 
     // check balance
-    const acc = await fetchAccount(stxAddress);
+    const acc = await fetchAccount(ownerStxAddress);
     const balance = acc ? parseInt(acc.balance, 16) : 0;
-    if (balance < 1000) {
-      setStatus('Your balance is below 1000 uSTX');
+    if (balance < amount) {
+      setStatus(`Your balance is below ${amount} uSTX`);
       spinner.current.classList.add('d-none');
       return;
     }
 
-    console.log('STX address of recipient ' + recipient.address);
     try {
       setStatus(`Sending transaction`);
 
       await doSTXTransfer({
-        recipient: recipient.address,
-        amount: new BigNum(1000),
+        recipient: appStxAddress,
+        amount: new BigNum(amount),
         appDetails: {
           name: 'Speed Spend',
           icon: 'https://speed-spend.netlify.app/speedspend.png',
@@ -79,18 +61,14 @@ export function OwnerAddressSpendField({ title, path, placeholder, stxAddress })
 
   return (
     <div>
-      Send Test STXs (from your own Stacks address)
+      Hodl (from your own address to your app address)
       <div className="NoteField input-group ">
-        <div className="input-group-prepend">
-          <span className="input-group-text">{title}</span>
-        </div>
         <input
-          type="text"
+          type="decimal"
           ref={textfield}
           className="form-control"
           defaultValue={''}
           placeholder={placeholder}
-          disabled={!account}
           onKeyUp={e => {
             if (e.key === 'Enter') sendAction();
           }}
@@ -105,7 +83,7 @@ export function OwnerAddressSpendField({ title, path, placeholder, stxAddress })
               role="status"
               className="d-none spinner-border spinner-border-sm text-info align-text-top mr-2"
             />
-            Send
+            Hodl
           </button>
         </div>
       </div>
