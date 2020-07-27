@@ -1,14 +1,10 @@
 import React from 'react';
 import Profile from '../Profile';
 
-import { SpendField } from '../SpendField';
 import { BetButton } from '../BetButton';
-import { OwnerAddressSpendField } from '../OwnerAddressSpendField';
 import { useBlockstack } from 'react-blockstack';
 import { getStacksAccount } from '../StacksAccount';
 import { addressToString } from '@blockstack/stacks-transactions';
-import { UnHodlButton } from '../UnHodlButton';
-import { HodlButton } from '../HodlButton';
 
 export default function Jackpot(props) {
   const { userData } = useBlockstack();

@@ -1,4 +1,4 @@
-import React, { useRef, useState, useCallback } from 'react';
+import React, { useRef, useState, useCallback, useEffect } from 'react';
 import { useBlockstack } from 'react-blockstack';
 import { fetchAccount } from './StacksAccount';
 
@@ -92,6 +92,12 @@ function StxProfile({ stxAddress, updateStatus, showAddress }) {
     },
     [updateStatus]
   );
+
+  useEffect(() => {
+    fetchAccount(stxAddress).then(acc => {
+      setProfileState({ account: acc });
+    });
+  }, [stxAddress]);
 
   const claimTestTokens = stxAddr => {
     updateStatus(undefined);
