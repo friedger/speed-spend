@@ -22,8 +22,8 @@ export default function App(props) {
 
   return (
     <Connect
-      authOptions={useConnectOptions(connectOptions, ({ userSession }) =>
-        setUserSession(userSession)
+      authOptions={useConnectOptions(
+        connectOptions(({ userSession }) => setUserSession(userSession))
       )}
     >
       <Content userSession={userSession} />
