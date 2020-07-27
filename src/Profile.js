@@ -30,7 +30,8 @@ export default function Profile({ stxAddresses }) {
         />
       </div>
       <h1 className="text-center mt-2">
-        Hello, <span id="heading-name">{(person && person.name()) || 'Stacks Tester'}</span>!
+        Hello,{' '}
+        <span id="heading-name">{(person && person.name()) || username || 'Stacks Tester'}</span>!
       </h1>
       {username && (
         <>
