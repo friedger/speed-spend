@@ -14,8 +14,11 @@ import Auth from './Auth.js';
 const blockstack = ReactBlockstack({ appConfig });
 (() => {
   if (blockstack.userSession.isSignInPending()) {
-    blockstack.userSession.handlePendingSignIn();
-    finished(() => {});
+    blockstack.userSession.handlePendingSignIn().then(userData => {
+      finished(() => {
+        console.log('handling pending sign in on launch');
+      })({ userSession: blockstack.userSession });
+    });
   }
 })();
 

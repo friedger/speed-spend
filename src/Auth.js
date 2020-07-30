@@ -4,7 +4,7 @@ import { useBlockstack } from 'react-blockstack';
 // Authentication button adapting to status
 
 export default function Auth(props) {
-  const { signOut } = useBlockstack();
+  const { signIn, signOut, userSession } = useBlockstack();
 
   if (signOut) {
     return (
@@ -12,8 +12,9 @@ export default function Auth(props) {
         className="btn btn-primary btn-lg"
         disabled={!signOut}
         onClick={() => {
-          console.log('signOut', signOut);
+          console.log('signOut');
           signOut();
+          userSession.signUserOut('/');
         }}
       >
         {signOut ? 'Log Out' : '...'}

@@ -40,7 +40,7 @@ export function putStxAddress(userSession, address) {
   }
 }
 
-export const finished = async onDidConnect => ({ userSession }) => {
+export const finished = onDidConnect => ({ userSession }) => {
   didConnect({ userSession });
   onDidConnect({ userSession });
   console.log(userSession.loadUserData());
