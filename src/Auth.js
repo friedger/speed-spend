@@ -4,7 +4,7 @@ import { useBlockstack } from 'react-blockstack';
 // Authentication button adapting to status
 
 export default function Auth(props) {
-  const { signIn, signOut, userSession } = useBlockstack();
+  const { signOut, userSession } = useBlockstack();
 
   if (signOut) {
     return (
