@@ -86,25 +86,30 @@ export function BetButton({ jackpot, ownerStxAddress }) {
     console.log(`Betting on ${betValue} using jackpot ${jackpot}`);
 
     try {
+      const postConditions = [
+        makeStandardSTXPostCondition(
+          ownerStxAddress,
+          FungibleConditionCode.LessEqual,
+          new BigNum(2000)
+        ),
+        makeContractSTXPostCondition(
+          CONTRACT_ADDRESS,
+          jackpot ? 'flip-coin-jackpot' : 'flip-coin-at-two',
+          FungibleConditionCode.GreaterEqual,
+          new BigNum(0)
+        ),
+      ];
+
+      console.log({ postConditions });
+      console.log(postConditions.map(p => addressToString(p.principal.address)));
+
       doContractCall({
         contractAddress: CONTRACT_ADDRESS,
         contractName: jackpot ? 'flip-coin-jackpot' : 'flip-coin-at-two',
         functionName: 'bet',
         functionArgs: [betValue ? trueCV() : falseCV()],
         network: NETWORK,
-        postConditions: [
-          makeStandardSTXPostCondition(
-            ownerStxAddress,
-            FungibleConditionCode.LessEqual,
-            new BigNum(1000)
-          ),
-          makeContractSTXPostCondition(
-            CONTRACT_ADDRESS,
-            jackpot ? 'flip-coin-jackpot' : 'flip-coin-at-two',
-            FungibleConditionCode.GreaterEqual,
-            new BigNum(0)
-          ),
-        ],
+        postConditions: postConditions,
         postConditionMode: PostConditionMode.Deny,
         finished: result => {
           console.log(result);
