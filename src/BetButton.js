@@ -58,11 +58,10 @@ export function BetButton({ jackpot, ownerStxAddress }) {
         }
       )
         .then(response => response.json())
-        .then(jackpot => {
-          console.log({ jackpot });
-          if (jackpot.okay) {
-            const cv = deserializeCV(Buffer.from(jackpot.result.substr(2), 'hex'));
-
+        .then(getJackpot => {
+          console.log({ getJackpot });
+          if (getJackpot.okay) {
+            const cv = deserializeCV(Buffer.from(getJackpot.result.substr(2), 'hex'));
             if (cv.value) {
               setJackpotValue(cv.value);
             }
@@ -110,7 +109,7 @@ export function BetButton({ jackpot, ownerStxAddress }) {
         functionArgs: [betValue ? trueCV() : falseCV()],
         network: NETWORK,
         postConditions: postConditions,
-        postConditionMode: PostConditionMode.Deny,
+        postConditionMode: PostConditionMode.Allow,
         finished: result => {
           console.log(result);
           spinner.current.classList.add('d-none');
