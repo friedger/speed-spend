@@ -1030,12 +1030,12 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
-"@blockstack/connect@^2.9.0":
-  version "2.9.0"
-  resolved "https://registry.yarnpkg.com/@blockstack/connect/-/connect-2.9.0.tgz#4921c8d4843ae2d682f6e14949c435bed710f88b"
-  integrity sha512-c8oGBtDre3WV/Na7yCiGEWLio6q/T7dTCFs7JHc+8Y0TfY9IGTerI9JFnfgSkalCfldGQ9FR3Ortbx+9AoO9VQ==
+"@blockstack/connect@^2.10.5":
+  version "2.10.5"
+  resolved "https://registry.yarnpkg.com/@blockstack/connect/-/connect-2.10.5.tgz#c4745e338280261388f8a7b6fb127dcc7acb6fb7"
+  integrity sha512-eGkAJ0dcPAR9me/YiIJcGU5kN/owFgFJjG0ydrQDlYgV167YtG5GDwWXU2gGDPrlrMzdj8OdLlDrMrIahy8MGQ==
   dependencies:
-    "@blockstack/ui" "^2.11.0"
+    "@blockstack/ui" "^2.12.5"
     jsontokens "^3.0.0"
     preact "^10.4.0"
     styled-components "^5.1.0"
@@ -1068,10 +1068,10 @@
     sha.js "^2.4.11"
     smart-buffer "^4.1.0"
 
-"@blockstack/ui@^2.11.0":
-  version "2.11.0"
-  resolved "https://registry.yarnpkg.com/@blockstack/ui/-/ui-2.11.0.tgz#cec68b8c14b30af3c80c5d6141ccddc207f3b1d9"
-  integrity sha512-Ia/MspEjeyXepS0mRNRNOmBrNiSQZChtsh9lVjmehPvkREoygeQmOUVuW32114HJzsgqaQpDZHbq2DAXqRXjKg==
+"@blockstack/ui@^2.12.5":
+  version "2.12.5"
+  resolved "https://registry.yarnpkg.com/@blockstack/ui/-/ui-2.12.5.tgz#a7f561e8fe8d23862f6c8a11dfdde029b39d5729"
+  integrity sha512-6H0Hr0kRaMSgsOF/ChKr87jFHsNaWrTHiK4un6hxkNC5ewBThG06s4W2ojmJCcVj1XmUhOhn6sp8kvSSUU76ow==
   dependencies:
     "@popperjs/core" "^2.4.0"
     "@reach/alert" "^0.10.2"

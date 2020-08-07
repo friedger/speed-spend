@@ -89,7 +89,7 @@ export function BetButton({ jackpot, ownerStxAddress }) {
         makeStandardSTXPostCondition(
           ownerStxAddress,
           FungibleConditionCode.LessEqual,
-          new BigNum(2000)
+          new BigNum(1000)
         ),
         makeContractSTXPostCondition(
           CONTRACT_ADDRESS,
@@ -98,9 +98,6 @@ export function BetButton({ jackpot, ownerStxAddress }) {
           new BigNum(0)
         ),
       ];
-
-      console.log({ postConditions });
-      console.log(postConditions.map(p => addressToString(p.principal.address)));
 
       doContractCall({
         contractAddress: CONTRACT_ADDRESS,
