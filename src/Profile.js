@@ -38,6 +38,11 @@ export default function Profile({ stxAddresses }) {
           Your Blockstack username is {username} <br />
         </>
       )}
+      <b>
+        <a href="https://github.com/blockstack/ux/issue/570">
+          Betting and buying hodl tokens still fail due to github issue #570
+        </a>
+      </b>
       <div className="pt-4">
         Your Hodl amount for Speed Spend app:
         <br />
