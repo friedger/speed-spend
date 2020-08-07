@@ -7,7 +7,6 @@ import {
   makeStandardSTXPostCondition,
   FungibleConditionCode,
   makeContractSTXPostCondition,
-  deserializeCV,
   PostConditionMode,
 } from '@blockstack/stacks-transactions';
 import Switch from 'react-input-switch';
@@ -18,6 +17,7 @@ import {
   NETWORK,
   CONTRACT_ADDRESS,
   txIdToStatus,
+  fetchJackpot,
 } from './StacksAccount';
 import { useConnect } from '@blockstack/connect';
 const BigNum = require('bn.js');
@@ -47,26 +47,11 @@ export function BetButton({ jackpot, ownerStxAddress }) {
           setAccount(acc);
           console.log({ acc });
         });
-      fetch(
-        `${NETWORK.coreApiUrl}/v2/contracts/call-read/${CONTRACT_ADDRESS}/flip-coin-jackpot/get-jackpot`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: `{"sender":"${addressToString(id.address)}","arguments":[]}`,
+      fetchJackpot(addressToString(id.address)).then(jackpot => {
+        if (jackpot) {
+          setJackpotValue(jackpot);
         }
-      )
-        .then(response => response.json())
-        .then(getJackpot => {
-          console.log({ getJackpot });
-          if (getJackpot.okay) {
-            const cv = deserializeCV(Buffer.from(getJackpot.result.substr(2), 'hex'));
-            if (cv.value) {
-              setJackpotValue(cv.value);
-            }
-          }
-        });
+      });
     }
   }, [userSession]);
 

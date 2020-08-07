@@ -6,6 +6,7 @@ import { getStacksAccount } from '../StacksAccount';
 import { addressToString } from '@blockstack/stacks-transactions';
 import { UnHodlButton } from '../UnHodlButton';
 import { HodlButton } from '../HodlButton';
+import { BuyHodlTokensButton } from '../BuyHodlTokensButton';
 
 export default function Hodl(props) {
   const { userData } = useBlockstack();
@@ -32,6 +33,11 @@ export default function Hodl(props) {
           <h1 className="card-title pt-4">Hodl</h1>
         </div>
         <div className="col-xs-10 col-md-8 mx-auto px-4">
+          <BuyHodlTokensButton
+            placeholder="amount"
+            ownerStxAddress={ownerStxAddress}
+            appStxAddress={appStxAddress}
+          />
           <HodlButton
             placeholder="amount"
             ownerStxAddress={ownerStxAddress}

@@ -1,6 +1,6 @@
 import React, { useRef, useState, useCallback, useEffect } from 'react';
 import { useBlockstack } from 'react-blockstack';
-import { fetchAccount } from './StacksAccount';
+import { fetchAccount, fetchHodlTokenBalance } from './StacksAccount';
 
 // Demonstrating BlockstackContext for legacy React Class Components.
 
@@ -47,6 +47,15 @@ export default function Profile({ stxAddresses }) {
         ></StxProfile>
       </div>
       <div className="pt-4">
+        Your Hodl amount for Speed Spend Hodl tokens:
+        <br />
+        <HodlTokenProfile
+          stxAddress={stxAddresses.ownerStxAddress}
+          updateStatus={updateStatus}
+        ></HodlTokenProfile>
+      </div>
+
+      <div className="pt-4">
         Your own Stacks address:
         <br />
         <StxProfile
@@ -62,6 +71,33 @@ export default function Profile({ stxAddresses }) {
         </>
       )}
     </div>
+  );
+}
+
+function HodlTokenProfile({ stxAddress }) {
+  const [balanceProfile, setBalanceProfile] = useState({
+    balance: undefined,
+  });
+
+  useEffect(() => {
+    fetchHodlTokenBalance(stxAddress).then(balance => {
+      setBalanceProfile({ balance });
+    });
+  }, [stxAddress]);
+
+  return (
+    <>
+      {balanceProfile.balance && (
+        <>
+          {balanceProfile.balance} <br />
+        </>
+      )}
+      {!balanceProfile.balance && (
+        <>
+          0 <br />
+        </>
+      )}
+    </>
   );
 }
 

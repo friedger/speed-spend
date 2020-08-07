@@ -6,16 +6,19 @@ import {
   AddressVersion,
   AddressHashMode,
   StacksTestnet,
+  deserializeCV,
+  serializeCV,
 } from '@blockstack/stacks-transactions';
 import { STX_JSON_PATH } from './UserSession';
+import { standardPrincipalCV } from '@blockstack/stacks-transactions';
 
 export const NETWORK = new StacksTestnet();
 NETWORK.coreApiUrl = 'https://sidecar.staging.blockstack.xyz';
 
 export const CONTRACT_ADDRESS = 'ST12EY99GS4YKP0CP2CFW6SEPWQ2CGVRWK5GHKDRV';
 
-export const STACK_API_URL = 'https://sidecar.staging.blockstack.xyz/v2/transactions';
-export const STACKS_API_ACCOUNTS_URL = 'https://sidecar.staging.blockstack.xyz/v2/accounts';
+export const STACK_API_URL = 'https://sidecar.staging.blockstack.xyz';
+export const STACKS_API_ACCOUNTS_URL = `${STACK_API_URL}/v2/accounts`;
 export const STACKS_API_ACCOUNTS_BROWSER_URL =
   'http://testnet-master.blockstack.org:20443/v2/accounts';
 
@@ -66,4 +69,54 @@ export function txIdToStatus(txId) {
       <a href={`https://testnet-explorer.blockstack.org/txid/0x${txId}`}>{txId}</a>
     </>
   );
+}
+
+export function fetchJackpot(sender) {
+  return fetch(
+    `${NETWORK.coreApiUrl}/v2/contracts/call-read/${CONTRACT_ADDRESS}/flip-coin-jackpot/get-jackpot`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: `{"sender":"${sender}","arguments":[]}`,
+    }
+  )
+    .then(response => response.json())
+    .then(getJackpot => {
+      console.log({ getJackpot });
+      if (getJackpot.okay) {
+        const cv = deserializeCV(Buffer.from(getJackpot.result.substr(2), 'hex'));
+        if (cv.value) {
+          return cv.value;
+        } else {
+          return undefined;
+        }
+      }
+    });
+}
+
+export function fetchHodlTokenBalance(sender) {
+  return fetch(
+    `${NETWORK.coreApiUrl}/v2/contracts/call-read/${CONTRACT_ADDRESS}/hold-token/hodl-balance-of`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: `{"sender":"${sender}","arguments":[${serializeCV(new standardPrincipalCV(sender))}]}`,
+    }
+  )
+    .then(response => response.json())
+    .then(hodlBalanceOf => {
+      console.log({ hodlBalanceOf });
+      if (hodlBalanceOf.okay) {
+        const cv = deserializeCV(Buffer.from(hodlBalanceOf.result.substr(2), 'hex'));
+        if (cv.value) {
+          return cv.value;
+        } else {
+          return undefined;
+        }
+      }
+    });
 }
