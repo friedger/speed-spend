@@ -18,6 +18,7 @@ import {
   CONTRACT_ADDRESS,
   txIdToStatus,
   fetchJackpot,
+  fetchHodlTokenBalance,
 } from './StacksAccount';
 import { useConnect } from '@blockstack/connect';
 const BigNum = require('bn.js');
@@ -62,9 +63,16 @@ export function BetButton({ jackpot, ownerStxAddress }) {
     const acc = await fetchAccount(addressToString(identity.address));
     const balance = acc ? parseInt(acc.balance, 16) : 0;
     if (balance < 1000) {
-      setStatus('Your hodl balance is below 1000 uSTX');
-      spinner.current.classList.add('d-none');
-      return;
+      const hodlBalanceString = await fetchHodlTokenBalance(addressToString(identity.address));
+      const hodlBalance = hodlBalanceString ? parseInt(hodlBalanceString) : 0;
+      console.log(hodlBalanceString, hodlBalance);
+      if (hodlBalance < 10) {
+        setStatus(
+          'Your hodl balance is below 1000 uSTX and you have not hodled at least 10 HODL tokens'
+        );
+        spinner.current.classList.add('d-none');
+        return;
+      }
     }
 
     console.log(`Betting on ${betValue} using jackpot ${jackpot}`);

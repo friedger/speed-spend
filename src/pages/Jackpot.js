@@ -52,7 +52,12 @@ export default function Jackpot(props) {
               on your account.
             </li>
             <li className="list-group-item">
-              Toggle the switch. Yellow on blue means "HEADS", Blue on yellow means "TAILS"
+              Hodl some STXs for speed spend: Go to the "Hodl" tab and follow the instructions
+              there.
+            </li>
+            <li className="list-group-item">
+              Play the game: Toggle the switch. Yellow on blue means "HEADS", Blue on yellow means
+              "TAILS"
             </li>
             <li className="list-group-item">
               Click the <i>Bet ..</i> button to bet 1000 uSTX.
