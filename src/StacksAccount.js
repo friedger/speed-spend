@@ -16,7 +16,7 @@ export const NETWORK = new StacksTestnet();
 NETWORK.coreApiUrl = 'https://sidecar.staging.blockstack.xyz';
 
 export const CONTRACT_ADDRESS = 'ST12EY99GS4YKP0CP2CFW6SEPWQ2CGVRWK5GHKDRV';
-
+export const HODL_TOKEN_CONTRACT = 'hodl-token';
 export const STACK_API_URL = 'https://sidecar.staging.blockstack.xyz';
 export const STACKS_API_ACCOUNTS_URL = `${STACK_API_URL}/v2/accounts`;
 export const STACKS_API_ACCOUNTS_BROWSER_URL =
@@ -97,14 +97,47 @@ export function fetchJackpot(sender) {
 }
 
 export function fetchHodlTokenBalance(sender) {
+  console.log(sender);
   return fetch(
-    `${NETWORK.coreApiUrl}/v2/contracts/call-read/${CONTRACT_ADDRESS}/hold-token/hodl-balance-of`,
+    `${NETWORK.coreApiUrl}/v2/contracts/call-read/${CONTRACT_ADDRESS}/${HODL_TOKEN_CONTRACT}/hodl-balance-of`,
     {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: `{"sender":"${sender}","arguments":[${serializeCV(new standardPrincipalCV(sender))}]}`,
+      body: `{"sender":"${sender}","arguments":["0x${serializeCV(
+        new standardPrincipalCV(sender)
+      ).toString('hex')}"]}`,
+    }
+  )
+    .then(async response => {
+      return response.json();
+    })
+    .then(hodlBalanceOf => {
+      console.log({ hodlBalanceOf });
+      if (hodlBalanceOf.okay) {
+        const cv = deserializeCV(Buffer.from(hodlBalanceOf.result.substr(2), 'hex'));
+        console.log(cv);
+        if (cv.value) {
+          return cv.value.toString(10);
+        } else {
+          return undefined;
+        }
+      }
+    });
+}
+
+export function fetchSpendableTokenBalance(sender) {
+  return fetch(
+    `${NETWORK.coreApiUrl}/v2/contracts/call-read/${CONTRACT_ADDRESS}/${HODL_TOKEN_CONTRACT}/spendable-balance-of`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: `{"sender":"${sender}","arguments":["0x${serializeCV(
+        new standardPrincipalCV(sender)
+      ).toString('hex')}"]}`,
     }
   )
     .then(response => response.json())
@@ -113,7 +146,7 @@ export function fetchHodlTokenBalance(sender) {
       if (hodlBalanceOf.okay) {
         const cv = deserializeCV(Buffer.from(hodlBalanceOf.result.substr(2), 'hex'));
         if (cv.value) {
-          return cv.value;
+          return cv.value.toString(10);
         } else {
           return undefined;
         }

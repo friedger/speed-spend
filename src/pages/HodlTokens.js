@@ -4,8 +4,9 @@ import Profile from '../Profile';
 import { useBlockstack } from 'react-blockstack';
 import { getStacksAccount } from '../StacksAccount';
 import { addressToString } from '@blockstack/stacks-transactions';
-import { UnHodlButton } from '../UnHodlButton';
-import { HodlButton } from '../HodlButton';
+import { BuyHodlTokensButton } from '../BuyHodlTokensButton';
+import { HodlTokenButton } from '../HodlTokenButton';
+import { UnHodlTokenButton } from '../UnHodlTokenButton';
 
 export default function Hodl(props) {
   const { userData } = useBlockstack();
@@ -32,35 +33,40 @@ export default function Hodl(props) {
           <h1 className="card-title pt-4">Hodl</h1>
         </div>
         <div className="col-xs-10 col-md-8 mx-auto px-4">
-          <HodlButton
+          <BuyHodlTokensButton
             placeholder="amount"
             ownerStxAddress={ownerStxAddress}
             appStxAddress={appStxAddress}
           />
-          <UnHodlButton placeholder="amount" ownerStxAddress={ownerStxAddress} />
+        </div>
+        <div className="col-xs-10 col-md-8 mx-auto px-4">
+          <HodlTokenButton
+            placeholder="amount"
+            ownerStxAddress={ownerStxAddress}
+            appStxAddress={appStxAddress}
+          />
+          <UnHodlTokenButton placeholder="amount" ownerStxAddress={ownerStxAddress} />
         </div>
         <div className="card col-md-8 mx-auto mt-5 mb-5 text-center px-0 border-warning">
           <div className="card-header">
             <h5 className="card-title">Instructions</h5>
           </div>
           <ul className="list-group list-group-flush">
-            <li className="list-group-item">Claim test tokens from the faucet to get 500k uSTX.</li>
-            <li className="list-group-item">Wait a few minutes and refresh the account balance.</li>
             <li className="list-group-item">
-              Enter the blockstack username of a friend (that signed in to this app already).
-              Examples are
-              <br />
-              <em>openintents</em> <br />
-              (which is the same as <em>openintents.id.blockstack</em>) <br />
-              or
-              <br /> <em>friedger.id</em>
+              Hodl token have two states
+              <ul>
+                <li>spendable and </li>
+                <li>hodled</li>
+              </ul>
             </li>
             <li className="list-group-item">
-              Press the <i>Enter</i> key or click the <i>Send</i> button to send off the tokens.
+              If you own hodled Hodl tokens then you will be able to play the betting game in the
+              future! For now, just hodl them :-)
             </li>
-            <li className="list-group-item">
-              Check the balance again (after a few seconds) to see whether tokens were sent.
-            </li>
+            <li className="list-group-item">Buy 10 Hodl tokens first (10.000 available)</li>
+            <li className="list-group-item">Check the transaction whether tokens were sent.</li>
+            <li className="list-group-item">Then hodl these 10 tokens.</li>
+            <li className="list-group-item">Check the balance to see whether tokens were sent.</li>
           </ul>
         </div>
       </div>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Landing from './Landing';
 import Main from './pages/Main';
 import Hodl from './pages/Hodl';
+import HodlTokens from './pages/HodlTokens';
 import { Connect } from '@blockstack/connect';
 import { useBlockstack, useConnectOptions } from 'react-blockstack';
 import { connectOptions } from './UserSession';
@@ -48,6 +49,9 @@ function Content({ userSession }) {
             <Link to="/hodl" className="nav-item px-4">
               Hodl
             </Link>
+            <Link to="/hodl-tokens" className="nav-item px-4">
+              Hodl Tokens
+            </Link>
             <Link to="/jackpot" className="nav-item px-4">
               Flip Coin with Jackpot
             </Link>
@@ -58,6 +62,7 @@ function Content({ userSession }) {
           <Router>
             <Main path="/" decentralizedID={decentralizedID} />
             <Hodl path="/hodl" decentralizedID={decentralizedID} />
+            <HodlTokens path="/hodl-tokens" decentralizedID={decentralizedID} />
             <Jackpot path="/jackpot" decentralizedID={decentralizedID} />
             <AtTwo path="/at-two" decentralizedID={decentralizedID} />
           </Router>

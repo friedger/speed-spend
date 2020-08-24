@@ -1,6 +1,6 @@
 import React, { useRef, useState, useCallback, useEffect } from 'react';
 import { useBlockstack } from 'react-blockstack';
-import { fetchAccount, fetchHodlTokenBalance } from './StacksAccount';
+import { fetchAccount, fetchHodlTokenBalance, fetchSpendableTokenBalance } from './StacksAccount';
 
 // Demonstrating BlockstackContext for legacy React Class Components.
 
@@ -38,13 +38,8 @@ export default function Profile({ stxAddresses }) {
           Your Blockstack username is {username} <br />
         </>
       )}
-      <b>
-        <a href="https://github.com/blockstack/ux/issue/570">
-          Betting and buying hodl tokens still fail due to github issue #570
-        </a>
-      </b>
       <div className="pt-4">
-        Your Hodl amount for Speed Spend app:
+        Your STX hodl amount for Speed Spend app:
         <br />
         <StxProfile
           stxAddress={stxAddresses.appStxAddress}
@@ -79,29 +74,81 @@ export default function Profile({ stxAddresses }) {
   );
 }
 
-function HodlTokenProfile({ stxAddress }) {
-  const [balanceProfile, setBalanceProfile] = useState({
+function HodlTokenProfile({ stxAddress, updateStatus }) {
+  const [hodlBalanceProfile, setHodlBalanceProfile] = useState({
     balance: undefined,
   });
 
+  const [spendableBalanceProfile, setSpendableBalanceProfile] = useState({
+    balance: undefined,
+  });
+
+  const spinner = useRef();
+
   useEffect(() => {
     fetchHodlTokenBalance(stxAddress).then(balance => {
-      setBalanceProfile({ balance });
+      setHodlBalanceProfile({ balance });
+    });
+    fetchSpendableTokenBalance(stxAddress).then(balance => {
+      setSpendableBalanceProfile({ balance });
     });
   }, [stxAddress]);
 
+  const onRefreshBalance = useCallback(
+    async stxAddress => {
+      updateStatus(undefined);
+      spinner.current.classList.remove('d-none');
+
+      fetchHodlTokenBalance(stxAddress)
+        .then(balance => {
+          setHodlBalanceProfile({ balance });
+          spinner.current.classList.add('d-none');
+        })
+        .catch(e => {
+          updateStatus('Refresh failed');
+          console.log(e);
+          spinner.current.classList.add('d-none');
+        });
+
+      fetchSpendableTokenBalance(stxAddress)
+        .then(balance => {
+          setSpendableBalanceProfile({ balance });
+          spinner.current.classList.add('d-none');
+        })
+        .catch(e => {
+          updateStatus('Refresh failed');
+          console.log(e);
+          spinner.current.classList.add('d-none');
+        });
+    },
+    [updateStatus]
+  );
+
   return (
     <>
-      {balanceProfile.balance && (
-        <>
-          {balanceProfile.balance} <br />
-        </>
+      Your balance:
+      <br />
+      {hodlBalanceProfile.balance && <>{hodlBalanceProfile.balance} hodled Hodl Tokens</>}
+      {!hodlBalanceProfile.balance && <>0 hodled Hodl Tokens</>}
+      <br />
+      {spendableBalanceProfile.balance && (
+        <>{spendableBalanceProfile.balance} spendable Hodl Tokens</>
       )}
-      {!balanceProfile.balance && (
-        <>
-          0 <br />
-        </>
-      )}
+      {!spendableBalanceProfile.balance && <>0 spendable Hodl Tokens</>}
+      <br />
+      <button
+        className="btn btn-outline-secondary mt-1"
+        onClick={e => {
+          onRefreshBalance(stxAddress);
+        }}
+      >
+        <div
+          ref={spinner}
+          role="status"
+          className="d-none spinner-border spinner-border-sm text-info align-text-top mr-2"
+        />
+        Refresh balance
+      </button>
     </>
   );
 }

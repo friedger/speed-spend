@@ -1,23 +1,31 @@
 import React, { useRef, useState, useEffect } from 'react';
 
-import { txIdToStatus, CONTRACT_ADDRESS } from './StacksAccount';
+import {
+  fetchAccount,
+  txIdToStatus,
+  CONTRACT_ADDRESS,
+  HODL_TOKEN_CONTRACT,
+  fetchSpendableTokenBalance,
+} from './StacksAccount';
 import { useConnect } from '@blockstack/connect';
 import {
   uintCV,
   PostConditionMode,
-  makeStandardSTXPostCondition,
+  makeContractFungiblePostCondition,
   FungibleConditionCode,
+  createAssetInfo,
+  makeStandardFungiblePostCondition,
 } from '@blockstack/stacks-transactions';
-import * as BigNum from 'bn.js';
+const BigNum = require('bn.js');
 
-export function BuyHodlTokensButton({ placeholder, ownerStxAddress }) {
+export function HodlTokenButton({ title, path, placeholder, ownerStxAddress }) {
   const { doContractCall } = useConnect();
   const textfield = useRef();
   const spinner = useRef();
   const [status, setStatus] = useState();
 
   useEffect(() => {
-    fetch(ownerStxAddress)
+    fetchAccount(ownerStxAddress)
       .catch(e => {
         setStatus('Failed to access your account', e);
         console.log(e);
@@ -33,20 +41,37 @@ export function BuyHodlTokensButton({ placeholder, ownerStxAddress }) {
     var amountAsString = textfield.current.value.trim();
     var amount = parseInt(amountAsString);
 
+    // check balance
+    const acc = await fetchSpendableTokenBalance(ownerStxAddress);
+    const balance = acc ? parseInt(acc.balance, 16) : 0;
+    if (balance < amount) {
+      setStatus(`Your balance is below ${amount} uSTX`);
+      spinner.current.classList.add('d-none');
+      return;
+    }
+
     try {
       setStatus(`Sending transaction`);
 
       await doContractCall({
         contractAddress: CONTRACT_ADDRESS,
-        contractName: 'hodl-token',
-        functionName: 'buy-tokens',
+        contractName: HODL_TOKEN_CONTRACT,
+        functionName: 'hodl',
         functionArgs: [uintCV(amount)],
-        postConditionMode: PostConditionMode.Deny,
+        postConditionMode: PostConditionMode.Allow,
         postConditions: [
-          makeStandardSTXPostCondition(
+          makeStandardFungiblePostCondition(
             ownerStxAddress,
             FungibleConditionCode.LessEqual,
-            new BigNum(amount)
+            new BigNum(amount),
+            new createAssetInfo(CONTRACT_ADDRESS, HODL_TOKEN_CONTRACT, 'spendable-token')
+          ),
+          makeContractFungiblePostCondition(
+            CONTRACT_ADDRESS,
+            HODL_TOKEN_CONTRACT,
+            FungibleConditionCode.LessEqual,
+            new BigNum(amount),
+            new createAssetInfo(CONTRACT_ADDRESS, HODL_TOKEN_CONTRACT, 'hodl-token')
           ),
         ],
         appDetails: {
@@ -68,7 +93,7 @@ export function BuyHodlTokensButton({ placeholder, ownerStxAddress }) {
 
   return (
     <div>
-      Buy Hodl tokens (1 uSTX = 1 Hodl token)
+      Hodl tokens (make them not spendable)
       <div className="NoteField input-group ">
         <input
           type="decimal"
@@ -90,7 +115,7 @@ export function BuyHodlTokensButton({ placeholder, ownerStxAddress }) {
               role="status"
               className="d-none spinner-border spinner-border-sm text-info align-text-top mr-2"
             />
-            Buy
+            Hodl
           </button>
         </div>
       </div>
