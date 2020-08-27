@@ -16,9 +16,10 @@ import {
   fetchAccount,
   NETWORK,
   CONTRACT_ADDRESS,
-  txIdToStatus,
   fetchJackpot,
   fetchHodlTokenBalance,
+  TxStatus,
+  Opponent,
 } from './StacksAccount';
 import { useConnect } from '@blockstack/connect';
 const BigNum = require('bn.js');
@@ -32,13 +33,19 @@ export function BetButton({ jackpot, ownerStxAddress }) {
   const [account, setAccount] = useState();
   const [identity, setIdentity] = useState();
   const [jackpotValue, setJackpotValue] = useState();
+  const [txId, setTxId] = useState();
 
   useEffect(() => {
     if (userSession.isUserSignedIn()) {
       const userData = userSession.loadUserData();
       const appPrivateKey = userData.appPrivateKey;
       const id = getStacksAccount(appPrivateKey);
-      setIdentity(id);
+      setIdentity({
+        appPrivateKey: id.appPrivateKey,
+        appStxAddress: id.address,
+        stxAddress: userData.profile.stxAddress,
+      });
+      console.log({ userData, id });
       fetchAccount(addressToString(id.address))
         .catch(e => {
           setStatus('Failed to access your account', e);
@@ -60,10 +67,13 @@ export function BetButton({ jackpot, ownerStxAddress }) {
     spinner.current.classList.remove('d-none');
 
     // check balance
-    const acc = await fetchAccount(addressToString(identity.address));
+    const acc = await fetchAccount(addressToString(identity.appStxAddress)).catch(e => {
+      setStatus('Failed to access your account', e);
+      console.log(e);
+    });
     const balance = acc ? parseInt(acc.balance, 16) : 0;
     if (balance < 1000) {
-      const hodlBalanceString = await fetchHodlTokenBalance(addressToString(identity.address));
+      const hodlBalanceString = await fetchHodlTokenBalance(identity.stxAddress);
       const hodlBalance = hodlBalanceString ? parseInt(hodlBalanceString) : 0;
       console.log(hodlBalanceString, hodlBalance);
       if (hodlBalance < 10) {
@@ -103,7 +113,7 @@ export function BetButton({ jackpot, ownerStxAddress }) {
         finished: result => {
           console.log(result);
           spinner.current.classList.add('d-none');
-          setStatus(txIdToStatus(result.txId));
+          setTxId(result.txId);
         },
       });
     } catch (e) {
@@ -115,7 +125,7 @@ export function BetButton({ jackpot, ownerStxAddress }) {
 
   return (
     <div>
-      <div className="pb-4">Note, you need to hodl 1000uSTX or more!</div>
+      <div className="pb-4">Note, you need to hodl 1000+ uSTX or hold 10 Hodl tokens!</div>
       Bet 1000uSTX on "HEADS" ("true") or "TAILS" ("false") and{' '}
       {jackpot ? (
         <>get the jackpot {jackpotValue ? <> of {jackpotValue.toString(10)}</> : null}</>
@@ -180,6 +190,14 @@ export function BetButton({ jackpot, ownerStxAddress }) {
             {jackpot ? <>Bet Now</> : <>Bet against somebody</>}
           </button>
         </div>
+      </div>
+      {!jackpot && (
+        <div>
+          <Opponent />
+        </div>
+      )}
+      <div>
+        <TxStatus txId={txId} />
       </div>
       {status && (
         <>

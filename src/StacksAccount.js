@@ -1,4 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import {
+  connectWebSocketClient,
+  TransactionsApi,
+  SmartContractsApi,
+} from '@stacks/blockchain-api-client';
 import {
   createStacksPrivateKey,
   getPublicKey,
@@ -8,10 +13,9 @@ import {
   StacksTestnet,
   deserializeCV,
   serializeCV,
+  standardPrincipalCV,
 } from '@blockstack/stacks-transactions';
 import { STX_JSON_PATH } from './UserSession';
-import { standardPrincipalCV } from '@blockstack/stacks-transactions';
-
 export const NETWORK = new StacksTestnet();
 NETWORK.coreApiUrl = 'https://sidecar.staging.blockstack.xyz';
 
@@ -56,7 +60,7 @@ export function fetchAccount(addressAsString) {
 export function resultToStatus(result) {
   if (result && result.startsWith('"') && result.length === 66) {
     const txId = result.substr(1, 64);
-    txIdToStatus(txId);
+    return txIdToStatus(txId);
   } else {
     return result;
   }
@@ -69,6 +73,101 @@ export function txIdToStatus(txId) {
       <a href={`https://testnet-explorer.blockstack.org/txid/0x${txId}`}>{txId}</a>
     </>
   );
+}
+
+export function TxStatus({ txId }) {
+  const [processingResult, setProcessingResult] = useState({ loading: false });
+  const spinner = useRef();
+
+  useEffect(() => {
+    console.log(txId);
+    if (!txId) {
+      return;
+    }
+
+    spinner.current.classList.remove('d-none');
+    setProcessingResult({ loading: true });
+
+    let sub;
+    const subscribe = async (txId, update) => {
+      const client = await connectWebSocketClient(
+        'ws://stacks-node-api-latest.argon.blockstack.xyz/'
+      );
+      sub = await client.subscribeTxUpdates(txId, update);
+      console.log({ client, sub });
+    };
+
+    subscribe(txId, async event => {
+      console.log(event);
+      let result;
+      if (event.tx_status === 'pending') {
+        return;
+      } else if (event.tx_status === 'success') {
+        const tx = await new TransactionsApi().getTransactionById({ txId });
+        console.log(tx);
+        const optionalWinner = await new SmartContractsApi().callReadOnlyFunctionRaw({
+          stacksAddress: 'ST12EY99GS4YKP0CP2CFW6SEPWQ2CGVRWK5GHKDRVT',
+          contractName: 'flip-coin-jackpot',
+          functionName: 'get-optional-winner-at',
+        });
+        result = tx.tx_result;
+      } else if (event.tx_status.startsWith('abort')) {
+        result = undefined;
+      }
+      spinner.current.classList.add('d-none');
+      setProcessingResult({ loading: false, result });
+      await sub.unsubscribe();
+    });
+  }, [txId]);
+
+  if (!txId) {
+    return null;
+  }
+
+  return (
+    <>
+      {processingResult.loading && (
+        <>
+          Checking transaction status:{' '}
+          <a href={`https://testnet-explorer.blockstack.org/txid/0x${txId}`}>{txId}</a>
+        </>
+      )}
+      {!processingResult.loading && processingResult.result && (
+        <>{processingResult.result.toString()}</>
+      )}{' '}
+      <div
+        ref={spinner}
+        role="status"
+        className="d-none spinner-border spinner-border-sm text-info align-text-top mr-2"
+      />
+    </>
+  );
+}
+
+export function Opponent() {
+  useEffect(() => {
+    const subscribe = async () => {
+      const client = await connectWebSocketClient(
+        'ws://stacks-node-api-latest.argon.blockstack.xyz/'
+      );
+      const sub = await client.subscribeAddressTransactions(
+        'ST12EY99GS4YKP0CP2CFW6SEPWQ2CGVRWK5GHKDRVT',
+        event => {
+          console.log(event);
+        }
+      );
+
+      const nextSlot = await new SmartContractsApi().callReadOnlyFunction({
+        stacksAddress: 'ST12EY99GS4YKP0CP2CFW6SEPWQ2CGVRWK5GHKDRVT',
+        contractName: 'flip-coin-at-two',
+        functionName: 'get-next-slot',
+      });
+    };
+
+    subscribe();
+  }, []);
+
+  return <>Opponent: </>;
 }
 
 export function fetchJackpot(sender) {
