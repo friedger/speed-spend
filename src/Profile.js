@@ -7,7 +7,8 @@ import { fetchAccount, fetchHodlTokenBalance, fetchSpendableTokenBalance } from 
 export default function Profile({ stxAddresses }) {
   const [status, setStatus] = useState('');
 
-  const { person, username } = useBlockstack();
+  const { person, userData } = useBlockstack();
+  const username = userData && userData.username;
 
   const updateStatus = status => {
     setStatus(status);
