@@ -2,15 +2,9 @@ import React, { useRef, useState, useEffect } from 'react';
 
 import { txIdToStatus, CONTRACT_ADDRESS, fetchAccount } from './StacksAccount';
 import { useConnect } from '@blockstack/connect';
-import {
-  uintCV,
-  PostConditionMode,
-  makeStandardSTXPostCondition,
-  FungibleConditionCode,
-} from '@blockstack/stacks-transactions';
-import * as BigNum from 'bn.js';
+import { PostConditionMode, uintCV } from '@blockstack/stacks-transactions';
 
-export function BuyHodlTokensButton({ placeholder, ownerStxAddress }) {
+export function BuyMonsters({ ownerStxAddress }) {
   const { doContractCall } = useConnect();
   const textfield = useRef();
   const spinner = useRef();
@@ -27,28 +21,21 @@ export function BuyHodlTokensButton({ placeholder, ownerStxAddress }) {
       });
   }, [ownerStxAddress]);
 
-  const sendAction = async () => {
+  const bidAction = async () => {
     spinner.current.classList.remove('d-none');
 
-    var amountAsString = textfield.current.value.trim();
-    var amount = parseInt(amountAsString);
+    var monsterId = textfield.current.value.trim();
 
     try {
       setStatus(`Sending transaction`);
 
       await doContractCall({
         contractAddress: CONTRACT_ADDRESS,
-        contractName: 'hodl-token',
-        functionName: 'buy-tokens',
-        functionArgs: [uintCV(amount)],
-        postConditionMode: PostConditionMode.Deny,
-        postConditions: [
-          makeStandardSTXPostCondition(
-            ownerStxAddress,
-            FungibleConditionCode.LessEqual,
-            new BigNum(amount)
-          ),
-        ],
+        contractName: 'market',
+        functionName: 'bid',
+        functionArgs: [uintCV(parseInt(monsterId)), uintCV(1000)],
+        postConditionMode: PostConditionMode.Allow,
+        postConditions: [],
         appDetails: {
           name: 'Speed Spend',
           icon: 'https://speed-spend.netlify.app/speedspend.png',
@@ -68,29 +55,29 @@ export function BuyHodlTokensButton({ placeholder, ownerStxAddress }) {
 
   return (
     <div>
-      Buy Hodl tokens (1 uSTX = 1 Hodl token)
+      <h5>Bid for a monster for 1000 uSTX</h5>
       <div className="NoteField input-group ">
         <input
-          type="decimal"
+          type="text"
           ref={textfield}
           className="form-control"
           defaultValue={''}
-          placeholder={placeholder}
+          placeholder="Id of monster"
           onKeyUp={e => {
-            if (e.key === 'Enter') sendAction();
+            if (e.key === 'Enter') bidAction();
           }}
           onBlur={e => {
             setStatus(undefined);
           }}
         />
         <div className="input-group-append">
-          <button className="btn btn-outline-secondary" type="button" onClick={sendAction}>
+          <button className="btn btn-outline-secondary" type="button" onClick={bidAction}>
             <div
               ref={spinner}
               role="status"
               className="d-none spinner-border spinner-border-sm text-info align-text-top mr-2"
             />
-            Buy
+            Bid
           </button>
         </div>
       </div>

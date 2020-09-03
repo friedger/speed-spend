@@ -2,15 +2,9 @@ import React, { useRef, useState, useEffect } from 'react';
 
 import { txIdToStatus, CONTRACT_ADDRESS, fetchAccount } from './StacksAccount';
 import { useConnect } from '@blockstack/connect';
-import {
-  uintCV,
-  PostConditionMode,
-  makeStandardSTXPostCondition,
-  FungibleConditionCode,
-} from '@blockstack/stacks-transactions';
-import * as BigNum from 'bn.js';
+import { PostConditionMode, bufferCVFromString } from '@blockstack/stacks-transactions';
 
-export function BuyHodlTokensButton({ placeholder, ownerStxAddress }) {
+export function CreateMonsterButton({ ownerStxAddress }) {
   const { doContractCall } = useConnect();
   const textfield = useRef();
   const spinner = useRef();
@@ -30,25 +24,18 @@ export function BuyHodlTokensButton({ placeholder, ownerStxAddress }) {
   const sendAction = async () => {
     spinner.current.classList.remove('d-none');
 
-    var amountAsString = textfield.current.value.trim();
-    var amount = parseInt(amountAsString);
+    var name = textfield.current.value.trim();
 
     try {
       setStatus(`Sending transaction`);
 
       await doContractCall({
         contractAddress: CONTRACT_ADDRESS,
-        contractName: 'hodl-token',
-        functionName: 'buy-tokens',
-        functionArgs: [uintCV(amount)],
-        postConditionMode: PostConditionMode.Deny,
-        postConditions: [
-          makeStandardSTXPostCondition(
-            ownerStxAddress,
-            FungibleConditionCode.LessEqual,
-            new BigNum(amount)
-          ),
-        ],
+        contractName: 'monsters',
+        functionName: 'create-monster',
+        functionArgs: [bufferCVFromString(name)],
+        postConditionMode: PostConditionMode.Allow,
+        postConditions: [],
         appDetails: {
           name: 'Speed Spend',
           icon: 'https://speed-spend.netlify.app/speedspend.png',
@@ -68,14 +55,14 @@ export function BuyHodlTokensButton({ placeholder, ownerStxAddress }) {
 
   return (
     <div>
-      Buy Hodl tokens (1 uSTX = 1 Hodl token)
+      <h5>Create your own monster</h5>
       <div className="NoteField input-group ">
         <input
-          type="decimal"
+          type="text"
           ref={textfield}
           className="form-control"
           defaultValue={''}
-          placeholder={placeholder}
+          placeholder="Name of monster (20 letters max)"
           onKeyUp={e => {
             if (e.key === 'Enter') sendAction();
           }}
@@ -90,7 +77,7 @@ export function BuyHodlTokensButton({ placeholder, ownerStxAddress }) {
               role="status"
               className="d-none spinner-border spinner-border-sm text-info align-text-top mr-2"
             />
-            Buy
+            Create
           </button>
         </div>
       </div>
