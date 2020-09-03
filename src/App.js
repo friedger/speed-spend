@@ -9,6 +9,7 @@ import { connectOptions } from './UserSession';
 import { Link, Router } from '@reach/router';
 import Jackpot from './pages/Jackpot';
 import AtTwo from './pages/AtTwo';
+import Monsters from './pages/Monsters';
 
 export default function App(props) {
   const [userSession, setUserSession] = useState();
@@ -58,6 +59,9 @@ function Content({ userSession }) {
             <Link to="/at-two" className="nav-item px-4">
               Flip Coin at two
             </Link>
+            <Link to="/monsters" className="nav-item px-4">
+              Monsters
+            </Link>
           </nav>
           <Router>
             <Main path="/" decentralizedID={decentralizedID} />
@@ -65,6 +69,7 @@ function Content({ userSession }) {
             <HodlTokens path="/hodl-tokens" decentralizedID={decentralizedID} />
             <Jackpot path="/jackpot" decentralizedID={decentralizedID} />
             <AtTwo path="/at-two" decentralizedID={decentralizedID} />
+            <Monsters path="/monsters" decentralizedID={decentralizedID} />
           </Router>
         </>
       )}

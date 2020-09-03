@@ -3,6 +3,7 @@ import {
   connectWebSocketClient,
   TransactionsApi,
   SmartContractsApi,
+  AccountsApi,
 } from '@stacks/blockchain-api-client';
 import {
   createStacksPrivateKey,
@@ -54,6 +55,14 @@ export function fetchAccount(addressAsString) {
   return fetch(balanceUrl).then(r => {
     console.log({ r });
     return r.json();
+  });
+}
+
+export function fetchBalances(addressAsString) {
+  console.log('Checking balances');
+  return new AccountsApi().getAccountBalance({ principal: addressAsString }).then(balance => {
+    console.log({ balance });
+    return balance;
   });
 }
 
