@@ -10,6 +10,7 @@ import { Link, Router } from '@reach/router';
 import Jackpot from './pages/Jackpot';
 import AtTwo from './pages/AtTwo';
 import Monsters from './pages/Monsters';
+import MonsterDetails from './pages/MonsterDetails';
 
 export default function App(props) {
   const [userSession, setUserSession] = useState();
@@ -70,6 +71,7 @@ function Content({ userSession }) {
             <Jackpot path="/jackpot" decentralizedID={decentralizedID} />
             <AtTwo path="/at-two" decentralizedID={decentralizedID} />
             <Monsters path="/monsters" decentralizedID={decentralizedID} />
+            <MonsterDetails path="/monsters/:monsterId" decentralizedID={decentralizedID} />
           </Router>
         </>
       )}

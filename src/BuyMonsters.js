@@ -4,7 +4,7 @@ import { txIdToStatus, CONTRACT_ADDRESS, fetchAccount } from './StacksAccount';
 import { useConnect } from '@blockstack/connect';
 import { PostConditionMode, uintCV } from '@blockstack/stacks-transactions';
 
-export function BuyMonsters({ ownerStxAddress }) {
+export function BuyMonsters({ ownerStxAddress, monsterId }) {
   const { doContractCall } = useConnect();
   const textfield = useRef();
   const spinner = useRef();
@@ -61,8 +61,9 @@ export function BuyMonsters({ ownerStxAddress }) {
           type="text"
           ref={textfield}
           className="form-control"
-          defaultValue={''}
+          defaultValue={monsterId}
           placeholder="Id of monster"
+          hidden={monsterId}
           onKeyUp={e => {
             if (e.key === 'Enter') bidAction();
           }}
