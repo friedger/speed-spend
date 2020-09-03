@@ -164,14 +164,14 @@ export function Opponent() {
       const client = await connectWebSocketClient(
         'ws://stacks-node-api-latest.argon.blockstack.xyz/'
       );
-      const sub = await client.subscribeAddressTransactions(
+      await client.subscribeAddressTransactions(
         'ST12EY99GS4YKP0CP2CFW6SEPWQ2CGVRWK5GHKDRVT',
         event => {
           console.log(event);
         }
       );
 
-      const nextSlot = await new SmartContractsApi().callReadOnlyFunction({
+      await new SmartContractsApi().callReadOnlyFunction({
         stacksAddress: 'ST12EY99GS4YKP0CP2CFW6SEPWQ2CGVRWK5GHKDRVT',
         contractName: 'flip-coin-at-two',
         functionName: 'get-next-slot',
