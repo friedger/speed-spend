@@ -114,11 +114,13 @@ export function TxStatus({ txId }) {
       } else if (event.tx_status === 'success') {
         const tx = await new TransactionsApi().getTransactionById({ txId });
         console.log(tx);
+        /*
         const optionalWinner = await new SmartContractsApi().callReadOnlyFunctionRaw({
           stacksAddress: 'ST12EY99GS4YKP0CP2CFW6SEPWQ2CGVRWK5GHKDRVT',
           contractName: 'flip-coin-jackpot',
           functionName: 'get-optional-winner-at',
         });
+        */
         result = tx.tx_result;
       } else if (event.tx_status.startsWith('abort')) {
         result = undefined;
@@ -142,7 +144,7 @@ export function TxStatus({ txId }) {
         </>
       )}
       {!processingResult.loading && processingResult.result && (
-        <>{processingResult.result.toString()}</>
+        <>Result: {processingResult.result.repr}</>
       )}{' '}
       <div
         ref={spinner}
