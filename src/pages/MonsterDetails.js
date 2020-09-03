@@ -56,10 +56,9 @@ export default function MonsterDetails({ monsterId }) {
               on your account.
             </li>
             <li className="list-group-item">
-              Hodl some STXs for speed spend: Go to the "Hodl" tab and follow the instructions
-              there.
+              Bid for the monster for 1000 uSTX. Only if the owner selects you, you have to pay for
+              it.
             </li>
-            <li className="list-group-item">Collect some monsters</li>
           </ul>
         </div>
       </div>
