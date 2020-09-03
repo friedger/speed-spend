@@ -197,7 +197,7 @@ export function BetButton({ jackpot, ownerStxAddress }) {
         </div>
       )}
       <div>
-        <TxStatus txId={txId} />
+        <TxStatus txId={txId} resultPrefix="Bet placed in block " />
       </div>
       {status && (
         <>

@@ -1,12 +1,16 @@
 import React, { useRef, useState, useCallback, useEffect } from 'react';
 import { useBlockstack } from 'react-blockstack';
-import { fetchAccount, fetchHodlTokenBalance, fetchSpendableTokenBalance } from './StacksAccount';
+import {
+  fetchAccount,
+  fetchHodlTokenBalance,
+  fetchSpendableTokenBalance,
+  TxStatus,
+} from './StacksAccount';
 
 // Demonstrating BlockstackContext for legacy React Class Components.
 
 export default function Profile({ stxAddresses }) {
   const [status, setStatus] = useState('');
-
   const { person, userData } = useBlockstack();
   const username = userData && userData.username;
 
@@ -155,6 +159,7 @@ function HodlTokenProfile({ stxAddress, updateStatus }) {
 }
 
 function StxProfile({ stxAddress, updateStatus, showAddress }) {
+  const [txId, setTxId] = useState();
   const spinner = useRef();
   const faucetSpinner = useRef();
 
@@ -188,7 +193,7 @@ function StxProfile({ stxAddress, updateStatus, showAddress }) {
     });
   }, [stxAddress]);
 
-  const claimTestTokens = stxAddr => {
+  const claimTestTokens = async stxAddr => {
     updateStatus(undefined);
     faucetSpinner.current.classList.remove('d-none');
 
@@ -197,6 +202,10 @@ function StxProfile({ stxAddress, updateStatus, showAddress }) {
     })
       .then(r => {
         if (r.status === 200) {
+          r.json().then(faucetResponse => {
+            setTxId(faucetResponse.txId.substr(2));
+          });
+
           updateStatus('Tokens will arrive soon.');
         } else {
           updateStatus('Claiming tokens failed.');
@@ -238,19 +247,23 @@ function StxProfile({ stxAddress, updateStatus, showAddress }) {
         Refresh balance
       </button>
       {showAddress && (
-        <button
-          className="btn btn-outline-secondary mt-1"
-          onClick={() => {
-            claimTestTokens(stxAddress);
-          }}
-        >
-          <div
-            ref={faucetSpinner}
-            role="status"
-            className="d-none spinner-border spinner-border-sm text-info align-text-top mr-2"
-          />
-          Claim test tokens from faucet
-        </button>
+        <>
+          <button
+            className="btn btn-outline-secondary mt-1"
+            onClick={() => {
+              claimTestTokens(stxAddress);
+            }}
+          >
+            <div
+              ref={faucetSpinner}
+              role="status"
+              className="d-none spinner-border spinner-border-sm text-info align-text-top mr-2"
+            />
+            Claim test tokens from faucet
+          </button>
+          <br />
+          <TxStatus txId={txId} resultPrefix="Tokens transferred? " />
+        </>
       )}
     </>
   );

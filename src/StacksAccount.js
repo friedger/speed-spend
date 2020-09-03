@@ -84,7 +84,7 @@ export function txIdToStatus(txId) {
   );
 }
 
-export function TxStatus({ txId }) {
+export function TxStatus({ txId, resultPrefix }) {
   const [processingResult, setProcessingResult] = useState({ loading: false });
   const spinner = useRef();
 
@@ -144,7 +144,10 @@ export function TxStatus({ txId }) {
         </>
       )}
       {!processingResult.loading && processingResult.result && (
-        <>Result: {processingResult.result.repr}</>
+        <>
+          {resultPrefix}
+          {processingResult.result.repr}
+        </>
       )}{' '}
       <div
         ref={spinner}
