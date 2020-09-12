@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 
-import { txIdToStatus, CONTRACT_ADDRESS, fetchAccount } from './StacksAccount';
+import { txIdToStatus, CONTRACT_ADDRESS, fetchAccount, TxStatus } from './StacksAccount';
 import { useConnect } from '@blockstack/connect';
 import { PostConditionMode, uintCV } from '@blockstack/stacks-transactions';
 
@@ -9,6 +9,7 @@ export function BuyMonsters({ ownerStxAddress, monsterId }) {
   const textfield = useRef();
   const spinner = useRef();
   const [status, setStatus] = useState();
+  const [txId, setTxId] = useState();
 
   useEffect(() => {
     fetchAccount(ownerStxAddress)
@@ -43,6 +44,7 @@ export function BuyMonsters({ ownerStxAddress, monsterId }) {
         finished: data => {
           console.log(data);
           setStatus(txIdToStatus(data.txId));
+          setTxId(data.txId);
           spinner.current.classList.add('d-none');
         },
       });
@@ -81,6 +83,9 @@ export function BuyMonsters({ ownerStxAddress, monsterId }) {
             Bid
           </button>
         </div>
+      </div>
+      <div>
+        <TxStatus txId={txId} resultPrefix="Offer placed in block " />
       </div>
       {status && (
         <>

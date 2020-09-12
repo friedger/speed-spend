@@ -15,6 +15,10 @@ import {
   deserializeCV,
   serializeCV,
   standardPrincipalCV,
+  uintCV,
+  tupleCV,
+  cvToString,
+  addressToString,
 } from '@blockstack/stacks-transactions';
 import { STX_JSON_PATH } from './UserSession';
 export const NETWORK = new StacksTestnet();
@@ -22,10 +26,15 @@ NETWORK.coreApiUrl = 'https://sidecar.staging.blockstack.xyz';
 
 export const CONTRACT_ADDRESS = 'ST12EY99GS4YKP0CP2CFW6SEPWQ2CGVRWK5GHKDRV';
 export const HODL_TOKEN_CONTRACT = 'hodl-token';
+export const MONSTERS_CONTRACT_NAME = 'monsters';
 export const STACK_API_URL = 'https://sidecar.staging.blockstack.xyz';
 export const STACKS_API_ACCOUNTS_URL = `${STACK_API_URL}/v2/accounts`;
 export const STACKS_API_ACCOUNTS_BROWSER_URL =
   'http://testnet-master.blockstack.org:20443/v2/accounts';
+const ARGON_API_URL = 'https://stacks-node-api-latest.argon.blockstack.xyz';
+
+const accountsApi = new AccountsApi();
+const smartContractsApi = new SmartContractsApi();
 
 export function getStacksAccount(appPrivateKey) {
   const privateKey = createStacksPrivateKey(appPrivateKey);
@@ -51,6 +60,13 @@ export async function getUserAddress(userSession, username) {
 
 export function fetchAccount(addressAsString) {
   console.log('Checking account');
+  return accountsApi
+    .getAccountBalance({ principal: addressAsString })
+    .then(response => response.stx);
+}
+
+export function fetchAccount2(addressAsString) {
+  console.log('Checking account');
   const balanceUrl = `${STACKS_API_ACCOUNTS_URL}/${addressAsString}`;
   return fetch(balanceUrl).then(r => {
     console.log({ r });
@@ -60,7 +76,7 @@ export function fetchAccount(addressAsString) {
 
 export function fetchBalances(addressAsString) {
   console.log('Checking balances');
-  return new AccountsApi().getAccountBalance({ principal: addressAsString }).then(balance => {
+  return accountsApi.getAccountBalance({ principal: addressAsString }).then(balance => {
     console.log({ balance });
     return balance;
   });
@@ -114,13 +130,6 @@ export function TxStatus({ txId, resultPrefix }) {
       } else if (event.tx_status === 'success') {
         const tx = await new TransactionsApi().getTransactionById({ txId });
         console.log(tx);
-        /*
-        const optionalWinner = await new SmartContractsApi().callReadOnlyFunctionRaw({
-          stacksAddress: 'ST12EY99GS4YKP0CP2CFW6SEPWQ2CGVRWK5GHKDRVT',
-          contractName: 'flip-coin-jackpot',
-          functionName: 'get-optional-winner-at',
-        });
-        */
         result = tx.tx_result;
       } else if (event.tx_status.startsWith('abort')) {
         result = undefined;
@@ -209,6 +218,31 @@ export function fetchJackpot(sender) {
     });
 }
 
+export function fetchWinnerAt(sender, height) {
+  return fetch(
+    `${ARGON_API_URL}/v2/contracts/call-read/${CONTRACT_ADDRESS}/flip-coin-jackpot/get-optional-winner-at`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: `{"sender":"${sender}","arguments":["${serializeCV(uintCV(height)).toString('hex')}"]}`,
+    }
+  )
+    .then(response => response.json())
+    .then(optionalWinner => {
+      console.log({ optionalWinner });
+      if (optionalWinner.okay) {
+        const cv = deserializeCV(Buffer.from(optionalWinner.result.substr(2), 'hex'));
+        if (cv.value) {
+          return cv.value;
+        } else {
+          return undefined;
+        }
+      }
+    });
+}
+
 export function fetchHodlTokenBalance(sender) {
   console.log(sender);
   return fetch(
@@ -265,4 +299,56 @@ export function fetchSpendableTokenBalance(sender) {
         }
       }
     });
+}
+
+export function fetchMonsterDetails2(monsterId) {
+  console.log(monsterId);
+  return fetch(
+    `https://stacks-node-api-latest.argon.blockstack.xyz/v2/map_entry/${CONTRACT_ADDRESS}/${MONSTERS_CONTRACT_NAME}/monsters`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: `"0x${monsterId}"`,
+    }
+  ).then(response => response.json());
+}
+
+export function fetchMonsterDetails(monsterId) {
+  console.log({ monsterId });
+
+  return Promise.all([
+    smartContractsApi
+      .callReadOnlyFunction({
+        stacksAddress: CONTRACT_ADDRESS,
+        contractName: MONSTERS_CONTRACT_NAME,
+        functionName: 'owner-of?',
+        readOnlyFunctionArgs: {
+          sender: CONTRACT_ADDRESS,
+          arguments: [serializeCV(uintCV(monsterId)).toString('hex')],
+        },
+      })
+      .then(response =>
+        cvToString(deserializeCV(Buffer.from(response.result.substr(2), 'hex')).value)
+      ),
+    smartContractsApi
+      .getContractDataMapEntryRaw({
+        stacksAddress: CONTRACT_ADDRESS,
+        contractName: MONSTERS_CONTRACT_NAME,
+        mapName: 'monsters',
+        key: serializeCV(tupleCV({ 'monster-id': uintCV(monsterId) })).toString('hex'),
+      })
+      .then(dataMapRaw => dataMapRaw.raw.json())
+      .then(dataMap => {
+        console.log({ dataMap });
+        const metaData = deserializeCV(Buffer.from(dataMap.data.substr(2), 'hex')).value.data;
+        return {
+          lastMeal: parseInt(metaData['last-meal'].value),
+          name: metaData['name'].buffer.toString(),
+        };
+      }),
+  ]).then(result => {
+    return { owner: result[0], metaData: result[1] };
+  });
 }

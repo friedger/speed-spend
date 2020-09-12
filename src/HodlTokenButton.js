@@ -6,6 +6,7 @@ import {
   CONTRACT_ADDRESS,
   HODL_TOKEN_CONTRACT,
   fetchSpendableTokenBalance,
+  TxStatus,
 } from './StacksAccount';
 import { useConnect } from '@blockstack/connect';
 import {
@@ -23,6 +24,7 @@ export function HodlTokenButton({ title, path, placeholder, ownerStxAddress }) {
   const textfield = useRef();
   const spinner = useRef();
   const [status, setStatus] = useState();
+  const [txId, setTxId] = useState();
 
   useEffect(() => {
     fetchAccount(ownerStxAddress)
@@ -80,7 +82,7 @@ export function HodlTokenButton({ title, path, placeholder, ownerStxAddress }) {
         },
         finished: data => {
           console.log(data);
-          setStatus(txIdToStatus(data.txId));
+          setTxId(data.txId);
           spinner.current.classList.add('d-none');
         },
       });
@@ -118,6 +120,9 @@ export function HodlTokenButton({ title, path, placeholder, ownerStxAddress }) {
             Hodl
           </button>
         </div>
+      </div>
+      <div>
+        <TxStatus txId={txId} resultPrefix="Purchase placed in block " />
       </div>
       {status && (
         <>

@@ -3,6 +3,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { fetchAccount } from './StacksAccount';
 import { AccountsApi } from '@stacks/blockchain-api-client';
 import { Monster } from './Monster';
+import { deserializeCV } from '@blockstack/stacks-transactions';
 
 const accountsApi = new AccountsApi();
 
@@ -51,7 +52,8 @@ export function MyMonsters({ ownerStxAddress }) {
         className="d-none spinner-border spinner-border-sm text-info align-text-top mr-2"
       />
       {monsters &&
-        monsters.map((monsterId, key) => {
+        monsters.map((monsterIdHex, key) => {
+          const monsterId = deserializeCV(Buffer.from(monsterIdHex.substr(2), 'hex'));
           return <Monster key={key} monsterId={monsterId} ownerStxAddress={ownerStxAddress} />;
         })}
       {!monsters && <>No monsters yet. Create one!</>}

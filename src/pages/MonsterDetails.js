@@ -35,10 +35,7 @@ export default function MonsterDetails({ monsterId }) {
           Monsters as seen on <a href="https://planet.friedger.de">Monster Planet</a>
         </div>
         <div className="col-xs-10 col-md-8 mx-auto mb-4 px-4">
-          <Monster
-            ownerStxAddress={ownerStxAddress}
-            monsterId={`0x${serializeCV(uintCV(monsterId)).toString('hex')}`}
-          />
+          <Monster ownerStxAddress={ownerStxAddress} monsterId={monsterId} />
           <br />
           <BuyMonsters ownerStxAddress={ownerStxAddress} monsterId={monsterId} />
         </div>

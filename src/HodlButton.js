@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 
-import { fetchAccount, txIdToStatus } from './StacksAccount';
+import { fetchAccount, txIdToStatus, TxStatus } from './StacksAccount';
 import { useConnect } from '@blockstack/connect';
 const BigNum = require('bn.js');
 
@@ -9,6 +9,7 @@ export function HodlButton({ title, path, placeholder, ownerStxAddress, appStxAd
   const textfield = useRef();
   const spinner = useRef();
   const [status, setStatus] = useState();
+  const [txId, setTxId] = useState();
 
   useEffect(() => {
     fetchAccount(ownerStxAddress)
@@ -48,7 +49,7 @@ export function HodlButton({ title, path, placeholder, ownerStxAddress, appStxAd
         },
         finished: data => {
           console.log(data);
-          setStatus(txIdToStatus(data.txId));
+          setTxId(data.txId);
           spinner.current.classList.add('d-none');
         },
       });
@@ -92,6 +93,9 @@ export function HodlButton({ title, path, placeholder, ownerStxAddress, appStxAd
           <div>{status}</div>
         </>
       )}
+      <div>
+        <TxStatus txId={txId} resultPrefix="Bet placed in block " />
+      </div>
     </div>
   );
 }

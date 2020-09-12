@@ -11,6 +11,7 @@ import Jackpot from './pages/Jackpot';
 import AtTwo from './pages/AtTwo';
 import Monsters from './pages/Monsters';
 import MonsterDetails from './pages/MonsterDetails';
+import ClarityValues from './pages/ClarityValues';
 
 export default function App(props) {
   const [userSession, setUserSession] = useState();
@@ -63,6 +64,9 @@ function Content({ userSession }) {
             <Link to="/monsters" className="nav-item px-4">
               Monsters
             </Link>
+            <Link to="/cv" className="nav-item px-4">
+              Clarity Values
+            </Link>
           </nav>
           <Router>
             <Main path="/" decentralizedID={decentralizedID} />
@@ -72,6 +76,7 @@ function Content({ userSession }) {
             <AtTwo path="/at-two" decentralizedID={decentralizedID} />
             <Monsters path="/monsters" decentralizedID={decentralizedID} />
             <MonsterDetails path="/monsters/:monsterId" decentralizedID={decentralizedID} />
+            <ClarityValues path="/cv" />
           </Router>
         </>
       )}

@@ -20,8 +20,16 @@ import {
   fetchHodlTokenBalance,
   TxStatus,
   Opponent,
+  fetchWinnerAt,
 } from './StacksAccount';
 import { useConnect } from '@blockstack/connect';
+import {
+  connectWebSocketClient,
+  TransactionsApi,
+  SmartContractsApi,
+  BlocksApi,
+  InfoApi,
+} from '@stacks/blockchain-api-client';
 const BigNum = require('bn.js');
 
 export function BetButton({ jackpot, ownerStxAddress }) {
@@ -59,6 +67,10 @@ export function BetButton({ jackpot, ownerStxAddress }) {
         if (jackpot) {
           setJackpotValue(jackpot);
         }
+      });
+
+      fetchWinnerAt(CONTRACT_ADDRESS, 200).then(r => {
+        console.log(r);
       });
     }
   }, [userSession]);
@@ -197,7 +209,7 @@ export function BetButton({ jackpot, ownerStxAddress }) {
         </div>
       )}
       <div>
-        <TxStatus txId={txId} resultPrefix="Bet placed in block " />
+        <BetResult txId={txId} />
       </div>
       {status && (
         <>
@@ -205,5 +217,67 @@ export function BetButton({ jackpot, ownerStxAddress }) {
         </>
       )}
     </div>
+  );
+}
+
+export function BetResult({ txId }) {
+  const [processingResult, setProcessingResult] = useState({ loading: false });
+  const spinner = useRef();
+
+  useEffect(() => {
+    console.log(txId);
+    if (!txId) {
+      return;
+    }
+
+    spinner.current.classList.remove('d-none');
+    setProcessingResult({ loading: true });
+
+    let sub;
+    let client;
+    const subscribe = async (txId, update) => {
+      client = await connectWebSocketClient('ws://stacks-node-api-latest.argon.blockstack.xyz/');
+      sub = await client.subscribeTxUpdates(txId, update);
+      console.log({ client, sub });
+    };
+
+    subscribe(txId, async event => {
+      console.log(event);
+      let result;
+      if (event.tx_status === 'pending') {
+        return;
+      } else if (event.tx_status === 'success') {
+        const tx = await new TransactionsApi().getTransactionById({ txId });
+        console.log(tx);
+        const optionalWinner = await fetchWinnerAt(CONTRACT_ADDRESS, tx.block_height - 1);
+        result = optionalWinner;
+      } else if (event.tx_status.startsWith('abort')) {
+        result = undefined;
+      }
+      spinner.current.classList.add('d-none');
+      setProcessingResult({ loading: false, result });
+      await sub.unsubscribe();
+    });
+  }, [txId]);
+
+  if (!txId) {
+    return null;
+  }
+
+  return (
+    <>
+      {processingResult.loading && (
+        <>
+          Checking transaction status:{' '}
+          <a href={`https://testnet-explorer.blockstack.org/txid/0x${txId}`}>{txId}</a>
+        </>
+      )}
+      {!processingResult.loading && processingResult.result && <>{processingResult.result.repr}</>}{' '}
+      <div
+        ref={spinner}
+        role="status"
+        className="d-none spinner-border spinner-border-sm text-info align-text-top mr-2"
+      />
+    </>
   );
 }

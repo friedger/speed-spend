@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 
-import { txIdToStatus, CONTRACT_ADDRESS, fetchAccount } from './StacksAccount';
+import { txIdToStatus, CONTRACT_ADDRESS, fetchAccount, TxStatus } from './StacksAccount';
 import { useConnect } from '@blockstack/connect';
 import { PostConditionMode, bufferCVFromString } from '@blockstack/stacks-transactions';
 
@@ -9,6 +9,7 @@ export function CreateMonsterButton({ ownerStxAddress }) {
   const textfield = useRef();
   const spinner = useRef();
   const [status, setStatus] = useState();
+  const [txId, setTxId] = useState();
 
   useEffect(() => {
     fetchAccount(ownerStxAddress)
@@ -42,7 +43,7 @@ export function CreateMonsterButton({ ownerStxAddress }) {
         },
         finished: data => {
           console.log(data);
-          setStatus(txIdToStatus(data.txId));
+          setTxId(data.txId);
           spinner.current.classList.add('d-none');
         },
       });
@@ -80,6 +81,9 @@ export function CreateMonsterButton({ ownerStxAddress }) {
             Create
           </button>
         </div>
+      </div>
+      <div>
+        <TxStatus txId={txId} resultPrefix="Birth happened in block " />
       </div>
       {status && (
         <>

@@ -1,16 +1,38 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 
-import { txIdToStatus, CONTRACT_ADDRESS } from './StacksAccount';
+import {
+  txIdToStatus,
+  CONTRACT_ADDRESS,
+  fetchMonsterDetails,
+  MONSTERS_CONTRACT_NAME,
+} from './StacksAccount';
 import { useConnect } from '@blockstack/connect';
-import { PostConditionMode, deserializeCV } from '@blockstack/stacks-transactions';
+import {
+  PostConditionMode,
+  deserializeCV,
+  serializeCV,
+  uintCV,
+} from '@blockstack/stacks-transactions';
 
 export function Monster({ monsterId }) {
   const { doContractCall } = useConnect();
   const spinner = useRef();
   const [status, setStatus] = useState();
-  const monsterIdNumber = parseInt(
-    deserializeCV(new Buffer(monsterId.substr(2), 'hex')).value.toString()
-  );
+  const [monsterDetails, setMonsterDetails] = useState();
+
+  const monsterIdNumber = parseInt(monsterId);
+
+  useEffect(() => {
+    if (monsterId) {
+      fetchMonsterDetails(monsterId)
+        .then(details => {
+          setMonsterDetails(details);
+        })
+        .catch(e => console.log(e));
+    } else {
+      console.log('no monsterId');
+    }
+  }, [monsterId]);
 
   const sendAction = async () => {
     spinner.current.classList.remove('d-none');
@@ -46,7 +68,17 @@ export function Monster({ monsterId }) {
     <div>
       <img src={`/monsters/monster-${(monsterIdNumber - 1) % 109}.png`} alt="monster" width="100" />
       <br />
-      Monster {monsterIdNumber}
+      {monsterDetails && (
+        <>
+          <b>{monsterDetails.metaData.name}</b>
+          <br />
+          <small>Last fed: block {monsterDetails.metaData.lastMeal}</small>
+          <br />
+          <small>Owned by: {monsterDetails.owner}</small>
+          <br />
+          <small>ID: {monsterIdNumber}</small>
+        </>
+      )}
       <br />
       <div className="input-group ">
         <div className="input-group-append">
