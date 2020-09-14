@@ -18,18 +18,11 @@ import {
   CONTRACT_ADDRESS,
   fetchJackpot,
   fetchHodlTokenBalance,
-  TxStatus,
   Opponent,
   fetchWinnerAt,
-} from './StacksAccount';
+} from '../StacksAccount';
 import { useConnect } from '@blockstack/connect';
-import {
-  connectWebSocketClient,
-  TransactionsApi,
-  SmartContractsApi,
-  BlocksApi,
-  InfoApi,
-} from '@stacks/blockchain-api-client';
+import { connectWebSocketClient, TransactionsApi } from '@stacks/blockchain-api-client';
 const BigNum = require('bn.js');
 
 export function BetButton({ jackpot, ownerStxAddress }) {
@@ -258,7 +251,7 @@ export function BetResult({ txId }) {
       setProcessingResult({ loading: false, result });
       await sub.unsubscribe();
     });
-  }, [txId]);
+  }, [txId, spinner]);
 
   if (!txId) {
     return null;

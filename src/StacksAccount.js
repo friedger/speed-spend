@@ -18,7 +18,6 @@ import {
   uintCV,
   tupleCV,
   cvToString,
-  addressToString,
 } from '@blockstack/stacks-transactions';
 import { STX_JSON_PATH } from './UserSession';
 export const NETWORK = new StacksTestnet();
@@ -35,6 +34,7 @@ const ARGON_API_URL = 'https://stacks-node-api-latest.argon.blockstack.xyz';
 
 const accountsApi = new AccountsApi();
 const smartContractsApi = new SmartContractsApi();
+const transactionsApi = new TransactionsApi();
 
 export function getStacksAccount(appPrivateKey) {
   const privateKey = createStacksPrivateKey(appPrivateKey);
@@ -168,29 +168,71 @@ export function TxStatus({ txId, resultPrefix }) {
 }
 
 export function Opponent() {
+  const [opponent, setOpponent] = useState();
   useEffect(() => {
     const subscribe = async () => {
+      let response = await accountsApi.getAccountTransactions({
+        principal: `${CONTRACT_ADDRESS}.flip-coin-at-two`,
+      });
+      const txs = response.results.filter(tx => tx.tx_type === 'contract_call');
+      console.log(txs);
+      const resp = await smartContractsApi.callReadOnlyFunctionRaw({
+        stacksAddress: CONTRACT_ADDRESS,
+        contractName: 'flip-coin-at-two',
+        functionName: 'get-next-slot',
+        readOnlyFunctionArgs: { sender: CONTRACT_ADDRESS, arguments: [] },
+      });
+      const nextSlotCVJson = await resp.raw.json();
+      const nextSlotData = deserializeCV(Buffer.from(nextSlotCVJson.result.substr(2), 'hex')).data;
+      console.log({ nextSlotData });
+
+      const nextSlot = {
+        amount: nextSlotData.amount.value.toString(),
+        betFalse:
+          nextSlotData['bet-false'].type === 9
+            ? undefined
+            : cvToString(nextSlotData['bet-false'].value),
+        betTrue:
+          nextSlotData['bet-true'].type === 9
+            ? undefined
+            : cvToString(nextSlotData['bet-true'].value),
+      };
+      console.log({ nextSlot });
+      setOpponent(nextSlot);
+
       const client = await connectWebSocketClient(
         'ws://stacks-node-api-latest.argon.blockstack.xyz/'
       );
       await client.subscribeAddressTransactions(
-        'ST12EY99GS4YKP0CP2CFW6SEPWQ2CGVRWK5GHKDRVT',
-        event => {
+        `${CONTRACT_ADDRESS}.flip-coin-at-two`,
+        async event => {
           console.log(event);
+
+          if (event.tx_status === 'pending') {
+            const mempooltx = await transactionsApi.getMempoolTransactionList();
+            console.log(mempooltx);
+            return;
+          } else if (event.tx_status === 'success') {
+            const tx = await transactionsApi.getTransactionById({ txId: event.tx_id });
+            console.log({ tx });
+          }
         }
       );
-
-      await new SmartContractsApi().callReadOnlyFunction({
-        stacksAddress: 'ST12EY99GS4YKP0CP2CFW6SEPWQ2CGVRWK5GHKDRVT',
-        contractName: 'flip-coin-at-two',
-        functionName: 'get-next-slot',
-      });
     };
 
     subscribe();
   }, []);
 
-  return <>Opponent: </>;
+  if (opponent) {
+    return (
+      <>
+        <div>Player Seats "HEAD": {opponent.betTrue || 'Free Seat'} </div>
+        <div>Player Seats "TAILS": {opponent.betFalse || 'Free Seat'} </div>
+      </>
+    );
+  } else {
+    return null;
+  }
 }
 
 export function fetchJackpot(sender) {

@@ -7,9 +7,14 @@ import {
   broadcastTransaction,
 } from '@blockstack/stacks-transactions';
 
-import { getStacksAccount, fetchAccount, NETWORK, resultToStatus } from './StacksAccount';
-import { getUserAddress } from './StacksAccount';
-import { putStxAddress } from './UserSession';
+import {
+  getUserAddress,
+  getStacksAccount,
+  fetchAccount,
+  NETWORK,
+  resultToStatus,
+} from '../StacksAccount';
+import { putStxAddress } from '../UserSession';
 const BigNum = require('bn.js');
 
 export function SpendField({ title, path, placeholder }) {

@@ -1,8 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useBlockstack } from 'react-blockstack';
 
-import { fetchAccount, txIdToStatus } from './StacksAccount';
-import { getUserAddress } from './StacksAccount';
+import { getUserAddress, fetchAccount, txIdToStatus } from '../StacksAccount';
 import { useConnect } from '@blockstack/connect';
 const BigNum = require('bn.js');
 

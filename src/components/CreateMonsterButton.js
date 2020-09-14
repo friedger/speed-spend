@@ -1,41 +1,31 @@
 import React, { useRef, useState, useEffect } from 'react';
 
-import {
-  txIdToStatus,
-  CONTRACT_ADDRESS,
-  fetchMonsterDetails,
-  MONSTERS_CONTRACT_NAME,
-} from './StacksAccount';
+import { CONTRACT_ADDRESS, fetchAccount, TxStatus } from '../StacksAccount';
 import { useConnect } from '@blockstack/connect';
-import {
-  PostConditionMode,
-  deserializeCV,
-  serializeCV,
-  uintCV,
-} from '@blockstack/stacks-transactions';
+import { PostConditionMode, bufferCVFromString } from '@blockstack/stacks-transactions';
 
-export function Monster({ monsterId }) {
+export function CreateMonsterButton({ ownerStxAddress }) {
   const { doContractCall } = useConnect();
+  const textfield = useRef();
   const spinner = useRef();
   const [status, setStatus] = useState();
-  const [monsterDetails, setMonsterDetails] = useState();
-
-  const monsterIdNumber = parseInt(monsterId);
+  const [txId, setTxId] = useState();
 
   useEffect(() => {
-    if (monsterId) {
-      fetchMonsterDetails(monsterId)
-        .then(details => {
-          setMonsterDetails(details);
-        })
-        .catch(e => console.log(e));
-    } else {
-      console.log('no monsterId');
-    }
-  }, [monsterId]);
+    fetchAccount(ownerStxAddress)
+      .catch(e => {
+        setStatus('Failed to access your account', e);
+        console.log(e);
+      })
+      .then(async acc => {
+        console.log({ acc });
+      });
+  }, [ownerStxAddress]);
 
   const sendAction = async () => {
     spinner.current.classList.remove('d-none');
+
+    var name = textfield.current.value.trim();
 
     try {
       setStatus(`Sending transaction`);
@@ -43,8 +33,8 @@ export function Monster({ monsterId }) {
       await doContractCall({
         contractAddress: CONTRACT_ADDRESS,
         contractName: 'monsters',
-        functionName: 'feed-monster',
-        functionArgs: [monsterId.substr(2)],
+        functionName: 'create-monster',
+        functionArgs: [bufferCVFromString(name)],
         postConditionMode: PostConditionMode.Allow,
         postConditions: [],
         appDetails: {
@@ -53,7 +43,7 @@ export function Monster({ monsterId }) {
         },
         finished: data => {
           console.log(data);
-          setStatus(txIdToStatus(data.txId));
+          setTxId(data.txId);
           spinner.current.classList.add('d-none');
         },
       });
@@ -66,21 +56,21 @@ export function Monster({ monsterId }) {
 
   return (
     <div>
-      <img src={`/monsters/monster-${(monsterIdNumber - 1) % 109}.png`} alt="monster" width="100" />
-      <br />
-      {monsterDetails && (
-        <>
-          <b>{monsterDetails.metaData.name}</b>
-          <br />
-          <small>Last fed: block {monsterDetails.metaData.lastMeal}</small>
-          <br />
-          <small>Owned by: {monsterDetails.owner}</small>
-          <br />
-          <small>ID: {monsterIdNumber}</small>
-        </>
-      )}
-      <br />
-      <div className="input-group ">
+      <h5>Create your own monster</h5>
+      <div className="NoteField input-group ">
+        <input
+          type="text"
+          ref={textfield}
+          className="form-control"
+          defaultValue={''}
+          placeholder="Name of monster (20 letters max)"
+          onKeyUp={e => {
+            if (e.key === 'Enter') sendAction();
+          }}
+          onBlur={e => {
+            setStatus(undefined);
+          }}
+        />
         <div className="input-group-append">
           <button className="btn btn-outline-secondary" type="button" onClick={sendAction}>
             <div
@@ -88,9 +78,12 @@ export function Monster({ monsterId }) {
               role="status"
               className="d-none spinner-border spinner-border-sm text-info align-text-top mr-2"
             />
-            Feed
+            Create
           </button>
         </div>
+      </div>
+      <div>
+        <TxStatus txId={txId} resultPrefix="Birth happened in block " />
       </div>
       {status && (
         <>

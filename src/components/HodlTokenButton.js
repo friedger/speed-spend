@@ -2,12 +2,11 @@ import React, { useRef, useState, useEffect } from 'react';
 
 import {
   fetchAccount,
-  txIdToStatus,
   CONTRACT_ADDRESS,
   HODL_TOKEN_CONTRACT,
   fetchSpendableTokenBalance,
   TxStatus,
-} from './StacksAccount';
+} from '../StacksAccount';
 import { useConnect } from '@blockstack/connect';
 import {
   uintCV,

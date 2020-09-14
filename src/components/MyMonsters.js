@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 
-import { fetchAccount } from './StacksAccount';
+import { CONTRACT_ADDRESS, fetchAccount } from '../StacksAccount';
 import { AccountsApi } from '@stacks/blockchain-api-client';
 import { Monster } from './Monster';
 import { deserializeCV } from '@blockstack/stacks-transactions';
@@ -32,8 +32,7 @@ export function MyMonsters({ ownerStxAddress }) {
           .filter(
             a =>
               a.event_type === 'non_fungible_token_asset' &&
-              a.asset.asset_id ===
-                'ST12EY99GS4YKP0CP2CFW6SEPWQ2CGVRWK5GHKDRV.monsters::nft-monsters'
+              a.asset.asset_id === `${CONTRACT_ADDRESS}.monsters::nft-monsters`
           )
           .map(a => a.asset.value.hex)
       )
@@ -54,7 +53,9 @@ export function MyMonsters({ ownerStxAddress }) {
       {monsters &&
         monsters.map((monsterIdHex, key) => {
           const monsterId = deserializeCV(Buffer.from(monsterIdHex.substr(2), 'hex'));
-          return <Monster key={key} monsterId={monsterId} ownerStxAddress={ownerStxAddress} />;
+          return (
+            <Monster key={key} monsterId={monsterId.value} ownerStxAddress={ownerStxAddress} />
+          );
         })}
       {!monsters && <>No monsters yet. Create one!</>}
       {status && (

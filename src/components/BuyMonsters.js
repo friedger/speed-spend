@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 
-import { txIdToStatus, CONTRACT_ADDRESS, fetchAccount, TxStatus } from './StacksAccount';
+import { CONTRACT_ADDRESS, fetchAccount, TxStatus } from '../StacksAccount';
 import { useConnect } from '@blockstack/connect';
 import { PostConditionMode, uintCV } from '@blockstack/stacks-transactions';
 
@@ -43,7 +43,7 @@ export function BuyMonsters({ ownerStxAddress, monsterId }) {
         },
         finished: data => {
           console.log(data);
-          setStatus(txIdToStatus(data.txId));
+          setStatus(undefined);
           setTxId(data.txId);
           spinner.current.classList.add('d-none');
         },

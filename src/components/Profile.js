@@ -5,7 +5,7 @@ import {
   fetchHodlTokenBalance,
   fetchSpendableTokenBalance,
   TxStatus,
-} from './StacksAccount';
+} from '../StacksAccount';
 
 // Demonstrating BlockstackContext for legacy React Class Components.
 
@@ -44,6 +44,15 @@ export default function Profile({ stxAddresses }) {
         </>
       )}
       <div className="pt-4">
+        Your own Stacks address:
+        <br />
+        <StxProfile
+          stxAddress={stxAddresses.ownerStxAddress}
+          updateStatus={updateStatus}
+          showAddress
+        ></StxProfile>
+      </div>
+      <div className="pt-4">
         Your STX hodl amount for Speed Spend app:
         <br />
         <StxProfile
@@ -60,15 +69,6 @@ export default function Profile({ stxAddresses }) {
         ></HodlTokenProfile>
       </div>
 
-      <div className="pt-4">
-        Your own Stacks address:
-        <br />
-        <StxProfile
-          stxAddress={stxAddresses.ownerStxAddress}
-          updateStatus={updateStatus}
-          showAddress
-        ></StxProfile>
-      </div>
       {status && (
         <>
           <br />

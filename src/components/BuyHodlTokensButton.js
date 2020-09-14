@@ -1,11 +1,17 @@
 import React, { useRef, useState, useEffect } from 'react';
 
-import { fetchAccount, txIdToStatus, TxStatus } from './StacksAccount';
+import { CONTRACT_ADDRESS, fetchAccount, TxStatus } from '../StacksAccount';
 import { useConnect } from '@blockstack/connect';
-const BigNum = require('bn.js');
+import {
+  uintCV,
+  PostConditionMode,
+  makeStandardSTXPostCondition,
+  FungibleConditionCode,
+} from '@blockstack/stacks-transactions';
+import * as BigNum from 'bn.js';
 
-export function HodlButton({ title, path, placeholder, ownerStxAddress, appStxAddress }) {
-  const { doSTXTransfer } = useConnect();
+export function BuyHodlTokensButton({ placeholder, ownerStxAddress }) {
+  const { doContractCall } = useConnect();
   const textfield = useRef();
   const spinner = useRef();
   const [status, setStatus] = useState();
@@ -28,21 +34,22 @@ export function HodlButton({ title, path, placeholder, ownerStxAddress, appStxAd
     var amountAsString = textfield.current.value.trim();
     var amount = parseInt(amountAsString);
 
-    // check balance
-    const acc = await fetchAccount(ownerStxAddress);
-    const balance = acc ? parseInt(acc.balance, 16) : 0;
-    if (balance < amount) {
-      setStatus(`Your balance is below ${amount} uSTX`);
-      spinner.current.classList.add('d-none');
-      return;
-    }
-
     try {
       setStatus(`Sending transaction`);
 
-      await doSTXTransfer({
-        recipient: appStxAddress,
-        amount: new BigNum(amount),
+      await doContractCall({
+        contractAddress: CONTRACT_ADDRESS,
+        contractName: 'hodl-token',
+        functionName: 'buy-tokens',
+        functionArgs: [uintCV(amount)],
+        postConditionMode: PostConditionMode.Deny,
+        postConditions: [
+          makeStandardSTXPostCondition(
+            ownerStxAddress,
+            FungibleConditionCode.LessEqual,
+            new BigNum(amount)
+          ),
+        ],
         appDetails: {
           name: 'Speed Spend',
           icon: 'https://speed-spend.netlify.app/speedspend.png',
@@ -62,7 +69,7 @@ export function HodlButton({ title, path, placeholder, ownerStxAddress, appStxAd
 
   return (
     <div>
-      Hodl (from your own address to your app hodl address)
+      Buy Hodl tokens (1 uSTX = 1 Hodl token)
       <div className="NoteField input-group ">
         <input
           type="decimal"
@@ -84,18 +91,18 @@ export function HodlButton({ title, path, placeholder, ownerStxAddress, appStxAd
               role="status"
               className="d-none spinner-border spinner-border-sm text-info align-text-top mr-2"
             />
-            Hodl
+            Buy
           </button>
         </div>
+      </div>
+      <div>
+        <TxStatus txId={txId} resultPrefix="Purchase request placed in block " />
       </div>
       {status && (
         <>
           <div>{status}</div>
         </>
       )}
-      <div>
-        <TxStatus txId={txId} resultPrefix="Bet placed in block " />
-      </div>
     </div>
   );
 }

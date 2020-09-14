@@ -1,18 +1,12 @@
 import React, { useRef, useState } from 'react';
-import Profile from '../Profile';
 
-import { useBlockstack } from 'react-blockstack';
-import { getStacksAccount } from '../StacksAccount';
 import {
-  addressToString,
   serializeCV,
   uintCV,
   intCV,
   standardPrincipalCV,
   contractPrincipalCV,
   tupleCV,
-  trueCV,
-  falseCV,
 } from '@blockstack/stacks-transactions';
 
 export default function ClarityValues(props) {

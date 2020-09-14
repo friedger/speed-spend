@@ -8,7 +8,7 @@ import App from './App.js';
 import 'bootstrap/dist/css/bootstrap.css';
 import './styles/style.css';
 import { appConfig, finished } from './UserSession.js';
-import Auth from './Auth.js';
+import Auth from './components/Auth.js';
 
 // eslint-disable-next-line
 const blockstack = ReactBlockstack({ appConfig });

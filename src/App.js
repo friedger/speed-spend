@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Landing from './Landing';
+import Landing from './pages/Landing';
 import Main from './pages/Main';
 import Hodl from './pages/Hodl';
 import HodlTokens from './pages/HodlTokens';
@@ -12,6 +12,8 @@ import AtTwo from './pages/AtTwo';
 import Monsters from './pages/Monsters';
 import MonsterDetails from './pages/MonsterDetails';
 import ClarityValues from './pages/ClarityValues';
+import MyProfile from './pages/MyProfile';
+import SpeedSpend from './pages/SpeedSpend';
 
 export default function App(props) {
   const [userSession, setUserSession] = useState();
@@ -35,6 +37,23 @@ export default function App(props) {
   );
 }
 
+const NavLink = props => (
+  <Link
+    {...props}
+    getProps={({ isCurrent }) => {
+      // the object returned here is passed to the
+      // anchor element's props
+      if (isCurrent) {
+        return {
+          className: 'nav-item nav-link px-4 active',
+        };
+      } else {
+        return { className: 'nav-item nav-link px-4' };
+      }
+    }}
+  />
+);
+
 function Content({ userSession }) {
   const authenticated = userSession && userSession.isUserSignedIn();
   const decentralizedID =
@@ -44,38 +63,26 @@ function Content({ userSession }) {
       {!authenticated && <Landing />}
       {decentralizedID && (
         <>
-          <nav className="navbar navbar-expand-md mx-auto">
-            <div className="nav-brand">Features:</div>
-            <Link to="/" className="nav-item px-4">
-              Speed Spend
-            </Link>
-            <Link to="/hodl" className="nav-item px-4">
-              Hodl
-            </Link>
-            <Link to="/hodl-tokens" className="nav-item px-4">
-              Hodl Tokens
-            </Link>
-            <Link to="/jackpot" className="nav-item px-4">
-              Flip Coin with Jackpot
-            </Link>
-            <Link to="/at-two" className="nav-item px-4">
-              Flip Coin at two
-            </Link>
-            <Link to="/monsters" className="nav-item px-4">
-              Monsters
-            </Link>
-            <Link to="/cv" className="nav-item px-4">
-              Clarity Values
-            </Link>
+          <nav className="navbar navbar-expand-md nav-pills nav-justified mx-auto">
+            <NavLink to="/">Overview</NavLink>
+            <NavLink to="/speed-spend">Speed Spend</NavLink>
+            <NavLink to="/hodl">Hodl</NavLink>
+            <NavLink to="/hodl-tokens">Hodl Tokens</NavLink>
+            <NavLink to="/jackpot">Flip Coin with Jackpot</NavLink>
+            <NavLink to="/at-two">Flip Coin at two</NavLink>
+            <NavLink to="/monsters">Monsters</NavLink>
+            <NavLink to="/me">Profile</NavLink>
           </nav>
           <Router>
             <Main path="/" decentralizedID={decentralizedID} />
+            <SpeedSpend path="/speed-spend" decentralizedID={decentralizedID} />
             <Hodl path="/hodl" decentralizedID={decentralizedID} />
             <HodlTokens path="/hodl-tokens" decentralizedID={decentralizedID} />
             <Jackpot path="/jackpot" decentralizedID={decentralizedID} />
             <AtTwo path="/at-two" decentralizedID={decentralizedID} />
             <Monsters path="/monsters" decentralizedID={decentralizedID} />
             <MonsterDetails path="/monsters/:monsterId" decentralizedID={decentralizedID} />
+            <MyProfile path="/me" decentralizedID={decentralizedID} />
             <ClarityValues path="/cv" />
           </Router>
         </>

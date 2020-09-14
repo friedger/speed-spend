@@ -1,38 +1,52 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { useBlockstack } from 'react-blockstack';
+import {
+  makeSTXTokenTransfer,
+  privateKeyToString,
+  addressToString,
+  broadcastTransaction,
+} from '@blockstack/stacks-transactions';
 
 import {
+  getUserAddress,
+  getStacksAccount,
   fetchAccount,
-  txIdToStatus,
-  CONTRACT_ADDRESS,
-  HODL_TOKEN_CONTRACT,
-  fetchHodlTokenBalance,
-} from './StacksAccount';
-import { useConnect } from '@blockstack/connect';
-import {
-  uintCV,
-  makeStandardFungiblePostCondition,
-  makeContractFungiblePostCondition,
-  FungibleConditionCode,
-  createAssetInfo,
-} from '@blockstack/stacks-transactions';
+  NETWORK,
+  resultToStatus,
+} from '../StacksAccount';
+import { putStxAddress } from '../UserSession';
 const BigNum = require('bn.js');
 
-export function UnHodlTokenButton({ title, placeholder, ownerStxAddress }) {
-  const { doContractCall } = useConnect();
+export function UnHodlButton({ title, placeholder, ownerStxAddress }) {
+  const { userSession } = useBlockstack();
   const textfield = useRef();
   const spinner = useRef();
   const [status, setStatus] = useState();
+  const [account, setAccount] = useState();
+  const [identity, setIdentity] = useState();
 
   useEffect(() => {
-    fetchAccount(ownerStxAddress)
+    const userData = userSession.loadUserData();
+    const appPrivateKey = userData.appPrivateKey;
+    const id = getStacksAccount(appPrivateKey);
+    const addrAsString = addressToString(id.address);
+    setIdentity(id);
+    fetchAccount(addrAsString)
       .catch(e => {
         setStatus('Failed to access your account', e);
         console.log(e);
       })
       .then(async acc => {
+        setAccount(acc);
         console.log({ acc });
+        const address = await getUserAddress(userSession, userData.username);
+        console.log(address);
+
+        if (!address) {
+          await putStxAddress(userSession, addrAsString);
+        }
       });
-  }, [ownerStxAddress]);
+  }, [userSession]);
 
   const sendAction = async () => {
     spinner.current.classList.remove('d-none');
@@ -41,7 +55,7 @@ export function UnHodlTokenButton({ title, placeholder, ownerStxAddress }) {
     const amount = parseInt(amountString);
 
     // check balance
-    const acc = await fetchHodlTokenBalance(ownerStxAddress);
+    const acc = await fetchAccount(addressToString(identity.address));
     const balance = acc ? parseInt(acc.balance, 16) : 0;
     if (balance < amount) {
       setStatus(`Your balance is below ${amount} uSTX`);
@@ -50,38 +64,18 @@ export function UnHodlTokenButton({ title, placeholder, ownerStxAddress }) {
     }
 
     try {
+      const transaction = await makeSTXTokenTransfer({
+        recipient: ownerStxAddress,
+        amount: new BigNum(amount),
+        senderKey: privateKeyToString(identity.privateKey),
+        network: NETWORK,
+      });
       setStatus(`Sending transaction`);
 
-      await doContractCall({
-        contractAddress: CONTRACT_ADDRESS,
-        contractName: HODL_TOKEN_CONTRACT,
-        functionName: 'unhodl',
-        functionArgs: [uintCV(amount)],
-        postConditions: [
-          makeStandardFungiblePostCondition(
-            ownerStxAddress,
-            FungibleConditionCode.LessEqual,
-            new BigNum(amount),
-            new createAssetInfo(CONTRACT_ADDRESS, HODL_TOKEN_CONTRACT, 'hodl-token')
-          ),
-          makeContractFungiblePostCondition(
-            CONTRACT_ADDRESS,
-            HODL_TOKEN_CONTRACT,
-            FungibleConditionCode.LessEqual,
-            new BigNum(amount),
-            new createAssetInfo(CONTRACT_ADDRESS, HODL_TOKEN_CONTRACT, 'spendable-token')
-          ),
-        ],
-        appDetails: {
-          name: 'Speed Spend',
-          icon: 'https://speed-spend.netlify.app/speedspend.png',
-        },
-        finished: data => {
-          console.log(data);
-          setStatus(txIdToStatus(data.txId));
-          spinner.current.classList.add('d-none');
-        },
-      });
+      const result = await broadcastTransaction(transaction, NETWORK);
+      console.log(result);
+      spinner.current.classList.add('d-none');
+      setStatus(resultToStatus(result));
     } catch (e) {
       console.log(e);
       setStatus(e.toString());
@@ -91,7 +85,7 @@ export function UnHodlTokenButton({ title, placeholder, ownerStxAddress }) {
 
   return (
     <div>
-      Unhodl tokens (make them spendable)
+      Unhodl (from your app hodl address to your own address)
       <div className="NoteField input-group ">
         <input
           type="decimal"
@@ -99,6 +93,7 @@ export function UnHodlTokenButton({ title, placeholder, ownerStxAddress }) {
           className="form-control"
           defaultValue={''}
           placeholder={placeholder}
+          disabled={!account}
           onKeyUp={e => {
             if (e.key === 'Enter') sendAction();
           }}
@@ -113,7 +108,7 @@ export function UnHodlTokenButton({ title, placeholder, ownerStxAddress }) {
               role="status"
               className="d-none spinner-border spinner-border-sm text-info align-text-top mr-2"
             />
-            Unhodl
+            UnHold
           </button>
         </div>
       </div>
