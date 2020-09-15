@@ -174,7 +174,6 @@ function StxProfile({ stxAddress, updateStatus, showAddress }) {
 
       fetchAccount(stxAddress)
         .then(acc => {
-          console.log(acc);
           setProfileState({ account: acc });
           spinner.current.classList.add('d-none');
         })
@@ -229,7 +228,7 @@ function StxProfile({ stxAddress, updateStatus, showAddress }) {
       )}
       {profileState.account && (
         <>
-          You balance: {parseInt(profileState.account.balance, 16).toString()}uSTX.
+          You balance: {profileState.account.balance}uSTX.
           <br />
         </>
       )}
