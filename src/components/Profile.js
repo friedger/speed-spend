@@ -53,15 +53,16 @@ export default function Profile({ stxAddresses }) {
         ></StxProfile>
       </div>
       <div className="pt-4">
-        Your STX hodl amount for Speed Spend app:
+        Your STX hodl address for Speed Spend app:
         <br />
         <StxProfile
           stxAddress={stxAddresses.appStxAddress}
           updateStatus={updateStatus}
+          showAddress
         ></StxProfile>
       </div>
       <div className="pt-4">
-        Your Hodl amount for Speed Spend Hodl tokens:
+        Your Speed Spend Hodl tokens:
         <br />
         <HodlTokenProfile
           stxAddress={stxAddresses.ownerStxAddress}

@@ -18,8 +18,10 @@ import {
   CONTRACT_ADDRESS,
   fetchJackpot,
   fetchHodlTokenBalance,
-  Opponent,
+  AtTwoState,
   fetchWinnerAt,
+  fetchAtTwoState,
+  JackpotState,
 } from '../StacksAccount';
 import { useConnect } from '@blockstack/connect';
 import { connectWebSocketClient, TransactionsApi } from '@stacks/blockchain-api-client';
@@ -87,6 +89,20 @@ export function BetButton({ jackpot, ownerStxAddress }) {
         );
         spinner.current.classList.add('d-none');
         return;
+      }
+    }
+
+    if (!jackpot) {
+      const atTwoState = await fetchAtTwoState();
+      if (atTwoState) {
+        if (
+          (betValue && atTwoState.nextSlot.betTrue) ||
+          (!betValue && atTwoState.nextSlot.betFalse)
+        ) {
+          setStatus(`The seat for ${betValue ? 'HEAD' : 'TAILS'} is already taken.`);
+          spinner.current.classList.add('d-none');
+          return;
+        }
       }
     }
 
@@ -196,11 +212,6 @@ export function BetButton({ jackpot, ownerStxAddress }) {
           </button>
         </div>
       </div>
-      {!jackpot && (
-        <div>
-          <Opponent />
-        </div>
-      )}
       <div>
         <BetResult txId={txId} />
       </div>
@@ -208,6 +219,16 @@ export function BetButton({ jackpot, ownerStxAddress }) {
         <>
           <div>{status}</div>
         </>
+      )}
+      {!jackpot && (
+        <div>
+          <AtTwoState />
+        </div>
+      )}
+      {jackpot && (
+        <div>
+          <JackpotState />
+        </div>
       )}
     </div>
   );
