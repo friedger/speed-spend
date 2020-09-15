@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Landing from './pages/Landing';
-import Main from './pages/Main';
+import Overview from './pages/Overview';
 import Hodl from './pages/Hodl';
 import HodlTokens from './pages/HodlTokens';
 import { Connect } from '@blockstack/connect';
@@ -74,7 +74,7 @@ function Content({ userSession }) {
             <NavLink to="/me">Profile</NavLink>
           </nav>
           <Router>
-            <Main path="/" decentralizedID={decentralizedID} />
+            <Overview path="/" decentralizedID={decentralizedID} />
             <SpeedSpend path="/speed-spend" decentralizedID={decentralizedID} />
             <Hodl path="/hodl" decentralizedID={decentralizedID} />
             <HodlTokens path="/hodl-tokens" decentralizedID={decentralizedID} />

@@ -1,11 +1,8 @@
 import React, { useRef, useState, useCallback, useEffect } from 'react';
 import { useBlockstack } from 'react-blockstack';
-import {
-  fetchAccount,
-  fetchHodlTokenBalance,
-  fetchSpendableTokenBalance,
-  TxStatus,
-} from '../StacksAccount';
+import { fetchAccount } from '../lib/account';
+import { fetchHodlTokenBalance, fetchSpendableTokenBalance } from '../lib/holdTokens';
+import { TxStatus } from '../lib/transactions';
 
 // Demonstrating BlockstackContext for legacy React Class Components.
 

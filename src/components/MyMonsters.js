@@ -1,6 +1,8 @@
 import React, { useRef, useState, useEffect } from 'react';
 
-import { CONTRACT_ADDRESS, fetchAccount } from '../StacksAccount';
+import { CONTRACT_ADDRESS } from '../lib/constants';
+import { fetchAccount } from '../lib/account';
+
 import { AccountsApi } from '@stacks/blockchain-api-client';
 import { Monster } from './Monster';
 import { deserializeCV } from '@blockstack/stacks-transactions';

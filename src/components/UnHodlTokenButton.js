@@ -1,12 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
 
-import {
-  fetchAccount,
-  txIdToStatus,
-  CONTRACT_ADDRESS,
-  HODL_TOKEN_CONTRACT,
-  fetchHodlTokenBalance,
-} from '../StacksAccount';
 import { useConnect } from '@blockstack/connect';
 import {
   uintCV,
@@ -15,6 +8,10 @@ import {
   FungibleConditionCode,
   createAssetInfo,
 } from '@blockstack/stacks-transactions';
+import { fetchAccount } from '../lib/account';
+import { fetchHodlTokenBalance } from '../lib/holdTokens';
+import { CONTRACT_ADDRESS, HODL_TOKEN_CONTRACT } from '../lib/constants';
+import { txIdToStatus } from '../lib/transactions';
 const BigNum = require('bn.js');
 
 export function UnHodlTokenButton({ title, placeholder, ownerStxAddress }) {

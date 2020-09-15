@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 
-import { CONTRACT_ADDRESS, fetchAccount, TxStatus } from '../StacksAccount';
+import { fetchAccount } from '../lib/account';
 import { useConnect } from '@blockstack/connect';
 import {
   uintCV,
@@ -9,6 +9,8 @@ import {
   FungibleConditionCode,
 } from '@blockstack/stacks-transactions';
 import * as BigNum from 'bn.js';
+import { CONTRACT_ADDRESS } from '../lib/constants';
+import { TxStatus } from '../lib/transactions';
 
 export function BuyHodlTokensButton({ placeholder, ownerStxAddress }) {
   const { doContractCall } = useConnect();

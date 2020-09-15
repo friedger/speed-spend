@@ -1,8 +1,10 @@
 import React, { useRef, useState, useEffect } from 'react';
 
-import { CONTRACT_ADDRESS, fetchAccount, TxStatus } from '../StacksAccount';
+import { fetchAccount } from '../lib/account';
 import { useConnect } from '@blockstack/connect';
 import { PostConditionMode, bufferCVFromString } from '@blockstack/stacks-transactions';
+import { CONTRACT_ADDRESS } from '../lib/constants';
+import { TxStatus } from '../lib/transactions';
 
 export function CreateMonsterButton({ ownerStxAddress }) {
   const { doContractCall } = useConnect();

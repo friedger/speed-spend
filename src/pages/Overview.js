@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Main(props) {
+export default function Overview(props) {
   return (
     <main className="panel-welcome mt-5 container">
       <div className="lead row mt-5 mb-3">

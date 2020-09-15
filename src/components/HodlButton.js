@@ -1,7 +1,8 @@
 import React, { useRef, useState, useEffect } from 'react';
 
-import { fetchAccount, TxStatus } from '../StacksAccount';
+import { fetchAccount } from '../lib/account';
 import { useConnect } from '@blockstack/connect';
+import { TxStatus } from '../lib/transactions';
 const BigNum = require('bn.js');
 
 export function HodlButton({ title, path, placeholder, ownerStxAddress, appStxAddress }) {

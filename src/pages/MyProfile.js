@@ -2,7 +2,7 @@ import React from 'react';
 import Profile from '../components/Profile';
 
 import { useBlockstack } from 'react-blockstack';
-import { getStacksAccount } from '../StacksAccount';
+import { getStacksAccount } from '../lib/account';
 import { addressToString } from '@blockstack/stacks-transactions';
 
 export default function MyProfile(props) {

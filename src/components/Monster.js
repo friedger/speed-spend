@@ -1,8 +1,10 @@
 import React, { useRef, useState, useEffect } from 'react';
 
-import { CONTRACT_ADDRESS, fetchMonsterDetails, TxStatus } from '../StacksAccount';
+import { CONTRACT_ADDRESS } from '../lib/constants';
+import { TxStatus } from '../lib/transactions';
 import { useConnect } from '@blockstack/connect';
 import { PostConditionMode, serializeCV, uintCV } from '@blockstack/stacks-transactions';
+import { fetchMonsterDetails } from '../lib/monsters';
 
 export function Monster({ monsterId, ownerStxAddress }) {
   const { doContractCall } = useConnect();

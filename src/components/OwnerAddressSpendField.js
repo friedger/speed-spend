@@ -1,8 +1,9 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useBlockstack } from 'react-blockstack';
 
-import { getUserAddress, fetchAccount, txIdToStatus } from '../StacksAccount';
+import { getUserAddress, fetchAccount } from '../lib/account';
 import { useConnect } from '@blockstack/connect';
+import { txIdToStatus } from '../lib/transactions';
 const BigNum = require('bn.js');
 
 export function OwnerAddressSpendField({ title, path, placeholder, stxAddress }) {

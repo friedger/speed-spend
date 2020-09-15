@@ -11,18 +11,17 @@ import {
 } from '@blockstack/stacks-transactions';
 import Switch from 'react-input-switch';
 
+import { getStacksAccount, fetchAccount } from '../lib/account';
+import { NETWORK, CONTRACT_ADDRESS } from '../lib/constants';
 import {
-  getStacksAccount,
-  fetchAccount,
-  NETWORK,
-  CONTRACT_ADDRESS,
   fetchJackpot,
-  fetchHodlTokenBalance,
   AtTwoState,
   fetchWinnerAt,
   fetchAtTwoState,
   JackpotState,
-} from '../StacksAccount';
+} from '../lib/flipCoin';
+import { fetchHodlTokenBalance } from '../lib/holdTokens';
+
 import { useConnect } from '@blockstack/connect';
 import { connectWebSocketClient, TransactionsApi } from '@stacks/blockchain-api-client';
 const BigNum = require('bn.js');

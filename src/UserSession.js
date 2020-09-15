@@ -1,6 +1,6 @@
 import { AppConfig } from 'blockstack';
 import { addressToString } from '@blockstack/stacks-transactions';
-import { getStacksAccount } from './StacksAccount';
+import { getStacksAccount } from './lib/account';
 import { didConnect } from 'react-blockstack';
 
 export const appConfig = new AppConfig(['store_write', 'publish_data']);

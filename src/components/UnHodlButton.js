@@ -7,14 +7,10 @@ import {
   broadcastTransaction,
 } from '@blockstack/stacks-transactions';
 
-import {
-  getUserAddress,
-  getStacksAccount,
-  fetchAccount,
-  NETWORK,
-  resultToStatus,
-} from '../StacksAccount';
+import { NETWORK } from '../lib/constants';
+import { getUserAddress, getStacksAccount, fetchAccount } from '../lib/account';
 import { putStxAddress } from '../UserSession';
+import { resultToStatus } from '../lib/transactions';
 const BigNum = require('bn.js');
 
 export function UnHodlButton({ title, placeholder, ownerStxAddress }) {
