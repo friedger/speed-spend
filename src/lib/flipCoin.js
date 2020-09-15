@@ -84,7 +84,7 @@ export function AtTwoState() {
   if (atTwoState) {
     return (
       <>
-        <div>Player Seats "HEAD": {atTwoState.nextSlot.betTrue || 'Free Seat'} </div>
+        <div>Player Seats "HEADS": {atTwoState.nextSlot.betTrue || 'Free Seat'} </div>
         <div>Player Seats "TAILS": {atTwoState.nextSlot.betFalse || 'Free Seat'} </div>
         {atTwoState.lastWinner && (
           <div className="mt-5">
