@@ -1,7 +1,8 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   cvToString,
   deserializeCV,
+  PostConditionMode,
   serializeCV,
   tupleCV,
   uintCV,
@@ -10,11 +11,33 @@ import {
   accountsApi,
   CONTRACT_ADDRESS,
   MONSTERS_CONTRACT_NAME,
+  NETWORK,
   smartContractsApi,
   transactionsApi,
 } from './constants';
+import { useConnect } from '@blockstack/connect';
 import { connectWebSocketClient } from '@stacks/blockchain-api-client';
+import { TxStatus } from './transactions';
+import { principalCV } from '@blockstack/stacks-transactions/lib/clarity/types/principalCV';
 
+export async function fetchMonsterIds(ownerStxAddress) {
+  return accountsApi
+    .getAccountAssets({ principal: ownerStxAddress })
+    .then(assetList => {
+      console.log({ assetList });
+      return assetList;
+    })
+    .then(assetList =>
+      assetList.results
+        .filter(
+          a =>
+            a.event_type === 'non_fungible_token_asset' &&
+            a.asset.asset_id === `${CONTRACT_ADDRESS}.monsters::nft-monsters`
+        )
+        .map(a => a.asset.value.hex)
+    )
+    .then(idsHex => [...new Set(idsHex)]);
+}
 export function fetchMonsterDetails2(monsterId) {
   console.log(monsterId);
   return fetch(
@@ -76,10 +99,20 @@ export async function fetchMarketState() {
   return { transactions };
 }
 
-export function MarketState() {
+export function MarketState({ ownerStxAddress }) {
   const [marketState, setMarketState] = useState();
+  const [ownedMonsterIds, setOwnedMonsterIds] = useState();
 
   useEffect(() => {
+    fetchMonsterIds(ownerStxAddress)
+      .then(async monsterIds => {
+        console.log({ monsterIds });
+        setOwnedMonsterIds(monsterIds);
+      })
+      .catch(e => {
+        console.log(e);
+      });
+
     const subscribe = async () => {
       const marketState = await fetchMarketState();
       setMarketState(marketState);
@@ -104,28 +137,18 @@ export function MarketState() {
     };
 
     subscribe();
-  }, []);
+  }, [ownerStxAddress]);
 
   if (marketState) {
     return (
       <>
         {marketState.transactions.map((tx, key) => {
           if (tx.contract_call.function_name === 'bid') {
-            return (
-              <Fragment key={key}>
-                <div>
-                  {tx.contract_call.function_name} for monster{' '}
-                  {deserializeCV(
-                    Buffer.from(tx.contract_call.function_args[0].hex.substr(2), 'hex')
-                  ).value.toString()}{' '}
-                  at{' '}
-                  {deserializeCV(
-                    Buffer.from(tx.contract_call.function_args[1].hex.substr(2), 'hex')
-                  ).value.toString()}{' '}
-                  uSTX at {tx.burn_block_time_iso}
-                </div>
-              </Fragment>
-            );
+            return <BidTransaction key={key} tx={tx} ownedMonsterIds={ownedMonsterIds} />;
+          } else if (tx.contract_call.function_name === 'accept') {
+            return <AcceptTransaction key={key} tx={tx} />;
+          } else if (tx.contract_call.function_name === 'pay') {
+            return <PayTransaction key={key} tx={tx} />;
           } else {
             return null;
           }
@@ -135,4 +158,109 @@ export function MarketState() {
   } else {
     return null;
   }
+}
+
+export function BidTransaction({ tx, ownedMonsterIds }) {
+  const [status, setStatus] = useState();
+  const [txId, setTxId] = useState();
+  const spinner = useRef();
+  const { doContractCall } = useConnect();
+
+  const monsterIdCV = deserializeCV(
+    Buffer.from(tx.contract_call.function_args[0].hex.substr(2), 'hex')
+  );
+  const amountCV = deserializeCV(
+    Buffer.from(tx.contract_call.function_args[1].hex.substr(2), 'hex')
+  );
+  const sender = principalCV(tx.sender_address);
+
+  const acceptAction = async () => {
+    spinner.current.classList.remove('d-none');
+
+    try {
+      setStatus(`Sending transaction`);
+
+      doContractCall({
+        contractAddress: CONTRACT_ADDRESS,
+        contractName: 'market',
+        functionName: 'accept',
+        functionArgs: [monsterIdCV, sender],
+        network: NETWORK,
+        postConditions: [],
+        postConditionMode: PostConditionMode.Allow,
+        finished: result => {
+          console.log(result);
+          spinner.current.classList.add('d-none');
+          setTxId(result.txId);
+        },
+      });
+    } catch (e) {
+      console.log(e);
+      setStatus(e.toString());
+      spinner.current.classList.add('d-none');
+    }
+  };
+
+  const isOwned =
+    ownedMonsterIds &&
+    ownedMonsterIds.find(
+      monsterId => monsterId.substr(2) === serializeCV(monsterIdCV).toString('hex')
+    );
+
+  return (
+    <div className="mb-4">
+      {tx.contract_call.function_name} for monster {monsterIdCV.value.toString()} at{' '}
+      {amountCV.value.toString()} uSTX at {tx.burn_block_time_iso}
+      {isOwned && (
+        <>
+          <div className="NoteField input-group ">
+            <div className="input-group-append">
+              <button className="btn btn-outline-secondary" type="button" onClick={acceptAction}>
+                <div
+                  ref={spinner}
+                  role="status"
+                  className="d-none spinner-border spinner-border-sm text-info align-text-top mr-2"
+                />
+                Accept
+              </button>
+            </div>
+          </div>
+          <TxStatus txId={txId} />
+          {status && <div>{status}</div>}
+        </>
+      )}
+    </div>
+  );
+}
+
+export function AcceptTransaction({ tx }) {
+  return (
+    <div className="mb-4">
+      Accepted bid for monster{' '}
+      {deserializeCV(
+        Buffer.from(tx.contract_call.function_args[0].hex.substr(2), 'hex')
+      ).value.toString()}{' '}
+      placed by user{' '}
+      {cvToString(
+        deserializeCV(Buffer.from(tx.contract_call.function_args[1].hex.substr(2), 'hex'))
+      )}
+      . Accepted at {tx.burn_block_time_iso}
+    </div>
+  );
+}
+
+export function PayTransaction({ tx }) {
+  return (
+    <div className="mb-4">
+      Paid{' '}
+      {deserializeCV(
+        Buffer.from(tx.contract_call.function_args[1].hex.substr(2), 'hex')
+      ).value.toString()}{' '}
+      uSTX for monster{' '}
+      {deserializeCV(
+        Buffer.from(tx.contract_call.function_args[0].hex.substr(2), 'hex')
+      ).value.toString()}{' '}
+      at {tx.burn_block_time_iso}
+    </div>
+  );
 }

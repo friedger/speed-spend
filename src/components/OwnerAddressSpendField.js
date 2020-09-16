@@ -3,7 +3,7 @@ import { useBlockstack } from 'react-blockstack';
 
 import { getUserAddress, fetchAccount } from '../lib/account';
 import { useConnect } from '@blockstack/connect';
-import { txIdToStatus, TxStatus } from '../lib/transactions';
+import { TxStatus } from '../lib/transactions';
 const BigNum = require('bn.js');
 
 export function OwnerAddressSpendField({ title, path, placeholder, stxAddress }) {

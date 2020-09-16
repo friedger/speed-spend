@@ -1,13 +1,10 @@
 import React, { useRef, useState, useEffect } from 'react';
 
-import { CONTRACT_ADDRESS } from '../lib/constants';
 import { fetchAccount } from '../lib/account';
 
-import { AccountsApi } from '@stacks/blockchain-api-client';
 import { Monster } from './Monster';
 import { deserializeCV } from '@blockstack/stacks-transactions';
-
-const accountsApi = new AccountsApi();
+import { fetchMonsterIds } from '../lib/monsters';
 
 export function MyMonsters({ ownerStxAddress }) {
   const spinner = useRef();
@@ -23,24 +20,14 @@ export function MyMonsters({ ownerStxAddress }) {
       .then(async acc => {
         console.log({ acc });
       });
-    accountsApi
-      .getAccountAssets({ principal: ownerStxAddress })
-      .catch(e => {
-        setStatus('Failed to get balances of your account', e);
-        console.log(e);
-      })
-      .then(b =>
-        b.results
-          .filter(
-            a =>
-              a.event_type === 'non_fungible_token_asset' &&
-              a.asset.asset_id === `${CONTRACT_ADDRESS}.monsters::nft-monsters`
-          )
-          .map(a => a.asset.value.hex)
-      )
+    fetchMonsterIds(ownerStxAddress)
       .then(async monsterIds => {
         console.log(monsterIds);
         setMonsters(monsterIds);
+      })
+      .catch(e => {
+        setStatus('Failed to get balances of your account', e);
+        console.log(e);
       });
   }, [ownerStxAddress]);
 
