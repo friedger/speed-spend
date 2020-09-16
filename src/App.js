@@ -37,23 +37,44 @@ export default function App(props) {
   );
 }
 
-const NavLink = props => (
-  <Link
-    {...props}
-    getProps={({ isCurrent }) => {
-      // the object returned here is passed to the
-      // anchor element's props
-      if (isCurrent) {
-        return {
-          className: 'nav-item nav-link px-4 active',
-        };
-      } else {
-        return { className: 'nav-item nav-link px-4' };
-      }
-    }}
-  />
-);
+const NavLink = props => {
+  console.log({ props });
+  return (
+    <Link
+      {...props}
+      getProps={({ isCurrent }) => {
+        console.log({ isCurrent });
+        // the object returned here is passed to the
+        // anchor element's props
+        if (isCurrent) {
+          return {
+            className: 'nav-item nav-link px-4 active',
+          };
+        } else {
+          return { className: 'nav-item nav-link px-4' };
+        }
+      }}
+    />
+  );
+};
 
+function AppBody(props) {
+  return (
+    <div>
+      <nav className="navbar navbar-expand-md nav-pills nav-justified mx-auto">
+        <NavLink to="/">Overview</NavLink>
+        <NavLink to="/speed-spend">Speed Spend</NavLink>
+        <NavLink to="/hodl">Hodl</NavLink>
+        <NavLink to="/hodl-tokens">Hodl Tokens</NavLink>
+        <NavLink to="/jackpot">Flip Coin with Jackpot</NavLink>
+        <NavLink to="/at-two">Flip Coin at two</NavLink>
+        <NavLink to="/monsters">Monsters</NavLink>
+        <NavLink to="/me">Profile</NavLink>
+      </nav>
+      {props.children}
+    </div>
+  );
+}
 function Content({ userSession }) {
   const authenticated = userSession && userSession.isUserSignedIn();
   const decentralizedID =
@@ -63,27 +84,19 @@ function Content({ userSession }) {
       {!authenticated && <Landing />}
       {decentralizedID && (
         <>
-          <nav className="navbar navbar-expand-md nav-pills nav-justified mx-auto">
-            <NavLink to="/">Overview</NavLink>
-            <NavLink to="/speed-spend">Speed Spend</NavLink>
-            <NavLink to="/hodl">Hodl</NavLink>
-            <NavLink to="/hodl-tokens">Hodl Tokens</NavLink>
-            <NavLink to="/jackpot">Flip Coin with Jackpot</NavLink>
-            <NavLink to="/at-two">Flip Coin at two</NavLink>
-            <NavLink to="/monsters">Monsters</NavLink>
-            <NavLink to="/me">Profile</NavLink>
-          </nav>
           <Router>
-            <Overview path="/" decentralizedID={decentralizedID} />
-            <SpeedSpend path="/speed-spend" decentralizedID={decentralizedID} />
-            <Hodl path="/hodl" decentralizedID={decentralizedID} />
-            <HodlTokens path="/hodl-tokens" decentralizedID={decentralizedID} />
-            <Jackpot path="/jackpot" decentralizedID={decentralizedID} />
-            <AtTwo path="/at-two" decentralizedID={decentralizedID} />
-            <Monsters path="/monsters" decentralizedID={decentralizedID} />
-            <MonsterDetails path="/monsters/:monsterId" decentralizedID={decentralizedID} />
-            <MyProfile path="/me" decentralizedID={decentralizedID} />
-            <ClarityValues path="/cv" />
+            <AppBody path="/">
+              <Overview path="/" decentralizedID={decentralizedID} />
+              <SpeedSpend path="/speed-spend" decentralizedID={decentralizedID} />
+              <Hodl path="/hodl" decentralizedID={decentralizedID} />
+              <HodlTokens path="/hodl-tokens" decentralizedID={decentralizedID} />
+              <Jackpot path="/jackpot" decentralizedID={decentralizedID} />
+              <AtTwo path="/at-two" decentralizedID={decentralizedID} />
+              <Monsters exact path="/monsters" decentralizedID={decentralizedID} />
+              <MonsterDetails path="/monsters/:monsterId" decentralizedID={decentralizedID} />
+              <MyProfile path="/me" decentralizedID={decentralizedID} />
+              <ClarityValues path="/cv" />
+            </AppBody>
           </Router>
         </>
       )}

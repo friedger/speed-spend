@@ -30,6 +30,10 @@ export async function getUserAddress(userSession, username) {
     .catch(e => console.log(e, username));
 }
 
+/**
+ * Uses the AccountsApi of the stacks blockchain api client library,
+ * returns the stacks balance object with property `balance` in decimal.
+ */
 export function fetchAccount(addressAsString) {
   console.log('Checking account');
   return accountsApi
@@ -37,19 +41,15 @@ export function fetchAccount(addressAsString) {
     .then(response => response.stx);
 }
 
+/**
+ * Uses the RCP api of the stacks node directly,
+ * returns the json object with property `balance` in hex.
+ */
 export function fetchAccount2(addressAsString) {
   console.log('Checking account');
   const balanceUrl = `${STACKS_API_ACCOUNTS_URL}/${addressAsString}`;
   return fetch(balanceUrl).then(r => {
     console.log({ r });
     return r.json();
-  });
-}
-
-export function fetchBalances(addressAsString) {
-  console.log('Checking balances');
-  return accountsApi.getAccountBalance({ principal: addressAsString }).then(balance => {
-    console.log({ balance });
-    return balance;
   });
 }

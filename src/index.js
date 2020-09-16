@@ -1,9 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router } from 'react-router-dom';
 import ReactBlockstack from 'react-blockstack';
 import App from './App.js';
-
 // Require Sass file so webpack can build it
 import 'bootstrap/dist/css/bootstrap.css';
 import './styles/style.css';
@@ -22,10 +20,5 @@ const blockstack = ReactBlockstack({ appConfig });
   }
 })();
 
-ReactDOM.render(
-  <Router>
-    <App />
-  </Router>,
-  document.getElementById('App')
-);
+ReactDOM.render(<App />, document.getElementById('App'));
 ReactDOM.render(<Auth />, document.getElementById('Auth'));

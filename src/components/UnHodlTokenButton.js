@@ -11,7 +11,7 @@ import {
 import { fetchAccount } from '../lib/account';
 import { fetchHodlTokenBalance } from '../lib/holdTokens';
 import { CONTRACT_ADDRESS, HODL_TOKEN_CONTRACT } from '../lib/constants';
-import { txIdToStatus } from '../lib/transactions';
+import { TxStatus } from '../lib/transactions';
 const BigNum = require('bn.js');
 
 export function UnHodlTokenButton({ title, placeholder, ownerStxAddress }) {
@@ -19,6 +19,7 @@ export function UnHodlTokenButton({ title, placeholder, ownerStxAddress }) {
   const textfield = useRef();
   const spinner = useRef();
   const [status, setStatus] = useState();
+  const [txId, setTxId] = useState();
 
   useEffect(() => {
     fetchAccount(ownerStxAddress)
@@ -75,7 +76,8 @@ export function UnHodlTokenButton({ title, placeholder, ownerStxAddress }) {
         },
         finished: data => {
           console.log(data);
-          setStatus(txIdToStatus(data.txId));
+          setStatus(undefined);
+          setTxId(data.txId);
           spinner.current.classList.add('d-none');
         },
       });
@@ -114,6 +116,7 @@ export function UnHodlTokenButton({ title, placeholder, ownerStxAddress }) {
           </button>
         </div>
       </div>
+      <TxStatus txId={txId} />
       {status && (
         <>
           <div>{status}</div>

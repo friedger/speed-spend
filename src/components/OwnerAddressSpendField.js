@@ -3,7 +3,7 @@ import { useBlockstack } from 'react-blockstack';
 
 import { getUserAddress, fetchAccount } from '../lib/account';
 import { useConnect } from '@blockstack/connect';
-import { txIdToStatus } from '../lib/transactions';
+import { txIdToStatus, TxStatus } from '../lib/transactions';
 const BigNum = require('bn.js');
 
 export function OwnerAddressSpendField({ title, path, placeholder, stxAddress }) {
@@ -12,6 +12,7 @@ export function OwnerAddressSpendField({ title, path, placeholder, stxAddress })
   const textfield = useRef();
   const spinner = useRef();
   const [status, setStatus] = useState();
+  const [txId, setTxId] = useState();
   const [account, setAccount] = useState();
 
   useEffect(() => {
@@ -66,7 +67,8 @@ export function OwnerAddressSpendField({ title, path, placeholder, stxAddress })
         },
         finished: data => {
           console.log(data);
-          setStatus(txIdToStatus(data.txId));
+          setStatus(undefined);
+          setTxId(data.txId);
           spinner.current.classList.add('d-none');
         },
       });
@@ -109,6 +111,7 @@ export function OwnerAddressSpendField({ title, path, placeholder, stxAddress })
           </button>
         </div>
       </div>
+      <TxStatus txId={txId} />
       {status && (
         <>
           <div>{status}</div>
