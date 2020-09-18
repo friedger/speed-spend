@@ -146,7 +146,14 @@ export function MarketState({ ownerStxAddress }) {
           if (tx.contract_call.function_name === 'bid') {
             return <BidTransaction key={key} tx={tx} ownedMonsterIds={ownedMonsterIds} />;
           } else if (tx.contract_call.function_name === 'accept') {
-            return <AcceptTransaction key={key} tx={tx} />;
+            return (
+              <AcceptTransaction
+                key={key}
+                tx={tx}
+                ownedMonsterIds={ownedMonsterIds}
+                ownerStxAddress={ownerStxAddress}
+              />
+            );
           } else if (tx.contract_call.function_name === 'pay') {
             return <PayTransaction key={key} tx={tx} />;
           } else {
@@ -233,18 +240,117 @@ export function BidTransaction({ tx, ownedMonsterIds }) {
   );
 }
 
-export function AcceptTransaction({ tx }) {
+export function AcceptTransaction({ tx, ownedMonsterIds, ownerStxAddress }) {
+  const [status, setStatus] = useState();
+  const [txId, setTxId] = useState();
+  const spinner = useRef();
+  const { doContractCall } = useConnect();
+
+  const monsterIdCV = deserializeCV(
+    Buffer.from(tx.contract_call.function_args[0].hex.substr(2), 'hex')
+  );
+
+  const bidOwnerCV = deserializeCV(
+    Buffer.from(tx.contract_call.function_args[1].hex.substr(2), 'hex')
+  );
+
+  const payAction = async () => {
+    spinner.current.classList.remove('d-none');
+
+    try {
+      setStatus(`Sending transaction`);
+
+      doContractCall({
+        contractAddress: CONTRACT_ADDRESS,
+        contractName: 'market',
+        functionName: 'pay',
+        functionArgs: [monsterIdCV],
+        network: NETWORK,
+        postConditions: [],
+        postConditionMode: PostConditionMode.Allow,
+        finished: result => {
+          console.log(result);
+          spinner.current.classList.add('d-none');
+          setTxId(result.txId);
+        },
+      });
+    } catch (e) {
+      console.log(e);
+      setStatus(e.toString());
+      spinner.current.classList.add('d-none');
+    }
+  };
+
+  const cancelAction = async () => {
+    spinner.current.classList.remove('d-none');
+
+    try {
+      setStatus(`Sending transaction`);
+
+      doContractCall({
+        contractAddress: CONTRACT_ADDRESS,
+        contractName: 'market',
+        functionName: 'cancel',
+        functionArgs: [monsterIdCV, bidOwnerCV],
+        network: NETWORK,
+        postConditions: [],
+        postConditionMode: PostConditionMode.Allow,
+        finished: result => {
+          console.log(result);
+          spinner.current.classList.add('d-none');
+          setTxId(result.txId);
+        },
+      });
+    } catch (e) {
+      console.log(e);
+      setStatus(e.toString());
+      spinner.current.classList.add('d-none');
+    }
+  };
+
+  const isBidder = cvToString(bidOwnerCV) === ownerStxAddress;
+
+  const isOwned =
+    ownedMonsterIds &&
+    ownedMonsterIds.find(
+      monsterId => monsterId.substr(2) === serializeCV(monsterIdCV).toString('hex')
+    );
   return (
     <div className="mb-4">
-      Accepted bid for monster{' '}
-      {deserializeCV(
-        Buffer.from(tx.contract_call.function_args[0].hex.substr(2), 'hex')
-      ).value.toString()}{' '}
-      placed by user{' '}
-      {cvToString(
-        deserializeCV(Buffer.from(tx.contract_call.function_args[1].hex.substr(2), 'hex'))
-      )}
-      . Accepted at {tx.burn_block_time_iso}
+      Accepted bid for monster {monsterIdCV.value.toString()} placed by user{' '}
+      {cvToString(bidOwnerCV)}. Accepted at {tx.burn_block_time_iso}
+      <>
+        {isBidder && (
+          <div className="NoteField input-group ">
+            <div className="input-group-append">
+              <button className="btn btn-outline-secondary" type="button" onClick={payAction}>
+                <div
+                  ref={spinner}
+                  role="status"
+                  className="d-none spinner-border spinner-border-sm text-info align-text-top mr-2"
+                />
+                Pay
+              </button>
+            </div>
+          </div>
+        )}
+        {isOwned && (
+          <div className="NoteField input-group ">
+            <div className="input-group-append">
+              <button className="btn btn-outline-secondary" type="button" onClick={cancelAction}>
+                <div
+                  ref={spinner}
+                  role="status"
+                  className="d-none spinner-border spinner-border-sm text-info align-text-top mr-2"
+                />
+                Cancel Sale
+              </button>
+            </div>
+          </div>
+        )}
+        <TxStatus txId={txId} />
+        {status && <div>{status}</div>}
+      </>
     </div>
   );
 }
