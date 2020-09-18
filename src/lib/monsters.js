@@ -69,6 +69,7 @@ export function fetchMonsterDetails(monsterId) {
       .then(response =>
         cvToString(deserializeCV(Buffer.from(response.result.substr(2), 'hex')).value)
       ),
+
     smartContractsApi
       .getContractDataMapEntryRaw({
         stacksAddress: CONTRACT_ADDRESS,
@@ -85,8 +86,21 @@ export function fetchMonsterDetails(monsterId) {
           name: metaData['name'].buffer.toString(),
         };
       }),
+    smartContractsApi
+      .callReadOnlyFunction({
+        stacksAddress: CONTRACT_ADDRESS,
+        contractName: MONSTERS_CONTRACT_NAME,
+        functionName: 'is-alive',
+        readOnlyFunctionArgs: {
+          sender: CONTRACT_ADDRESS,
+          arguments: [serializeCV(uintCV(monsterId)).toString('hex')],
+        },
+      })
+      .then(response =>
+        cvToString(deserializeCV(Buffer.from(response.result.substr(2), 'hex')).value)
+      ),
   ]).then(result => {
-    return { owner: result[0], metaData: result[1] };
+    return { owner: result[0], metaData: result[1], alive: result[2] };
   });
 }
 
@@ -94,7 +108,9 @@ export async function fetchMarketState() {
   let response = await accountsApi.getAccountTransactions({
     principal: `${CONTRACT_ADDRESS}.market`,
   });
-  const transactions = response.results.filter(tx => tx.tx_type === 'contract_call');
+  const transactions = response.results.filter(
+    tx => tx.tx_type === 'contract_call' && tx.tx_status === 'success'
+  );
   console.log({ transactions });
   return { transactions };
 }
@@ -139,9 +155,10 @@ export function MarketState({ ownerStxAddress }) {
     subscribe();
   }, [ownerStxAddress]);
 
-  if (marketState) {
+  if (marketState && marketState.transactions.length > 0) {
     return (
       <>
+        <h5>Recent activities on the marketplace</h5>
         {marketState.transactions.map((tx, key) => {
           if (tx.contract_call.function_name === 'bid') {
             return <BidTransaction key={key} tx={tx} ownedMonsterIds={ownedMonsterIds} />;
@@ -199,6 +216,7 @@ export function BidTransaction({ tx, ownedMonsterIds }) {
           console.log(result);
           spinner.current.classList.add('d-none');
           setTxId(result.txId);
+          setStatus(undefined);
         },
       });
     } catch (e) {
@@ -216,8 +234,8 @@ export function BidTransaction({ tx, ownedMonsterIds }) {
 
   return (
     <div className="mb-4">
-      {tx.contract_call.function_name} for monster {monsterIdCV.value.toString()} at{' '}
-      {amountCV.value.toString()} uSTX at {tx.burn_block_time_iso}
+      Bid for monster {monsterIdCV.value.toString()} at {amountCV.value.toString()} uSTX at{' '}
+      {tx.burn_block_time_iso}
       {isOwned && (
         <>
           <div className="NoteField input-group ">
@@ -243,7 +261,8 @@ export function BidTransaction({ tx, ownedMonsterIds }) {
 export function AcceptTransaction({ tx, ownedMonsterIds, ownerStxAddress }) {
   const [status, setStatus] = useState();
   const [txId, setTxId] = useState();
-  const spinner = useRef();
+  const spinnerPay = useRef();
+  const spinnerCancel = useRef();
   const { doContractCall } = useConnect();
 
   const monsterIdCV = deserializeCV(
@@ -255,7 +274,7 @@ export function AcceptTransaction({ tx, ownedMonsterIds, ownerStxAddress }) {
   );
 
   const payAction = async () => {
-    spinner.current.classList.remove('d-none');
+    spinnerPay.current.classList.remove('d-none');
 
     try {
       setStatus(`Sending transaction`);
@@ -270,19 +289,20 @@ export function AcceptTransaction({ tx, ownedMonsterIds, ownerStxAddress }) {
         postConditionMode: PostConditionMode.Allow,
         finished: result => {
           console.log(result);
-          spinner.current.classList.add('d-none');
+          spinnerPay.current.classList.add('d-none');
           setTxId(result.txId);
+          setStatus(undefined);
         },
       });
     } catch (e) {
       console.log(e);
       setStatus(e.toString());
-      spinner.current.classList.add('d-none');
+      spinnerPay.current.classList.add('d-none');
     }
   };
 
   const cancelAction = async () => {
-    spinner.current.classList.remove('d-none');
+    spinnerCancel.current.classList.remove('d-none');
 
     try {
       setStatus(`Sending transaction`);
@@ -297,14 +317,15 @@ export function AcceptTransaction({ tx, ownedMonsterIds, ownerStxAddress }) {
         postConditionMode: PostConditionMode.Allow,
         finished: result => {
           console.log(result);
-          spinner.current.classList.add('d-none');
+          spinnerCancel.current.classList.add('d-none');
           setTxId(result.txId);
+          setStatus(undefined);
         },
       });
     } catch (e) {
       console.log(e);
       setStatus(e.toString());
-      spinner.current.classList.add('d-none');
+      spinnerCancel.current.classList.add('d-none');
     }
   };
 
@@ -325,7 +346,7 @@ export function AcceptTransaction({ tx, ownedMonsterIds, ownerStxAddress }) {
             <div className="input-group-append">
               <button className="btn btn-outline-secondary" type="button" onClick={payAction}>
                 <div
-                  ref={spinner}
+                  ref={spinnerPay}
                   role="status"
                   className="d-none spinner-border spinner-border-sm text-info align-text-top mr-2"
                 />
@@ -339,7 +360,7 @@ export function AcceptTransaction({ tx, ownedMonsterIds, ownerStxAddress }) {
             <div className="input-group-append">
               <button className="btn btn-outline-secondary" type="button" onClick={cancelAction}>
                 <div
-                  ref={spinner}
+                  ref={spinnerCancel}
                   role="status"
                   className="d-none spinner-border spinner-border-sm text-info align-text-top mr-2"
                 />

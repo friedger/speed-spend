@@ -38,12 +38,10 @@ export default function App(props) {
 }
 
 const NavLink = props => {
-  console.log({ props });
   return (
     <Link
       {...props}
       getProps={({ isCurrent }) => {
-        console.log({ isCurrent });
         // the object returned here is passed to the
         // anchor element's props
         if (isCurrent) {

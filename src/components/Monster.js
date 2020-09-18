@@ -67,6 +67,8 @@ export function Monster({ monsterId, ownerStxAddress }) {
           <b>{monsterDetails.metaData.name}</b>
           <br />
           <small>Last fed: block {monsterDetails.metaData.lastMeal}</small>
+          <br />
+          <small>Still alive: {monsterDetails.alive}</small>
           {monsterDetails.owner !== ownerStxAddress && (
             <>
               <br />
