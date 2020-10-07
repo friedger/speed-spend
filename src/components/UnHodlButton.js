@@ -74,8 +74,8 @@ export function UnHodlButton({ title, placeholder, ownerStxAddress }) {
       setStatus(resultToStatus(result));
     } catch (e) {
       console.log(e);
-      setStatus(e.toString());
       spinner.current.classList.add('d-none');
+      setStatus(e.toString());
     }
   };
 

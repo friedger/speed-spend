@@ -9,7 +9,7 @@ import {
   FungibleConditionCode,
 } from '@blockstack/stacks-transactions';
 import * as BigNum from 'bn.js';
-import { CONTRACT_ADDRESS } from '../lib/constants';
+import { authOrigin, CONTRACT_ADDRESS, NETWORK } from '../lib/constants';
 import { TxStatus } from '../lib/transactions';
 
 export function BuyHodlTokensButton({ placeholder, ownerStxAddress }) {
@@ -52,6 +52,8 @@ export function BuyHodlTokensButton({ placeholder, ownerStxAddress }) {
             new BigNum(amount)
           ),
         ],
+        authOrigin: authOrigin,
+        network: NETWORK,
         appDetails: {
           name: 'Speed Spend',
           icon: 'https://speed-spend.netlify.app/speedspend.png',

@@ -1,6 +1,7 @@
 import React, { useRef, useState, useCallback, useEffect } from 'react';
 import { useBlockstack } from 'react-blockstack';
 import { fetchAccount } from '../lib/account';
+import { STACK_API_URL } from '../lib/constants';
 import { fetchHodlTokenBalance, fetchSpendableTokenBalance } from '../lib/holdTokens';
 import { TxStatus } from '../lib/transactions';
 
@@ -194,7 +195,7 @@ function StxProfile({ stxAddress, updateStatus, showAddress }) {
     updateStatus(undefined);
     faucetSpinner.current.classList.remove('d-none');
 
-    fetch(`https://sidecar.staging.blockstack.xyz/sidecar/v1/faucets/stx?address=${stxAddr}`, {
+    fetch(`${STACK_API_URL}/extended/v1/faucets/stx?address=${stxAddr}`, {
       method: 'POST',
     })
       .then(r => {

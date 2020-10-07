@@ -12,7 +12,7 @@ import {
 import Switch from 'react-input-switch';
 
 import { getStacksAccount, fetchAccount } from '../lib/account';
-import { NETWORK, CONTRACT_ADDRESS } from '../lib/constants';
+import { NETWORK, CONTRACT_ADDRESS, STACKS_API_WS_URL, authOrigin } from '../lib/constants';
 import {
   fetchJackpot,
   AtTwoState,
@@ -127,6 +127,7 @@ export function BetButton({ jackpot, ownerStxAddress }) {
         contractName: jackpot ? 'flip-coin-jackpot' : 'flip-coin-at-two',
         functionName: 'bet',
         functionArgs: [betValue ? trueCV() : falseCV()],
+        authOrigin: authOrigin,
         network: NETWORK,
         postConditions: postConditions,
         postConditionMode: PostConditionMode.Allow,
@@ -249,7 +250,7 @@ export function BetResult({ txId }) {
     let sub;
     let client;
     const subscribe = async (txId, update) => {
-      client = await connectWebSocketClient('ws://stacks-node-api-latest.argon.blockstack.xyz/');
+      client = await connectWebSocketClient(STACKS_API_WS_URL);
       sub = await client.subscribeTxUpdates(txId, update);
       console.log({ client, sub });
     };

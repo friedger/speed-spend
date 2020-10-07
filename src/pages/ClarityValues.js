@@ -1,12 +1,12 @@
 import React, { useRef, useState } from 'react';
 
 import {
-  serializeCV,
   uintCV,
   intCV,
   standardPrincipalCV,
   contractPrincipalCV,
   tupleCV,
+  cvToHex,
 } from '@blockstack/stacks-transactions';
 
 export default function ClarityValues(props) {
@@ -14,7 +14,7 @@ export default function ClarityValues(props) {
   const type = useRef();
   const [hex, setHex] = useState();
   const toHex = (data, type) => {
-    console.log({ data, type });
+    console.log({ data, type, cvToHex });
     let cv;
     switch (type) {
       case 'uint':
@@ -31,12 +31,12 @@ export default function ClarityValues(props) {
         }
         break;
       case 'tuple':
-        cv = tupleCV({ 'monster-id': uintCV(data) });
+        cv = tupleCV({ 'reward-cycle': uintCV(data) });
         break;
       default:
         break;
     }
-    setHex(cv ? `0x${serializeCV(cv).toString('hex')}` : undefined);
+    setHex(cv ? cvToHex(cv) : undefined);
   };
 
   return (

@@ -1,10 +1,10 @@
 import React, { useRef, useState, useEffect } from 'react';
 
-import { CONTRACT_ADDRESS } from '../lib/constants';
+import { authOrigin, CONTRACT_ADDRESS, NETWORK } from '../lib/constants';
 import { TxStatus } from '../lib/transactions';
 import { fetchAccount } from '../lib/account';
 import { useConnect } from '@blockstack/connect';
-import { PostConditionMode, uintCV } from '@blockstack/stacks-transactions';
+import { contractPrincipalCV, PostConditionMode, uintCV } from '@blockstack/stacks-transactions';
 
 export function BuyMonsters({ ownerStxAddress, monsterId }) {
   const { doContractCall } = useConnect();
@@ -36,9 +36,15 @@ export function BuyMonsters({ ownerStxAddress, monsterId }) {
         contractAddress: CONTRACT_ADDRESS,
         contractName: 'market',
         functionName: 'bid',
-        functionArgs: [uintCV(parseInt(monsterId)), uintCV(1000)],
+        functionArgs: [
+          contractPrincipalCV(CONTRACT_ADDRESS, 'monsters'),
+          uintCV(parseInt(monsterId)),
+          uintCV(1000),
+        ],
         postConditionMode: PostConditionMode.Allow,
         postConditions: [],
+        authOrigin: authOrigin,
+        network: NETWORK,
         appDetails: {
           name: 'Speed Spend',
           icon: 'https://speed-spend.netlify.app/speedspend.png',

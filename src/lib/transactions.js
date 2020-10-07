@@ -1,13 +1,16 @@
+import { deserializeCV, serializeCV } from '@blockstack/stacks-transactions';
 import { connectWebSocketClient } from '@stacks/blockchain-api-client';
 import React, { useState, useEffect, useRef } from 'react';
-import { transactionsApi } from './constants';
+import { STACKS_API_WS_URL, transactionsApi } from './constants';
 
 export function resultToStatus(result) {
-  if (result && result.startsWith('"') && result.length === 66) {
+  if (result && !result.error && result.startsWith('"') && result.length === 66) {
     const txId = result.substr(1, 64);
     return txIdToStatus(txId);
+  } else if (result && result.error) {
+    return JSON.stringify(result);
   } else {
-    return result;
+    return result.toString();
   }
 }
 
@@ -18,6 +21,15 @@ export function txIdToStatus(txId) {
       <a href={`https://testnet-explorer.blockstack.org/txid/0x${txId}`}>{txId}</a>
     </>
   );
+}
+
+export function cvToHex(value) {
+  return `0x${serializeCV(value).toString('hex')}`;
+}
+
+export function hexToCV(hexString) {
+  const hexStringNoPrefix = hexString.startsWith('0x') ? hexString.substr(2) : hexString;
+  return deserializeCV(Buffer.from(hexStringNoPrefix, 'hex'));
 }
 
 export function TxStatus({ txId, resultPrefix }) {
@@ -35,9 +47,7 @@ export function TxStatus({ txId, resultPrefix }) {
 
     let sub;
     const subscribe = async (txId, update) => {
-      const client = await connectWebSocketClient(
-        'ws://stacks-node-api-latest.argon.blockstack.xyz/'
-      );
+      const client = await connectWebSocketClient(STACKS_API_WS_URL);
       sub = await client.subscribeTxUpdates(txId, update);
       console.log({ client, sub });
     };

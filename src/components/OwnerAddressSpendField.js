@@ -4,6 +4,7 @@ import { useBlockstack } from 'react-blockstack';
 import { getUserAddress, fetchAccount } from '../lib/account';
 import { useConnect } from '@blockstack/connect';
 import { TxStatus } from '../lib/transactions';
+import { authOrigin, NETWORK } from '../lib/constants';
 const BigNum = require('bn.js');
 
 export function OwnerAddressSpendField({ title, path, placeholder, stxAddress }) {
@@ -57,10 +58,11 @@ export function OwnerAddressSpendField({ title, path, placeholder, stxAddress })
     console.log('STX address of recipient ' + recipient.address);
     try {
       setStatus(`Sending transaction`);
-
       await doSTXTransfer({
         recipient: recipient.address,
         amount: new BigNum(1000),
+        authOrigin: authOrigin,
+        network: NETWORK,
         appDetails: {
           name: 'Speed Spend',
           icon: 'https://speed-spend.netlify.app/speedspend.png',

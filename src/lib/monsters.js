@@ -9,15 +9,17 @@ import {
 } from '@blockstack/stacks-transactions';
 import {
   accountsApi,
+  authOrigin,
   CONTRACT_ADDRESS,
   MONSTERS_CONTRACT_NAME,
   NETWORK,
   smartContractsApi,
+  STACKS_API_WS_URL,
   transactionsApi,
 } from './constants';
 import { useConnect } from '@blockstack/connect';
 import { connectWebSocketClient } from '@stacks/blockchain-api-client';
-import { TxStatus } from './transactions';
+import { cvToHex, hexToCV, TxStatus } from './transactions';
 import { principalCV } from '@blockstack/stacks-transactions/lib/clarity/types/principalCV';
 
 export async function fetchMonsterIds(ownerStxAddress) {
@@ -40,16 +42,12 @@ export async function fetchMonsterIds(ownerStxAddress) {
 }
 export function fetchMonsterDetails2(monsterId) {
   console.log(monsterId);
-  return fetch(
-    `https://stacks-node-api-latest.argon.blockstack.xyz/v2/map_entry/${CONTRACT_ADDRESS}/${MONSTERS_CONTRACT_NAME}/monsters`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: `"0x${monsterId}"`,
-    }
-  ).then(response => response.json());
+  return smartContractsApi().getContractDataMapEntry({
+    contractAddress: CONTRACT_ADDRESS,
+    contractName: MONSTERS_CONTRACT_NAME,
+    mapName: 'monsters',
+    key: `0x${monsterId}`,
+  });
 }
 
 export function fetchMonsterDetails(monsterId) {
@@ -58,12 +56,12 @@ export function fetchMonsterDetails(monsterId) {
   return Promise.all([
     smartContractsApi
       .callReadOnlyFunction({
-        stacksAddress: CONTRACT_ADDRESS,
+        contractAddress: CONTRACT_ADDRESS,
         contractName: MONSTERS_CONTRACT_NAME,
         functionName: 'owner-of?',
         readOnlyFunctionArgs: {
           sender: CONTRACT_ADDRESS,
-          arguments: [serializeCV(uintCV(monsterId)).toString('hex')],
+          arguments: [cvToHex(uintCV(monsterId))],
         },
       })
       .then(response =>
@@ -71,24 +69,25 @@ export function fetchMonsterDetails(monsterId) {
       ),
 
     smartContractsApi
-      .getContractDataMapEntryRaw({
-        stacksAddress: CONTRACT_ADDRESS,
+      .getContractDataMapEntry({
+        contractAddress: CONTRACT_ADDRESS,
         contractName: MONSTERS_CONTRACT_NAME,
         mapName: 'monsters',
-        key: serializeCV(tupleCV({ 'monster-id': uintCV(monsterId) })).toString('hex'),
+        key: cvToHex(tupleCV({ 'monster-id': uintCV(monsterId) })),
       })
-      .then(dataMapRaw => dataMapRaw.raw.json())
       .then(dataMap => {
         console.log({ dataMap });
         const metaData = deserializeCV(Buffer.from(dataMap.data.substr(2), 'hex')).value.data;
+        console.log({ metaData });
         return {
+          image: parseInt(metaData['image'].value),
           lastMeal: parseInt(metaData['last-meal'].value),
           name: metaData['name'].buffer.toString(),
         };
       }),
     smartContractsApi
       .callReadOnlyFunction({
-        stacksAddress: CONTRACT_ADDRESS,
+        contractAddress: CONTRACT_ADDRESS,
         contractName: MONSTERS_CONTRACT_NAME,
         functionName: 'is-alive',
         readOnlyFunctionArgs: {
@@ -133,9 +132,7 @@ export function MarketState({ ownerStxAddress }) {
       const marketState = await fetchMarketState();
       setMarketState(marketState);
 
-      const client = await connectWebSocketClient(
-        'ws://stacks-node-api-latest.argon.blockstack.xyz/'
-      );
+      const client = await connectWebSocketClient(STACKS_API_WS_URL);
       await client.subscribeAddressTransactions(`${CONTRACT_ADDRESS}.market`, async event => {
         console.log(event);
 
@@ -189,13 +186,14 @@ export function BidTransaction({ tx, ownedMonsterIds }) {
   const [txId, setTxId] = useState();
   const spinner = useRef();
   const { doContractCall } = useConnect();
+  console.log(tx.contract_call);
 
-  const monsterIdCV = deserializeCV(
-    Buffer.from(tx.contract_call.function_args[0].hex.substr(2), 'hex')
-  );
-  const amountCV = deserializeCV(
-    Buffer.from(tx.contract_call.function_args[1].hex.substr(2), 'hex')
-  );
+  const tradableCV = hexToCV(tx.contract_call.function_args[0].hex);
+
+  const tradableIdCV = hexToCV(tx.contract_call.function_args[1].hex);
+
+  const amountCV = hexToCV(tx.contract_call.function_args[2].hex);
+
   const sender = principalCV(tx.sender_address);
 
   const acceptAction = async () => {
@@ -208,7 +206,8 @@ export function BidTransaction({ tx, ownedMonsterIds }) {
         contractAddress: CONTRACT_ADDRESS,
         contractName: 'market',
         functionName: 'accept',
-        functionArgs: [monsterIdCV, sender],
+        functionArgs: [tradableCV, tradableIdCV, sender],
+        authOrigin: authOrigin,
         network: NETWORK,
         postConditions: [],
         postConditionMode: PostConditionMode.Allow,
@@ -229,12 +228,12 @@ export function BidTransaction({ tx, ownedMonsterIds }) {
   const isOwned =
     ownedMonsterIds &&
     ownedMonsterIds.find(
-      monsterId => monsterId.substr(2) === serializeCV(monsterIdCV).toString('hex')
+      monsterId => monsterId.substr(2) === serializeCV(tradableIdCV).toString('hex')
     );
 
   return (
     <div className="mb-4">
-      Bid for monster {monsterIdCV.value.toString()} at {amountCV.value.toString()} uSTX at{' '}
+      Bid for monster {tradableIdCV.value.toString()} at {amountCV.value.toString()} uSTX at{' '}
       {tx.burn_block_time_iso}
       {isOwned && (
         <>
@@ -265,13 +264,9 @@ export function AcceptTransaction({ tx, ownedMonsterIds, ownerStxAddress }) {
   const spinnerCancel = useRef();
   const { doContractCall } = useConnect();
 
-  const monsterIdCV = deserializeCV(
-    Buffer.from(tx.contract_call.function_args[0].hex.substr(2), 'hex')
-  );
-
-  const bidOwnerCV = deserializeCV(
-    Buffer.from(tx.contract_call.function_args[1].hex.substr(2), 'hex')
-  );
+  const tradableCV = hexToCV(tx.contract_call.function_args[0].hex);
+  const tradableIdCV = hexToCV(tx.contract_call.function_args[1].hex);
+  const bidOwnerCV = hexToCV(tx.contract_call.function_args[2].hex);
 
   const payAction = async () => {
     spinnerPay.current.classList.remove('d-none');
@@ -283,7 +278,8 @@ export function AcceptTransaction({ tx, ownedMonsterIds, ownerStxAddress }) {
         contractAddress: CONTRACT_ADDRESS,
         contractName: 'market',
         functionName: 'pay',
-        functionArgs: [monsterIdCV],
+        functionArgs: [tradableCV, tradableIdCV],
+        authOrigin: authOrigin,
         network: NETWORK,
         postConditions: [],
         postConditionMode: PostConditionMode.Allow,
@@ -311,7 +307,8 @@ export function AcceptTransaction({ tx, ownedMonsterIds, ownerStxAddress }) {
         contractAddress: CONTRACT_ADDRESS,
         contractName: 'market',
         functionName: 'cancel',
-        functionArgs: [monsterIdCV, bidOwnerCV],
+        functionArgs: [tradableCV, tradableIdCV, bidOwnerCV],
+        authOrigin: authOrigin,
         network: NETWORK,
         postConditions: [],
         postConditionMode: PostConditionMode.Allow,
@@ -334,11 +331,11 @@ export function AcceptTransaction({ tx, ownedMonsterIds, ownerStxAddress }) {
   const isOwned =
     ownedMonsterIds &&
     ownedMonsterIds.find(
-      monsterId => monsterId.substr(2) === serializeCV(monsterIdCV).toString('hex')
+      monsterId => monsterId.substr(2) === serializeCV(tradableIdCV).toString('hex')
     );
   return (
     <div className="mb-4">
-      Accepted bid for monster {monsterIdCV.value.toString()} placed by user{' '}
+      Accepted bid for monster {tradableIdCV.value.toString()} placed by user{' '}
       {cvToString(bidOwnerCV)}. Accepted at {tx.burn_block_time_iso}
       <>
         {isBidder && (
@@ -379,15 +376,9 @@ export function AcceptTransaction({ tx, ownedMonsterIds, ownerStxAddress }) {
 export function PayTransaction({ tx }) {
   return (
     <div className="mb-4">
-      Paid{' '}
-      {deserializeCV(
-        Buffer.from(tx.contract_call.function_args[1].hex.substr(2), 'hex')
-      ).value.toString()}{' '}
-      uSTX for monster{' '}
-      {deserializeCV(
-        Buffer.from(tx.contract_call.function_args[0].hex.substr(2), 'hex')
-      ).value.toString()}{' '}
-      at {tx.burn_block_time_iso}
+      Paid {hexToCV(tx.contract_call.function_args[1].hex).value.toString()} uSTX for tradable{' '}
+      {hexToCV(tx.contract_call.function_args[0].hex).value.toString()} with id{' '}
+      {hexToCV(tx.contract_call.function_args[1].hex).value.toString()} at {tx.burn_block_time_iso}
     </div>
   );
 }

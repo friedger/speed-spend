@@ -1,17 +1,34 @@
-import { TransactionsApi, SmartContractsApi, AccountsApi } from '@stacks/blockchain-api-client';
+import {
+  TransactionsApi,
+  SmartContractsApi,
+  AccountsApi,
+  Configuration,
+} from '@stacks/blockchain-api-client';
 import { StacksTestnet } from '@blockstack/stacks-transactions';
-export const NETWORK = new StacksTestnet();
-NETWORK.coreApiUrl = 'https://sidecar.staging.blockstack.xyz';
 
-export const CONTRACT_ADDRESS = 'ST12EY99GS4YKP0CP2CFW6SEPWQ2CGVRWK5GHKDRV';
+export const localNode = false;
+export const localAuth = false;
+export const mocknet = false;
+export const authOrigin = localAuth ? 'http://localhost:8080' : 'https://app.blockstack.org';
+
+export const CONTRACT_ADDRESS = mocknet
+  ? 'STB44HYPYAT2BB2QE513NSP81HTMYWBJP02HPGK6' //ADDR1 from Stacks.toml
+  : 'ST12EY99GS4YKP0CP2CFW6SEPWQ2CGVRWK5GHKDRV';
 export const HODL_TOKEN_CONTRACT = 'hodl-token';
 export const MONSTERS_CONTRACT_NAME = 'monsters';
-export const STACK_API_URL = 'https://sidecar.staging.blockstack.xyz';
+export const STACK_API_URL = localNode
+  ? 'http://localhost:3999'
+  : 'https://stacks-node-api.blockstack.org';
+export const STACKS_API_WS_URL = localNode
+  ? 'ws:localhost:3999/'
+  : 'ws://stacks-node-api.blockstack.org/';
 export const STACKS_API_ACCOUNTS_URL = `${STACK_API_URL}/v2/accounts`;
-export const STACKS_API_ACCOUNTS_BROWSER_URL =
-  'http://testnet-master.blockstack.org:20443/v2/accounts';
-export const ARGON_API_URL = 'https://stacks-node-api-latest.argon.blockstack.xyz';
 
-export const accountsApi = new AccountsApi();
-export const smartContractsApi = new SmartContractsApi();
-export const transactionsApi = new TransactionsApi();
+export const NETWORK = new StacksTestnet();
+NETWORK.coreApiUrl = STACK_API_URL;
+
+const basePath = STACK_API_URL;
+const config = new Configuration({ basePath });
+export const accountsApi = new AccountsApi(config);
+export const smartContractsApi = new SmartContractsApi(config);
+export const transactionsApi = new TransactionsApi(config);

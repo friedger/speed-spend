@@ -2,6 +2,7 @@ import { AppConfig } from 'blockstack';
 import { addressToString } from '@blockstack/stacks-transactions';
 import { getStacksAccount } from './lib/account';
 import { didConnect } from 'react-blockstack';
+import { authOrigin } from './lib/constants';
 
 export const appConfig = new AppConfig(['store_write', 'publish_data']);
 export const STX_JSON_PATH = 'stx.json';
@@ -53,6 +54,7 @@ export const finished = onDidConnect => ({ userSession }) => {
 
 export const connectOptions = onDidConnect => {
   return {
+    authOrigin: authOrigin,
     finished: finished(onDidConnect),
     appDetails: {
       name: 'Speed Spend',

@@ -1,8 +1,12 @@
-import { cvToString, deserializeCV, serializeCV, uintCV } from '@blockstack/stacks-transactions';
-import { connectWebSocketClient } from '@stacks/blockchain-api-client';
+import { cvToString, deserializeCV, uintCV } from '@blockstack/stacks-transactions';
+import {
+  connectWebSocketClient,
+  ReadOnlyFunctionArgsFromJSON,
+} from '@stacks/blockchain-api-client';
 import React, { useState, useEffect } from 'react';
-import { CONTRACT_ADDRESS, NETWORK, ARGON_API_URL } from './constants';
+import { CONTRACT_ADDRESS, NETWORK, STACKS_API_WS_URL } from './constants';
 import { accountsApi, smartContractsApi, transactionsApi } from './constants';
+import { cvToHex } from './transactions';
 
 export async function fetchAtTwoState() {
   let response = await accountsApi.getAccountTransactions({
@@ -26,7 +30,7 @@ export async function fetchAtTwoState() {
       : undefined;
 
   const resp = await smartContractsApi.callReadOnlyFunctionRaw({
-    stacksAddress: CONTRACT_ADDRESS,
+    contractAddress: CONTRACT_ADDRESS,
     contractName: 'flip-coin-at-two',
     functionName: 'get-next-slot',
     readOnlyFunctionArgs: { sender: CONTRACT_ADDRESS, arguments: [] },
@@ -56,9 +60,7 @@ export function AtTwoState() {
       const atTwoState = await fetchAtTwoState();
       setAtTwoState(atTwoState);
 
-      const client = await connectWebSocketClient(
-        'ws://stacks-node-api-latest.argon.blockstack.xyz/'
-      );
+      const client = await connectWebSocketClient(STACKS_API_WS_URL);
       await client.subscribeAddressTransactions(
         `${CONTRACT_ADDRESS}.flip-coin-at-two`,
         async event => {
@@ -129,9 +131,7 @@ export function JackpotState() {
       const jackpotState = await fetchJackpotState();
       setJackpotState(jackpotState);
 
-      const client = await connectWebSocketClient(
-        'ws://stacks-node-api-latest.argon.blockstack.xyz/'
-      );
+      const client = await connectWebSocketClient(STACKS_API_WS_URL);
       await client.subscribeAddressTransactions(
         `${CONTRACT_ADDRESS}.flip-coin-jackpot`,
         async event => {
@@ -197,17 +197,16 @@ export function fetchJackpot(sender) {
 }
 
 export function fetchWinnerAt(sender, height) {
-  return fetch(
-    `${ARGON_API_URL}/v2/contracts/call-read/${CONTRACT_ADDRESS}/flip-coin-jackpot/get-optional-winner-at`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: `{"sender":"${sender}","arguments":["${serializeCV(uintCV(height)).toString('hex')}"]}`,
-    }
-  )
-    .then(response => response.json())
+  return smartContractsApi
+    .callReadOnlyFunction({
+      contractAddress: CONTRACT_ADDRESS,
+      contractName: 'flip-coin-jackpot',
+      functionName: 'get-optional-winner-at',
+      readOnlyFunctionArgs: ReadOnlyFunctionArgsFromJSON({
+        sender,
+        arguments: [cvToHex(uintCV(height))],
+      }),
+    })
     .then(optionalWinner => {
       console.log({ optionalWinner });
       if (optionalWinner.okay) {

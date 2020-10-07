@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 
-import { CONTRACT_ADDRESS } from '../lib/constants';
+import { authOrigin, CONTRACT_ADDRESS, NETWORK } from '../lib/constants';
 import { TxStatus } from '../lib/transactions';
 import { useConnect } from '@blockstack/connect';
 import { PostConditionMode, serializeCV, uintCV } from '@blockstack/stacks-transactions';
@@ -19,6 +19,7 @@ export function Monster({ monsterId, ownerStxAddress }) {
     if (monsterId) {
       fetchMonsterDetails(monsterId)
         .then(details => {
+          console.log({ details });
           setMonsterDetails(details);
         })
         .catch(e => console.log(e));
@@ -40,6 +41,8 @@ export function Monster({ monsterId, ownerStxAddress }) {
         functionArgs: [serializeCV(uintCV(monsterId)).toString('hex')],
         postConditionMode: PostConditionMode.Allow,
         postConditions: [],
+        authOrigin: authOrigin,
+        network: NETWORK,
         appDetails: {
           name: 'Speed Spend',
           icon: 'https://speed-spend.netlify.app/speedspend.png',
@@ -60,13 +63,18 @@ export function Monster({ monsterId, ownerStxAddress }) {
 
   return (
     <div>
-      <img src={`/monsters/monster-${(monsterIdNumber - 1) % 109}.png`} alt="monster" width="100" />
-      <br />
-      {monsterDetails && (
+      {monsterDetails ? (
         <>
+          <img
+            src={`/monsters/monster-${(monsterDetails.metaData.image - 1) % 109}.png`}
+            alt="monster"
+            width="100"
+          />
+          <br />
+
           <b>{monsterDetails.metaData.name}</b>
           <br />
-          <small>Last fed: block {monsterDetails.metaData.lastMeal}</small>
+          <small>Last fed at: {new Date(monsterDetails.metaData.lastMeal).toUTCString()}</small>
           <br />
           <small>Still alive: {monsterDetails.alive}</small>
           {monsterDetails.owner !== ownerStxAddress && (
@@ -77,6 +85,16 @@ export function Monster({ monsterId, ownerStxAddress }) {
           )}
           <br />
           <small>ID: {monsterIdNumber}</small>
+        </>
+      ) : (
+        <>
+          <img
+            src={`/monsters/monster-${(monsterIdNumber - 1) % 109}.png`}
+            alt="monster"
+            width="100"
+          />
+          <br />
+          (No details available)
         </>
       )}
       <br />

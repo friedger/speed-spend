@@ -95,7 +95,7 @@ export function HodlButton({ title, path, placeholder, ownerStxAddress, appStxAd
         </>
       )}
       <div>
-        <TxStatus txId={txId} resultPrefix="Bet placed in block " />
+        <TxStatus txId={txId} resultPrefix="Hodl tokens sent: " />
       </div>
     </div>
   );
