@@ -58,9 +58,6 @@ export function Monster({ monsterId, ownerStxAddress }) {
     }
   };
 
-  if (monsterDetails) {
-    console.log({ type: monsterDetails.alive });
-  }
   return (
     <div>
       {monsterDetails ? (
@@ -77,7 +74,7 @@ export function Monster({ monsterId, ownerStxAddress }) {
           <br />
           <small>Last fed at: {new Date(monsterDetails.metaData.lastMeal).toUTCString()}</small>
           <br />
-          <small>Still alive: {monsterDetails.alive}</small>
+          <small>Still alive: {monsterDetails.alive.toString()}</small>
           {monsterDetails.owner !== ownerStxAddress && (
             <>
               <br />
