@@ -33,7 +33,7 @@ export function MyMonsters({ ownerStxAddress }) {
 
   return (
     <div>
-      <h5>My Monsters</h5>
+      <h5>My current and previous Monsters</h5>
       <div
         ref={spinner}
         role="status"

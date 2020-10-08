@@ -3,7 +3,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { fetchAccount } from '../lib/account';
 import { useConnect } from '@blockstack/connect';
 import { PostConditionMode, bufferCVFromString, uintCV } from '@blockstack/stacks-transactions';
-import { authOrigin, CONTRACT_ADDRESS, NETWORK } from '../lib/constants';
+import { CONTRACT_ADDRESS, NETWORK } from '../lib/constants';
 import { TxStatus } from '../lib/transactions';
 
 export function CreateMonsterButton({ ownerStxAddress }) {
@@ -39,12 +39,7 @@ export function CreateMonsterButton({ ownerStxAddress }) {
         functionArgs: [bufferCVFromString(name), uintCV(Math.floor(Math.random() * 109))],
         postConditionMode: PostConditionMode.Allow,
         postConditions: [],
-        authOrigin: authOrigin,
         network: NETWORK,
-        appDetails: {
-          name: 'Speed Spend',
-          icon: 'https://speed-spend.netlify.app/speedspend.png',
-        },
         finished: data => {
           console.log(data);
           setTxId(data.txId);

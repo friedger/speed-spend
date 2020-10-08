@@ -10,7 +10,7 @@ import {
 } from '@blockstack/stacks-transactions';
 import { fetchAccount } from '../lib/account';
 import { fetchHodlTokenBalance } from '../lib/holdTokens';
-import { authOrigin, CONTRACT_ADDRESS, HODL_TOKEN_CONTRACT, NETWORK } from '../lib/constants';
+import { CONTRACT_ADDRESS, HODL_TOKEN_CONTRACT, NETWORK } from '../lib/constants';
 import { TxStatus } from '../lib/transactions';
 const BigNum = require('bn.js');
 
@@ -70,12 +70,8 @@ export function UnHodlTokenButton({ title, placeholder, ownerStxAddress }) {
             new createAssetInfo(CONTRACT_ADDRESS, HODL_TOKEN_CONTRACT, 'spendable-token')
           ),
         ],
-        authOrigin: authOrigin,
         network: NETWORK,
-        appDetails: {
-          name: 'Speed Spend',
-          icon: 'https://speed-spend.netlify.app/speedspend.png',
-        },
+
         finished: data => {
           console.log(data);
           setStatus(undefined);

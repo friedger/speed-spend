@@ -9,6 +9,7 @@ import { StacksTestnet } from '@blockstack/stacks-transactions';
 export const localNode = false;
 export const localAuth = false;
 export const mocknet = false;
+
 export const authOrigin = localAuth ? 'http://localhost:8080' : 'https://app.blockstack.org';
 
 export const CONTRACT_ADDRESS = mocknet

@@ -44,10 +44,6 @@ export function HodlButton({ title, path, placeholder, ownerStxAddress, appStxAd
       await doSTXTransfer({
         recipient: appStxAddress,
         amount: new BigNum(amount),
-        appDetails: {
-          name: 'Speed Spend',
-          icon: 'https://speed-spend.netlify.app/speedspend.png',
-        },
         finished: data => {
           console.log(data);
           setTxId(data.txId);

@@ -1,7 +1,7 @@
 import { deserializeCV, serializeCV } from '@blockstack/stacks-transactions';
 import { connectWebSocketClient } from '@stacks/blockchain-api-client';
 import React, { useState, useEffect, useRef } from 'react';
-import { STACKS_API_WS_URL, transactionsApi } from './constants';
+import { mocknet, STACKS_API_WS_URL, STACK_API_URL, transactionsApi } from './constants';
 
 export function resultToStatus(result) {
   if (result && !result.error && result.startsWith('"') && result.length === 66) {
@@ -17,8 +17,7 @@ export function resultToStatus(result) {
 export function txIdToStatus(txId) {
   return (
     <>
-      Check transaction status:{' '}
-      <a href={`https://testnet-explorer.blockstack.org/txid/0x${txId}`}>{txId}</a>
+      Check transaction status: <a href={txUrl(txId)}>{txId}</a>
     </>
   );
 }
@@ -30,6 +29,14 @@ export function cvToHex(value) {
 export function hexToCV(hexString) {
   const hexStringNoPrefix = hexString.startsWith('0x') ? hexString.substr(2) : hexString;
   return deserializeCV(Buffer.from(hexStringNoPrefix, 'hex'));
+}
+
+export function txUrl(txId) {
+  if (mocknet) {
+    return `${STACK_API_URL}/extended/v1/tx/0x${txId}`;
+  } else {
+    return `https://testnet-explorer.blockstack.org/txid/0x${txId}`;
+  }
 }
 
 export function TxStatus({ txId, resultPrefix }) {

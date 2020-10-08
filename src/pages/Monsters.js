@@ -5,10 +5,12 @@ import { CreateMonsterButton } from '../components/CreateMonsterButton';
 import { MyMonsters } from '../components/MyMonsters';
 import { BuyMonsters } from '../components/BuyMonsters';
 import { MarketState } from '../lib/monsters';
+import { BidConstantTradable } from '../components/BidConstantTradable';
 
 export default function Monsters(props) {
   const { userData } = useBlockstack();
   const ownerStxAddress = userData.profile.stxAddress;
+
   return (
     <main className="panel-welcome mt-5 container">
       <div className="lead row mt-5">
@@ -26,6 +28,9 @@ export default function Monsters(props) {
         </div>
         <div className="col-xs-10 col-md-8 mx-auto mb-4 px-4">
           <BuyMonsters ownerStxAddress={ownerStxAddress} />
+        </div>
+        <div className="col-xs-10 col-md-8 mx-auto mb-4 px-4">
+          <BidConstantTradable ownerStxAddress={ownerStxAddress} />
         </div>
         <div className="col-xs-10 col-md-8 mx-auto mb-4 px-4">
           <MarketState ownerStxAddress={ownerStxAddress} />

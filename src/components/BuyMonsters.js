@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 
-import { authOrigin, CONTRACT_ADDRESS, NETWORK } from '../lib/constants';
+import { CONTRACT_ADDRESS, NETWORK } from '../lib/constants';
 import { TxStatus } from '../lib/transactions';
 import { fetchAccount } from '../lib/account';
 import { useConnect } from '@blockstack/connect';
@@ -43,12 +43,7 @@ export function BuyMonsters({ ownerStxAddress, monsterId }) {
         ],
         postConditionMode: PostConditionMode.Allow,
         postConditions: [],
-        authOrigin: authOrigin,
         network: NETWORK,
-        appDetails: {
-          name: 'Speed Spend',
-          icon: 'https://speed-spend.netlify.app/speedspend.png',
-        },
         finished: data => {
           console.log(data);
           setStatus(undefined);
@@ -65,7 +60,11 @@ export function BuyMonsters({ ownerStxAddress, monsterId }) {
 
   return (
     <div>
-      <h5>Bid for a monster for 1000 uSTX</h5>
+      {monsterId ? (
+        <>Bid for this monster for 1000 uSTX</>
+      ) : (
+        <h5>Bid for a monster for 1000 uSTX</h5>
+      )}
       <div className="NoteField input-group ">
         <input
           type="text"

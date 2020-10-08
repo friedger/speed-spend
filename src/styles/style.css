@@ -51,3 +51,7 @@ inspect {
   max-width: 50em;
   margin: auto;
 }
+
+.monster {
+  filter: grayscale(100);
+}

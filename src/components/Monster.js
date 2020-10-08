@@ -1,10 +1,12 @@
 import React, { useRef, useState, useEffect } from 'react';
 
-import { authOrigin, CONTRACT_ADDRESS, NETWORK } from '../lib/constants';
-import { TxStatus } from '../lib/transactions';
+import { CONTRACT_ADDRESS, NETWORK } from '../lib/constants';
+import { cvToHex, TxStatus } from '../lib/transactions';
 import { useConnect } from '@blockstack/connect';
-import { PostConditionMode, serializeCV, uintCV } from '@blockstack/stacks-transactions';
+import { PostConditionMode, uintCV } from '@blockstack/stacks-transactions';
 import { fetchMonsterDetails } from '../lib/monsters';
+import { CreateMonsterButton } from './CreateMonsterButton';
+import { BuyMonsters } from './BuyMonsters';
 
 export function Monster({ monsterId, ownerStxAddress }) {
   const { doContractCall } = useConnect();
@@ -38,15 +40,10 @@ export function Monster({ monsterId, ownerStxAddress }) {
         contractAddress: CONTRACT_ADDRESS,
         contractName: 'monsters',
         functionName: 'feed-monster',
-        functionArgs: [serializeCV(uintCV(monsterId)).toString('hex')],
+        functionArgs: [cvToHex(uintCV(monsterId))],
         postConditionMode: PostConditionMode.Allow,
         postConditions: [],
-        authOrigin: authOrigin,
         network: NETWORK,
-        appDetails: {
-          name: 'Speed Spend',
-          icon: 'https://speed-spend.netlify.app/speedspend.png',
-        },
         finished: data => {
           console.log(data);
           setStatus(undefined);
@@ -61,6 +58,9 @@ export function Monster({ monsterId, ownerStxAddress }) {
     }
   };
 
+  if (monsterDetails) {
+    console.log({ type: monsterDetails.alive });
+  }
   return (
     <div>
       {monsterDetails ? (
@@ -69,6 +69,7 @@ export function Monster({ monsterId, ownerStxAddress }) {
             src={`/monsters/monster-${(monsterDetails.metaData.image - 1) % 109}.png`}
             alt="monster"
             width="100"
+            className={monsterDetails.owner !== ownerStxAddress ? 'monster' : 'own-monster'}
           />
           <br />
 
@@ -85,32 +86,35 @@ export function Monster({ monsterId, ownerStxAddress }) {
           )}
           <br />
           <small>ID: {monsterIdNumber}</small>
+          {monsterDetails.alive && (
+            <>
+              <br />
+              <div className="input-group ">
+                <button className="btn btn-outline-secondary" type="button" onClick={feedAction}>
+                  <div
+                    ref={spinner}
+                    role="status"
+                    className="d-none spinner-border spinner-border-sm text-info align-text-top mr-2"
+                  />
+                  Feed
+                </button>
+              </div>
+            </>
+          )}
+          <BuyMonsters ownerStxAddress={ownerStxAddress} monsterId={monsterId} />
+          <br />
+          <TxStatus txId={txId} resultPrefix="Meal confirmed in block:" />
         </>
       ) : (
         <>
-          <img
-            src={`/monsters/monster-${(monsterIdNumber - 1) % 109}.png`}
-            alt="monster"
-            width="100"
-          />
           <br />
-          (No details available)
+          This monster is not yet born.
+          <br />
+          <br />
+          <CreateMonsterButton ownerStxAddress={ownerStxAddress} />
         </>
       )}
-      <br />
-      <div className="input-group ">
-        <div className="input-group-append">
-          <button className="btn btn-outline-secondary" type="button" onClick={feedAction}>
-            <div
-              ref={spinner}
-              role="status"
-              className="d-none spinner-border spinner-border-sm text-info align-text-top mr-2"
-            />
-            Feed
-          </button>
-        </div>
-      </div>
-      <TxStatus txId={txId} resultPrefix="Meal confirmed in block:" />
+
       {status && (
         <>
           <div>{status}</div>

@@ -1030,12 +1030,12 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
-"@blockstack/connect@^2.12.2":
-  version "2.12.2"
-  resolved "https://registry.yarnpkg.com/@blockstack/connect/-/connect-2.12.2.tgz#3fe33ccb686b3752e1f0e7d8964b91080d11f379"
-  integrity sha512-+0fLotXLH4Lxt5qMCKmUtuCxrW+lPTfZ8DmtagaoqWDr9nPHMcLsohFHcPACTRzzg0aS01N7w8lYwa1IxeMSXw==
+"@blockstack/connect@^2.12.7":
+  version "2.12.7"
+  resolved "https://registry.yarnpkg.com/@blockstack/connect/-/connect-2.12.7.tgz#a2f3a94c8d82da43da80649a875e6b289e691d01"
+  integrity sha512-SXNEjz7V6hPKKJRr2nsCGdAJDucII6ruZ7BupokI3WeDj8QRbxC8c2ut5j8WcgGCiV4PIIxHBIj/qRTSAc4+Ww==
   dependencies:
-    "@blockstack/ui" "^2.12.8"
+    "@blockstack/ui" "^2.12.13"
     jsontokens "^3.0.0"
     preact "^10.4.0"
     styled-components "^5.1.0"
@@ -1071,10 +1071,10 @@
     sha.js "^2.4.11"
     smart-buffer "^4.1.0"
 
-"@blockstack/ui@^2.12.8":
-  version "2.12.8"
-  resolved "https://registry.yarnpkg.com/@blockstack/ui/-/ui-2.12.8.tgz#58389933adae26339e21c4985eb3f875fe44f1f3"
-  integrity sha512-F8QJq8eJ3FnXhKMVDxznO1AtMt6u9/Ni6u/WnBFzeRTp4tFA/k3V4xAu4RVL7b8PUOzM9F6u8nK/z29gwXvutg==
+"@blockstack/ui@^2.12.13":
+  version "2.12.13"
+  resolved "https://registry.yarnpkg.com/@blockstack/ui/-/ui-2.12.13.tgz#1a4fd98840a0f21d7d71ec5f213393e805e4fd67"
+  integrity sha512-dbtE+S0UGQVL5j9i2mmPkRncVAdbvt47i3OxxIeK7dJxicYUUSb+tmvIqW1iqXziJ7MMLVVjkNdenSgfRwQ96w==
   dependencies:
     "@popperjs/core" "^2.4.0"
     "@reach/alert" "^0.10.2"
@@ -2005,10 +2005,10 @@
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.7.0.tgz#9a06f4f137ee84d7df0460c1fdb1135ffa6c50fd"
   integrity sha512-ONhaKPIufzzrlNbqtWFFd+jlnemX6lJAgq9ZeiZtS7I1PIf/la7CW4m83rTXRnVnsMbW2k56pGYu7AUFJD9Pow==
 
-"@stacks/blockchain-api-client@0.14.2":
-  version "0.14.2"
-  resolved "https://registry.yarnpkg.com/@stacks/blockchain-api-client/-/blockchain-api-client-0.14.2.tgz#c7c591b56506101b2daa6078130bc8834363bb16"
-  integrity sha512-bP6CWKHPZ6cVbuWD3P9ycQRyHLo55FMUvxVAP3QMNtjPxQaPhAzVx6LqraGekdITpYUe8gtXuAEUhowG8UeqkA==
+"@stacks/blockchain-api-client@0.25.3":
+  version "0.25.3"
+  resolved "https://registry.yarnpkg.com/@stacks/blockchain-api-client/-/blockchain-api-client-0.25.3.tgz#e88e82b9c047b48acdc00290a0be79ec51e83646"
+  integrity sha512-v8q33UcEd/zY8T4qNY1hUdAkJL8NUqebqcs1qFBxNCehh4mTCu8L1px5zDAeqwvLYEBpEBRfwrPA6Fz1JFAfjQ==
   dependencies:
     "@blockstack/stacks-blockchain-api-types" "^0.5.3"
     "@types/ws" "^7.2.6"

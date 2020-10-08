@@ -1,18 +1,12 @@
 import React, { useRef, useState, useEffect } from 'react';
 
-import { fetchAccount } from '../lib/account';
-import { useConnect } from '@blockstack/connect';
-import {
-  uintCV,
-  PostConditionMode,
-  makeStandardSTXPostCondition,
-  FungibleConditionCode,
-} from '@blockstack/stacks-transactions';
-import * as BigNum from 'bn.js';
 import { CONTRACT_ADDRESS, NETWORK } from '../lib/constants';
 import { TxStatus } from '../lib/transactions';
+import { fetchAccount } from '../lib/account';
+import { useConnect } from '@blockstack/connect';
+import { contractPrincipalCV, PostConditionMode, uintCV } from '@blockstack/stacks-transactions';
 
-export function BuyHodlTokensButton({ placeholder, ownerStxAddress }) {
+export function BidConstantTradable({ ownerStxAddress, tradableId }) {
   const { doContractCall } = useConnect();
   const textfield = useRef();
   const spinner = useRef();
@@ -30,31 +24,29 @@ export function BuyHodlTokensButton({ placeholder, ownerStxAddress }) {
       });
   }, [ownerStxAddress]);
 
-  const sendAction = async () => {
+  const bidAction = async () => {
     spinner.current.classList.remove('d-none');
 
-    var amountAsString = textfield.current.value.trim();
-    var amount = parseInt(amountAsString);
+    var tradableId = textfield.current.value.trim();
 
     try {
       setStatus(`Sending transaction`);
 
       await doContractCall({
         contractAddress: CONTRACT_ADDRESS,
-        contractName: 'hodl-token',
-        functionName: 'buy-tokens',
-        functionArgs: [uintCV(amount)],
-        postConditionMode: PostConditionMode.Deny,
-        postConditions: [
-          makeStandardSTXPostCondition(
-            ownerStxAddress,
-            FungibleConditionCode.LessEqual,
-            new BigNum(amount)
-          ),
+        contractName: 'market',
+        functionName: 'bid',
+        functionArgs: [
+          contractPrincipalCV(CONTRACT_ADDRESS, 'constant-tradables'),
+          uintCV(parseInt(tradableId)),
+          uintCV(1000),
         ],
+        postConditionMode: PostConditionMode.Allow,
+        postConditions: [],
         network: NETWORK,
         finished: data => {
           console.log(data);
+          setStatus(undefined);
           setTxId(data.txId);
           spinner.current.classList.add('d-none');
         },
@@ -68,34 +60,35 @@ export function BuyHodlTokensButton({ placeholder, ownerStxAddress }) {
 
   return (
     <div>
-      Buy Hodl tokens (1 uSTX = 1 Hodl token)
+      <h5>Bid for a constant tradable for 1000 uSTX</h5>
       <div className="NoteField input-group ">
         <input
-          type="decimal"
+          type="text"
           ref={textfield}
           className="form-control"
-          defaultValue={''}
-          placeholder={placeholder}
+          defaultValue={tradableId}
+          placeholder="Id of tradable"
+          hidden={tradableId}
           onKeyUp={e => {
-            if (e.key === 'Enter') sendAction();
+            if (e.key === 'Enter') bidAction();
           }}
           onBlur={e => {
             setStatus(undefined);
           }}
         />
         <div className="input-group-append">
-          <button className="btn btn-outline-secondary" type="button" onClick={sendAction}>
+          <button className="btn btn-outline-secondary" type="button" onClick={bidAction}>
             <div
               ref={spinner}
               role="status"
               className="d-none spinner-border spinner-border-sm text-info align-text-top mr-2"
             />
-            Buy
+            Bid
           </button>
         </div>
       </div>
       <div>
-        <TxStatus txId={txId} resultPrefix="Purchase request placed in block " />
+        <TxStatus txId={txId} resultPrefix="Offer placed in block " />
       </div>
       {status && (
         <>

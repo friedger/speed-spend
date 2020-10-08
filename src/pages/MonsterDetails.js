@@ -2,7 +2,6 @@ import React from 'react';
 
 import { useBlockstack } from 'react-blockstack';
 import { Monster } from '../components/Monster';
-import { BuyMonsters } from '../components/BuyMonsters';
 
 export default function MonsterDetails({ monsterId }) {
   const { userData } = useBlockstack();
@@ -18,8 +17,6 @@ export default function MonsterDetails({ monsterId }) {
         </div>
         <div className="col-xs-10 col-md-8 mx-auto mb-4 px-4">
           <Monster ownerStxAddress={ownerStxAddress} monsterId={monsterId} />
-          <br />
-          <BuyMonsters ownerStxAddress={ownerStxAddress} monsterId={monsterId} />
         </div>
 
         <div className="card col-md-8 mx-auto mt-5 mb-5 text-center px-0 border-warning">

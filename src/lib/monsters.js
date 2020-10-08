@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
+  ClarityType,
   cvToString,
   deserializeCV,
   PostConditionMode,
@@ -9,7 +10,6 @@ import {
 } from '@blockstack/stacks-transactions';
 import {
   accountsApi,
-  authOrigin,
   CONTRACT_ADDRESS,
   MONSTERS_CONTRACT_NAME,
   NETWORK,
@@ -39,15 +39,6 @@ export async function fetchMonsterIds(ownerStxAddress) {
         .map(a => a.asset.value.hex)
     )
     .then(idsHex => [...new Set(idsHex)]);
-}
-export function fetchMonsterDetails2(monsterId) {
-  console.log(monsterId);
-  return smartContractsApi().getContractDataMapEntry({
-    contractAddress: CONTRACT_ADDRESS,
-    contractName: MONSTERS_CONTRACT_NAME,
-    mapName: 'monsters',
-    key: `0x${monsterId}`,
-  });
 }
 
 export function fetchMonsterDetails(monsterId) {
@@ -92,12 +83,15 @@ export function fetchMonsterDetails(monsterId) {
         functionName: 'is-alive',
         readOnlyFunctionArgs: {
           sender: CONTRACT_ADDRESS,
-          arguments: [serializeCV(uintCV(monsterId)).toString('hex')],
+          arguments: [cvToHex(uintCV(monsterId))],
         },
       })
-      .then(response =>
-        cvToString(deserializeCV(Buffer.from(response.result.substr(2), 'hex')).value)
-      ),
+      .then(response => {
+        const responseCV = hexToCV(response.result);
+        return responseCV.type === ClarityType.ResponseOk
+          ? responseCV.value.type === ClarityType.BoolTrue
+          : false;
+      }),
   ]).then(result => {
     return { owner: result[0], metaData: result[1], alive: result[2] };
   });
@@ -170,6 +164,8 @@ export function MarketState({ ownerStxAddress }) {
             );
           } else if (tx.contract_call.function_name === 'pay') {
             return <PayTransaction key={key} tx={tx} />;
+          } else if (tx.contract_call.function_name === 'cancel') {
+            return <CancelTransaction key={key} tx={tx} />;
           } else {
             return null;
           }
@@ -186,7 +182,6 @@ export function BidTransaction({ tx, ownedMonsterIds }) {
   const [txId, setTxId] = useState();
   const spinner = useRef();
   const { doContractCall } = useConnect();
-  console.log(tx.contract_call);
 
   const tradableCV = hexToCV(tx.contract_call.function_args[0].hex);
 
@@ -207,7 +202,6 @@ export function BidTransaction({ tx, ownedMonsterIds }) {
         contractName: 'market',
         functionName: 'accept',
         functionArgs: [tradableCV, tradableIdCV, sender],
-        authOrigin: authOrigin,
         network: NETWORK,
         postConditions: [],
         postConditionMode: PostConditionMode.Allow,
@@ -233,8 +227,8 @@ export function BidTransaction({ tx, ownedMonsterIds }) {
 
   return (
     <div className="mb-4">
-      Bid for monster {tradableIdCV.value.toString()} at {amountCV.value.toString()} uSTX at{' '}
-      {tx.burn_block_time_iso}
+      Bid for tradable {cvToString(tradableCV)} with id {tradableIdCV.value.toString()} at{' '}
+      {amountCV.value.toString()} uSTX at {tx.burn_block_time_iso} by user {cvToString(sender)}
       {isOwned && (
         <>
           <div className="NoteField input-group ">
@@ -279,7 +273,6 @@ export function AcceptTransaction({ tx, ownedMonsterIds, ownerStxAddress }) {
         contractName: 'market',
         functionName: 'pay',
         functionArgs: [tradableCV, tradableIdCV],
-        authOrigin: authOrigin,
         network: NETWORK,
         postConditions: [],
         postConditionMode: PostConditionMode.Allow,
@@ -308,7 +301,6 @@ export function AcceptTransaction({ tx, ownedMonsterIds, ownerStxAddress }) {
         contractName: 'market',
         functionName: 'cancel',
         functionArgs: [tradableCV, tradableIdCV, bidOwnerCV],
-        authOrigin: authOrigin,
         network: NETWORK,
         postConditions: [],
         postConditionMode: PostConditionMode.Allow,
@@ -335,8 +327,8 @@ export function AcceptTransaction({ tx, ownedMonsterIds, ownerStxAddress }) {
     );
   return (
     <div className="mb-4">
-      Accepted bid for monster {tradableIdCV.value.toString()} placed by user{' '}
-      {cvToString(bidOwnerCV)}. Accepted at {tx.burn_block_time_iso}
+      Accepted bid for {cvToString(tradableCV)} with id {tradableIdCV.value.toString()} placed by
+      user {cvToString(bidOwnerCV)}. Accepted at {tx.burn_block_time_iso}
       <>
         {isBidder && (
           <div className="NoteField input-group ">
@@ -374,11 +366,22 @@ export function AcceptTransaction({ tx, ownedMonsterIds, ownerStxAddress }) {
 }
 
 export function PayTransaction({ tx }) {
+  const amount = tx.events.filter(e => e.event_type === 'stx_asset')[0].asset.amount;
   return (
     <div className="mb-4">
-      Paid {hexToCV(tx.contract_call.function_args[1].hex).value.toString()} uSTX for tradable{' '}
-      {hexToCV(tx.contract_call.function_args[0].hex).value.toString()} with id{' '}
-      {hexToCV(tx.contract_call.function_args[1].hex).value.toString()} at {tx.burn_block_time_iso}
+      Paid {amount} uSTX for tradable {cvToString(hexToCV(tx.contract_call.function_args[0].hex))}{' '}
+      with id {hexToCV(tx.contract_call.function_args[1].hex).value.toString()} at{' '}
+      {tx.burn_block_time_iso}
+    </div>
+  );
+}
+
+export function CancelTransaction({ tx }) {
+  return (
+    <div className="mb-4">
+      Cancelled deal for tradable {cvToString(hexToCV(tx.contract_call.function_args[0].hex))} with
+      id {hexToCV(tx.contract_call.function_args[1].hex).value.toString()} at{' '}
+      {tx.burn_block_time_iso}
     </div>
   );
 }
