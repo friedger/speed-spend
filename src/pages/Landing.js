@@ -38,7 +38,7 @@ export default function Landing(props) {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    Stack Testnet
+                    Stacks Testnet
                   </a>{' '}
                   is blockchain based on Proof of Transfer. The testnet is initiated by Blockstack
                   PBC, a New York based public benefit corporation. In the current phase{' '}

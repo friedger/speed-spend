@@ -3,6 +3,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { fetchAccount } from '../lib/account';
 import { useConnect } from '@blockstack/connect';
 import { TxStatus } from '../lib/transactions';
+import { NETWORK } from '../lib/constants';
 const BigNum = require('bn.js');
 
 export function HodlButton({ title, path, placeholder, ownerStxAddress, appStxAddress }) {
@@ -44,6 +45,7 @@ export function HodlButton({ title, path, placeholder, ownerStxAddress, appStxAd
       await doSTXTransfer({
         recipient: appStxAddress,
         amount: new BigNum(amount),
+        network: NETWORK,
         finished: data => {
           console.log(data);
           setTxId(data.txId);

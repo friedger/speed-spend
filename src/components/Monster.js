@@ -72,7 +72,9 @@ export function Monster({ monsterId, ownerStxAddress }) {
 
           <b>{monsterDetails.metaData.name}</b>
           <br />
-          <small>Last fed at: {new Date(monsterDetails.metaData.lastMeal).toUTCString()}</small>
+          <small>
+            Last fed at: {new Date(monsterDetails.metaData.lastMeal * 1000).toUTCString()}
+          </small>
           <br />
           <small>Still alive: {monsterDetails.alive.toString()}</small>
           {monsterDetails.owner !== ownerStxAddress && (
