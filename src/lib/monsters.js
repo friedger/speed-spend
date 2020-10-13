@@ -74,6 +74,7 @@ export function fetchMonsterDetails(monsterId) {
           image: parseInt(metaData['image'].value),
           lastMeal: parseInt(metaData['last-meal'].value),
           name: metaData['name'].buffer.toString(),
+          dateOfBirth: parseInt(metaData['date-of-birth'].value),
         };
       }),
     smartContractsApi

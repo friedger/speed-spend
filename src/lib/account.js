@@ -35,7 +35,7 @@ export async function getUserAddress(userSession, username) {
  * returns the stacks balance object with property `balance` in decimal.
  */
 export function fetchAccount(addressAsString) {
-  console.log('Checking account');
+  console.log(`Checking account "${addressAsString}"`);
   return accountsApi
     .getAccountBalance({ principal: addressAsString })
     .then(response => response.stx);

@@ -6,9 +6,11 @@ import {
 } from '@stacks/blockchain-api-client';
 import { StacksTestnet } from '@blockstack/stacks-transactions';
 
-export const localNode = false;
-export const localAuth = false;
-export const mocknet = false;
+export const localMocknet =
+  window.location.search && window.location.search.includes('mocknet=local');
+export const localNode = localMocknet;
+export const localAuth = localMocknet;
+export const mocknet = localMocknet;
 
 export const authOrigin = localAuth ? 'http://localhost:8080' : 'https://app.blockstack.org';
 
