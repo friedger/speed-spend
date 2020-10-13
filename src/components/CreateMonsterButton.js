@@ -82,7 +82,7 @@ export function CreateMonsterButton({ ownerStxAddress }) {
         </div>
       </div>
       <div>
-        <TxStatus txId={txId} resultPrefix="Birth happened in block " />
+        <TxStatus txId={txId} resultPrefix="Monster was born with id " />
       </div>
       {status && (
         <>
