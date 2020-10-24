@@ -22,6 +22,20 @@ import { connectWebSocketClient } from '@stacks/blockchain-api-client';
 import { cvToHex, hexToCV, TxStatus } from './transactions';
 import { principalCV } from '@blockstack/stacks-transactions/lib/clarity/types/principalCV';
 
+export async function fetchNFTs(ownerStxAddress) {
+  let response = await accountsApi.getAccountTransactions({
+    principal: `${CONTRACT_ADDRESS}.market`,
+  });
+  const transactions = response.results.filter(
+    tx =>
+      tx.tx_type === 'contract_call' &&
+      tx.tx_status === 'success' &&
+      tx.contract_call.function_name === 'offer-tradable'
+  );
+  console.log({ transactions });
+  return transactions;
+}
+
 export async function fetchMonsterIds(ownerStxAddress) {
   return accountsApi
     .getAccountAssets({ principal: ownerStxAddress })

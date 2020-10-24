@@ -6,12 +6,12 @@ import {
 } from '@stacks/blockchain-api-client';
 import { StacksTestnet } from '@blockstack/stacks-transactions';
 
-export const localMocknet =
-  window.location.search && window.location.search.includes('mocknet=local');
+export const localMocknet = window.location.search.includes('mocknet=local');
 export const localNode = localMocknet;
-export const localAuth = localMocknet;
+export const localAuth = true;
 export const mocknet = localMocknet;
 
+console.log({ localNode, localAuth, mocknet });
 export const authOrigin = localAuth ? 'http://localhost:8080' : 'https://app.blockstack.org';
 
 export const CONTRACT_ADDRESS = mocknet
@@ -21,7 +21,7 @@ export const HODL_TOKEN_CONTRACT = 'hodl-token';
 export const MONSTERS_CONTRACT_NAME = 'monsters';
 export const STACK_API_URL = localNode
   ? 'http://localhost:3999'
-  : 'https://stacks-node-api.blockstack.org';
+  : 'https://stacks-node-api.krypton.blockstack.org';
 export const STACKS_API_WS_URL = localNode
   ? 'ws:localhost:3999/'
   : 'ws://stacks-node-api.blockstack.org/';

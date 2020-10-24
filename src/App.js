@@ -14,6 +14,8 @@ import MonsterDetails from './pages/MonsterDetails';
 import ClarityValues from './pages/ClarityValues';
 import MyProfile from './pages/MyProfile';
 import SpeedSpend from './pages/SpeedSpend';
+import Marketplace from './pages/Marketplace';
+import { NETWORK } from './lib/constants';
 
 export default function App(props) {
   const [userSession, setUserSession] = useState();
@@ -67,9 +69,11 @@ function AppBody(props) {
         <NavLink to="/jackpot">Flip Coin with Jackpot</NavLink>
         <NavLink to="/at-two">Flip Coin at two</NavLink>
         <NavLink to="/monsters">Monsters</NavLink>
+        <NavLink to="/openriff">Open Riff</NavLink>
         <NavLink to="/me">Profile</NavLink>
       </nav>
       {props.children}
+      <div>{NETWORK.coreApiUrl}</div>
     </div>
   );
 }
@@ -91,6 +95,7 @@ function Content({ userSession }) {
               <Jackpot path="/jackpot" decentralizedID={decentralizedID} />
               <AtTwo path="/at-two" decentralizedID={decentralizedID} />
               <Monsters exact path="/monsters" decentralizedID={decentralizedID} />
+              <Marketplace exact path="/openriff" decentralizedID={decentralizedID} />
               <MonsterDetails path="/monsters/:monsterId" decentralizedID={decentralizedID} />
               <MyProfile path="/me" decentralizedID={decentralizedID} />
               <ClarityValues path="/cv" />

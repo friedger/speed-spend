@@ -1,11 +1,12 @@
 import React from 'react';
 
 import { useBlockstack } from 'react-blockstack';
-import { CreateMonsterButton } from '../components/CreateMonsterButton';
-import { MyMonsters } from '../components/MyMonsters';
-import { BuyMonsters } from '../components/BuyMonsters';
+import { BidNFTs } from '../components/BidNFTs';
+import { MarketState } from '../lib/monsters';
+import { SellNFTs } from '../components/SellNFTs';
+import { NFTsOnSale } from '../components/NFTsOnSale';
 
-export default function Monsters(props) {
+export default function Marketplace() {
   const { userData } = useBlockstack();
   const ownerStxAddress = userData.profile.stxAddress;
 
@@ -13,19 +14,21 @@ export default function Monsters(props) {
     <main className="panel-welcome mt-5 container">
       <div className="lead row mt-5">
         <div className="col-xs-10 col-md-8 mx-auto px-4">
-          <h1 className="card-title">Monster Land</h1>
-          Feed, buy, sell monsters
-          <br />
-          Monsters as seen on <a href="https://planet.friedger.de">Monster Planet</a>
+          <h1 className="card-title">Open Riff</h1>
+          Marketplace for NFTs
         </div>
         <div className="col-xs-10 col-md-8 mx-auto mb-4 px-4">
-          <CreateMonsterButton ownerStxAddress={ownerStxAddress} />
+          <SellNFTs ownerStxAddress={ownerStxAddress} />
         </div>
         <div className="col-xs-10 col-md-8 mx-auto mb-4 px-4">
-          <MyMonsters ownerStxAddress={ownerStxAddress} />
+          <BidNFTs ownerStxAddress={ownerStxAddress} />
         </div>
         <div className="col-xs-10 col-md-8 mx-auto mb-4 px-4">
-          <BuyMonsters ownerStxAddress={ownerStxAddress} />
+          <NFTsOnSale ownerStxAddress={ownerStxAddress} />
+        </div>
+
+        <div className="col-xs-10 col-md-8 mx-auto mb-4 px-4">
+          <MarketState ownerStxAddress={ownerStxAddress} />
         </div>
         <div className="card col-md-8 mx-auto mt-5 mb-5 text-center px-0 border-warning">
           <div className="card-header">
@@ -43,7 +46,7 @@ export default function Monsters(props) {
               Hodl some STXs for speed spend: Go to the "Hodl" tab and follow the instructions
               there.
             </li>
-            <li className="list-group-item">Collect some monsters</li>
+            <li className="list-group-item">Collect some NFTs</li>
           </ul>
         </div>
       </div>
