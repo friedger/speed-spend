@@ -8,7 +8,7 @@ import { StacksTestnet } from '@blockstack/stacks-transactions';
 
 export const localMocknet = window.location.search.includes('mocknet=local');
 export const localNode = localMocknet;
-export const localAuth = true;
+export const localAuth = false;
 export const mocknet = localMocknet;
 
 console.log({ localNode, localAuth, mocknet });
