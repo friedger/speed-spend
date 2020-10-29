@@ -4,7 +4,7 @@ import { CONTRACT_ADDRESS, NETWORK } from '../lib/constants';
 import { TxStatus } from '../lib/transactions';
 import { fetchAccount } from '../lib/account';
 import { useConnect } from '@blockstack/connect';
-import { contractPrincipalCV, PostConditionMode, uintCV } from '@blockstack/stacks-transactions';
+import { contractPrincipalCV, PostConditionMode, uintCV } from '@stacks/transactions';
 
 export function SellNFTs({ ownerStxAddress }) {
   const { doContractCall } = useConnect();

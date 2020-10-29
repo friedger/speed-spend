@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 
 import { fetchAccount } from '../lib/account';
 import { useConnect } from '@blockstack/connect';
-import { PostConditionMode, bufferCVFromString, uintCV } from '@blockstack/stacks-transactions';
+import { PostConditionMode, bufferCVFromString, uintCV } from '@stacks/transactions';
 import { CONTRACT_ADDRESS, NETWORK } from '../lib/constants';
 import { TxStatus } from '../lib/transactions';
 

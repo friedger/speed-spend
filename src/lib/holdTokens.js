@@ -1,4 +1,4 @@
-import { deserializeCV, serializeCV, standardPrincipalCV } from '@blockstack/stacks-transactions';
+import { deserializeCV, serializeCV, standardPrincipalCV } from '@stacks/transactions';
 import { CONTRACT_ADDRESS, HODL_TOKEN_CONTRACT, NETWORK } from './constants';
 
 export function fetchHodlTokenBalance(sender) {

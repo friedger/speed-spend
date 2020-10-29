@@ -2,7 +2,7 @@ import React from 'react';
 
 import { useBlockstack } from 'react-blockstack';
 import { getStacksAccount } from '../lib/account';
-import { addressToString } from '@blockstack/stacks-transactions';
+import { addressToString } from '@stacks/transactions';
 import { BuyHodlTokensButton } from '../components/BuyHodlTokensButton';
 import { HodlTokenButton } from '../components/HodlTokenButton';
 import { UnHodlTokenButton } from '../components/UnHodlTokenButton';

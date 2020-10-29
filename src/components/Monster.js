@@ -3,7 +3,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { CONTRACT_ADDRESS, NETWORK } from '../lib/constants';
 import { cvToHex, TxStatus } from '../lib/transactions';
 import { useConnect } from '@blockstack/connect';
-import { PostConditionMode, uintCV } from '@blockstack/stacks-transactions';
+import { PostConditionMode, uintCV } from '@stacks/transactions';
 import { fetchMonsterDetails } from '../lib/monsters';
 import { CreateMonsterButton } from './CreateMonsterButton';
 import { BuyMonsters } from './BuyMonsters';

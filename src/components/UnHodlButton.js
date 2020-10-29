@@ -5,7 +5,7 @@ import {
   privateKeyToString,
   addressToString,
   broadcastTransaction,
-} from '@blockstack/stacks-transactions';
+} from '@stacks/transactions';
 
 import { NETWORK } from '../lib/constants';
 import { getUserAddress, getStacksAccount, fetchAccount } from '../lib/account';

@@ -1,4 +1,4 @@
-import { deserializeCV, serializeCV } from '@blockstack/stacks-transactions';
+import { deserializeCV, serializeCV } from '@stacks/transactions';
 import { connectWebSocketClient } from '@stacks/blockchain-api-client';
 import React, { useState, useEffect, useRef } from 'react';
 import { mocknet, STACKS_API_WS_URL, STACK_API_URL, transactionsApi } from './constants';

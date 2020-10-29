@@ -4,7 +4,7 @@ import {
   addressFromPublicKeys,
   AddressVersion,
   AddressHashMode,
-} from '@blockstack/stacks-transactions';
+} from '@stacks/transactions';
 import { STX_JSON_PATH } from '../UserSession';
 import { accountsApi, STACKS_API_ACCOUNTS_URL } from './constants';
 

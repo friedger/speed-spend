@@ -7,7 +7,7 @@ import {
   serializeCV,
   tupleCV,
   uintCV,
-} from '@blockstack/stacks-transactions';
+} from '@stacks/transactions';
 import {
   accountsApi,
   CONTRACT_ADDRESS,
@@ -19,8 +19,7 @@ import {
 } from './constants';
 import { useConnect } from '@blockstack/connect';
 import { connectWebSocketClient } from '@stacks/blockchain-api-client';
-import { cvToHex, hexToCV, TxStatus } from './transactions';
-import { principalCV } from '@blockstack/stacks-transactions/lib/clarity/types/principalCV';
+import { cvToHex, hexToCV, TxStatus, principalCV } from './transactions';
 
 export async function fetchNFTs(ownerStxAddress) {
   let response = await accountsApi.getAccountTransactions({

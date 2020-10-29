@@ -3,7 +3,7 @@ import Profile from '../components/Profile';
 
 import { useBlockstack } from 'react-blockstack';
 import { getStacksAccount } from '../lib/account';
-import { addressToString } from '@blockstack/stacks-transactions';
+import { addressToString } from '@stacks/transactions';
 
 export default function MyProfile(props) {
   const { userData } = useBlockstack();

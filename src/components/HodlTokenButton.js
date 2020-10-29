@@ -11,7 +11,7 @@ import {
   FungibleConditionCode,
   createAssetInfo,
   makeStandardFungiblePostCondition,
-} from '@blockstack/stacks-transactions';
+} from '@stacks/transactions';
 import { fetchSpendableTokenBalance } from '../lib/holdTokens';
 const BigNum = require('bn.js');
 
