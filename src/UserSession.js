@@ -1,5 +1,5 @@
-import { AppConfig } from 'blockstack';
-import { addressToString } from '@blockstack/stacks-transactions';
+import { AppConfig } from '@stacks/auth';
+import { addressToString } from '@stacks/transactions';
 import { getStacksAccount } from './lib/account';
 import { didConnect } from 'react-blockstack';
 import { authOrigin } from './lib/constants';

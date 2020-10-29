@@ -8,7 +8,7 @@ import {
   FungibleConditionCode,
   makeContractSTXPostCondition,
   PostConditionMode,
-} from '@blockstack/stacks-transactions';
+} from '@stacks/transactions';
 import Switch from 'react-input-switch';
 
 import { getStacksAccount, fetchAccount } from '../lib/account';

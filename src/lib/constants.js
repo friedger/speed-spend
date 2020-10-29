@@ -4,7 +4,7 @@ import {
   AccountsApi,
   Configuration,
 } from '@stacks/blockchain-api-client';
-import { StacksTestnet } from '@blockstack/stacks-transactions';
+import { StacksTestnet } from '@stacks/transactions';
 
 export const localMocknet = window.location.search.includes('mocknet=local');
 export const localNode = localMocknet;
