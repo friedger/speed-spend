@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 
-import { hexToCV, TxStatus } from '../lib/transactions';
+import { hexToCV } from '../lib/transactions';
 import { BidNFTs } from './BidNFTs';
 
 export function NFT({ nftId, nftTx, ownerStxAddress }) {
-  const [status, setStatus] = useState();
-  const [txId, setTxId] = useState();
   const [nftDetails, setNFTDetails] = useState();
 
   useEffect(() => {
@@ -49,15 +47,8 @@ export function NFT({ nftId, nftTx, ownerStxAddress }) {
               <br />
             </>
           )}
-          <TxStatus txId={txId} resultPrefix="" />
         </>
       ) : null}
-
-      {status && (
-        <>
-          <div>{status}</div>
-        </>
-      )}
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 
 import { fetchAccount } from '../lib/account';
-import { useConnect } from '@blockstack/connect';
+import { useConnect } from '@stacks/connect-react';
 import { PostConditionMode, bufferCVFromString, uintCV } from '@blockstack/stacks-transactions';
 import { CONTRACT_ADDRESS, NETWORK } from '../lib/constants';
 import { TxStatus } from '../lib/transactions';

@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { useBlockstack } from 'react-blockstack';
 
 import { getUserAddress, fetchAccount } from '../lib/account';
-import { useConnect } from '@blockstack/connect';
+import { useConnect } from '@stacks/connect-react';
 import { TxStatus } from '../lib/transactions';
 import { NETWORK } from '../lib/constants';
 const BigNum = require('bn.js');

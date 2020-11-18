@@ -3,7 +3,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { CONTRACT_ADDRESS, HODL_TOKEN_CONTRACT, NETWORK } from '../lib/constants';
 import { TxStatus } from '../lib/transactions';
 import { fetchAccount } from '../lib/account';
-import { useConnect } from '@blockstack/connect';
+import { useConnect } from '@stacks/connect-react';
 import {
   uintCV,
   PostConditionMode,

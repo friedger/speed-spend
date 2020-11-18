@@ -1,5 +1,5 @@
 import React from 'react';
-import { useConnect } from '@blockstack/connect';
+import { useConnect } from '@stacks/connect-react';
 
 // Landing page demonstrating Blockstack connect for registration
 

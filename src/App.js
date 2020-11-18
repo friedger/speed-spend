@@ -3,7 +3,7 @@ import Landing from './pages/Landing';
 import Overview from './pages/Overview';
 import Hodl from './pages/Hodl';
 import HodlTokens from './pages/HodlTokens';
-import { Connect } from '@blockstack/connect';
+import { Connect } from '@stacks/connect-react';
 import { useBlockstack, useConnectOptions } from 'react-blockstack';
 import { connectOptions } from './UserSession';
 import { Link, Router } from '@reach/router';
@@ -16,6 +16,7 @@ import MyProfile from './pages/MyProfile';
 import SpeedSpend from './pages/SpeedSpend';
 import Marketplace from './pages/Marketplace';
 import { NETWORK } from './lib/constants';
+import StackingActivies from './pages/StackingActivities';
 
 export default function App(props) {
   const [userSession, setUserSession] = useState();
@@ -64,6 +65,7 @@ function AppBody(props) {
       <nav className="navbar navbar-expand-md nav-pills nav-justified mx-auto">
         <NavLink to="/">Overview</NavLink>
         <NavLink to="/speed-spend">Speed Spend</NavLink>
+        <NavLink to="/stacking">Stacking</NavLink>
         <NavLink to="/hodl">Hodl</NavLink>
         <NavLink to="/hodl-tokens">Hodl Tokens</NavLink>
         <NavLink to="/jackpot">Flip Coin with Jackpot</NavLink>
@@ -99,6 +101,7 @@ function Content({ userSession }) {
               <MonsterDetails path="/monsters/:monsterId" decentralizedID={decentralizedID} />
               <MyProfile path="/me" decentralizedID={decentralizedID} />
               <ClarityValues path="/cv" />
+              <StackingActivies path="/stacking"></StackingActivies>
             </AppBody>
           </Router>
         </>

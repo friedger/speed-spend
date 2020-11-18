@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 
 import { fetchAccount } from '../lib/account';
-import { useConnect } from '@blockstack/connect';
+import { useConnect } from '@stacks/connect-react';
 import {
   uintCV,
   PostConditionMode,

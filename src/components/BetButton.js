@@ -22,7 +22,7 @@ import {
 } from '../lib/flipCoin';
 import { fetchHodlTokenBalance } from '../lib/holdTokens';
 
-import { useConnect } from '@blockstack/connect';
+import { useConnect } from '@stacks/connect-react';
 import { connectWebSocketClient, TransactionsApi } from '@stacks/blockchain-api-client';
 const BigNum = require('bn.js');
 

@@ -17,7 +17,7 @@ import {
   STACKS_API_WS_URL,
   transactionsApi,
 } from './constants';
-import { useConnect } from '@blockstack/connect';
+import { useConnect } from '@stacks/connect-react';
 import { connectWebSocketClient } from '@stacks/blockchain-api-client';
 import { cvToHex, hexToCV, TxStatus } from './transactions';
 import { principalCV } from '@blockstack/stacks-transactions/lib/clarity/types/principalCV';

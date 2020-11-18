@@ -3,8 +3,9 @@ import {
   SmartContractsApi,
   AccountsApi,
   Configuration,
+  InfoApi,
 } from '@stacks/blockchain-api-client';
-import { StacksTestnet } from '@blockstack/stacks-transactions';
+import { StacksTestnet } from '@stacks/network';
 
 export const localMocknet = window.location.search.includes('mocknet=local');
 export const localNode = localMocknet;
@@ -35,3 +36,4 @@ const config = new Configuration({ basePath });
 export const accountsApi = new AccountsApi(config);
 export const smartContractsApi = new SmartContractsApi(config);
 export const transactionsApi = new TransactionsApi(config);
+export const infoApi = new InfoApi(config);
