@@ -1,4 +1,4 @@
-import { deserializeCV, serializeCV } from '@blockstack/stacks-transactions';
+import { serializeCV, hexToCV as stacksHexToCV } from '@stacks/transactions';
 import { connectWebSocketClient } from '@stacks/blockchain-api-client';
 import React, { useState, useEffect, useRef } from 'react';
 import { mocknet, STACKS_API_WS_URL, STACK_API_URL, transactionsApi } from './constants';
@@ -27,8 +27,7 @@ export function cvToHex(value) {
 }
 
 export function hexToCV(hexString) {
-  const hexStringNoPrefix = hexString.startsWith('0x') ? hexString.substr(2) : hexString;
-  return deserializeCV(Buffer.from(hexStringNoPrefix, 'hex'));
+  return stacksHexToCV(hexString);
 }
 
 export function txUrl(txId) {

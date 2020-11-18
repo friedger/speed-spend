@@ -12240,9 +12240,9 @@ react-blockstack-button@^0.1.0:
   resolved "https://registry.yarnpkg.com/react-blockstack-button/-/react-blockstack-button-0.1.0.tgz#e8995b4e4f821e6fbc1d1c9b316cda4ef065347b"
   integrity sha512-Ez+R36CWqF4gS4GfXrUi8A0D8q8TC7dJh5G1Gb8T8nNMF41Rai4Q8rgyjyDu090/s7KShSfTW5vdVFvP7eBVMw==
 
-react-blockstack@friedger/react-blockstack#chore/stacks:
+react-blockstack@friedger/react-blockstack#06f0c6e305c5a15858411452135666cc56472ef8:
   version "0.6.10"
-  resolved "https://codeload.github.com/friedger/react-blockstack/tar.gz/1118d39b64d0e4e73a3db7e5cd110812cc784a44"
+  resolved "https://codeload.github.com/friedger/react-blockstack/tar.gz/06f0c6e305c5a15858411452135666cc56472ef8"
   dependencies:
     "@dbeining/react-atom" "^4.1.4"
     lodash "^4.17.5"

@@ -1,15 +1,18 @@
-import { cvToString, deserializeCV } from '@stacks/transactions';
+import { cvToString } from '@stacks/transactions';
 import React, { useState, useEffect } from 'react';
 import { accountsApi, infoApi } from '../lib/constants';
+import { hexToCV } from '../lib/transactions';
 
 export function Stacking({ ownerStxAddress }) {
   const [status, setStatus] = useState();
   const [txs, setTxs] = useState();
-
+  const [info, setInfo] = useState();
   useEffect(() => {
     const updatePoxInfo = async () => {
-      const result = await infoApi.getPoxInfo();
-      console.log({ result });
+      const poxInfo = await infoApi.getPoxInfo();
+      const coreInfo = await infoApi.getCoreApiInfo();
+      console.log({ coreInfo, poxInfo });
+      setInfo({ coreInfo, poxInfo });
     };
     updatePoxInfo();
     const updatePoxTxs = async () => {
@@ -25,7 +28,8 @@ export function Stacking({ ownerStxAddress }) {
   }, []);
   return (
     <div>
-      <h5>The last successful calls ordered by block height</h5>
+      <h5>The last successful calls ordered by stacks block height </h5>
+      {info && <p>Current burn block height: {info.coreInfo.burn_block_height}</p>}
       {txs &&
         txs.map((poxTx, key) => {
           return <PoxTransaction key={key} poxTx={poxTx} ownerStxAddress={ownerStxAddress} />;
@@ -40,11 +44,12 @@ export function Stacking({ ownerStxAddress }) {
 }
 
 const cvToData = hex => {
-  const tupleCV = deserializeCV(Buffer.from(hex.substr(2), 'hex'));
+  const tupleCV = hexToCV(hex);
   const data = tupleCV.data;
+  console.log(cvToString(tupleCV));
   return {
     stacker: cvToString(data.stacker),
-    unlockBurnHeight: cvToString(data['unlock-burn-height']),
+    unlockBurnHeight: data['unlock-burn-height'].value.toString(),
   };
 };
 
@@ -54,10 +59,13 @@ const PoxTransaction = ({ poxTx, ownerStxAddress }) => {
       switch (poxTx.contract_call.function_name) {
         case 'stack-stx':
           const { stacker, unlockBurnHeight } = cvToData(poxTx.tx_result.hex);
+          const startBurnHeight = hexToCV(
+            poxTx.contract_call.function_args[2].hex
+          ).value.toString();
           return (
             <div className="mb-4">
-              {poxTx.block_height}: {poxTx.contract_call.function_name}: {stacker} until block{' '}
-              {unlockBurnHeight}
+              {poxTx.block_height}: {poxTx.contract_call.function_name}: {stacker} from burn block{' '}
+              {startBurnHeight} until {unlockBurnHeight}
             </div>
           );
         default:
