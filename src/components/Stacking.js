@@ -1,9 +1,8 @@
 import { cvToString, deserializeCV } from '@stacks/transactions';
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { accountsApi, infoApi } from '../lib/constants';
 
 export function Stacking({ ownerStxAddress }) {
-  const spinner = useRef();
   const [status, setStatus] = useState();
   const [txs, setTxs] = useState();
 
@@ -27,11 +26,6 @@ export function Stacking({ ownerStxAddress }) {
   return (
     <div>
       <h5>The last successful calls ordered by block height</h5>
-      <div
-        ref={spinner}
-        role="status"
-        className="d-none spinner-border spinner-border-sm text-info align-text-top mr-2"
-      />
       {txs &&
         txs.map((poxTx, key) => {
           return <PoxTransaction key={key} poxTx={poxTx} ownerStxAddress={ownerStxAddress} />;
