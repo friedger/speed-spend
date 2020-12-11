@@ -62,14 +62,14 @@ export function HodlTokenButton({ title, path, placeholder, ownerStxAddress }) {
             ownerStxAddress,
             FungibleConditionCode.LessEqual,
             new BigNum(amount),
-            new createAssetInfo(CONTRACT_ADDRESS, HODL_TOKEN_CONTRACT, 'spendable-token')
+            createAssetInfo(CONTRACT_ADDRESS, HODL_TOKEN_CONTRACT, 'spendable-token')
           ),
           makeContractFungiblePostCondition(
             CONTRACT_ADDRESS,
             HODL_TOKEN_CONTRACT,
             FungibleConditionCode.LessEqual,
             new BigNum(amount),
-            new createAssetInfo(CONTRACT_ADDRESS, HODL_TOKEN_CONTRACT, 'hodl-token')
+            createAssetInfo(CONTRACT_ADDRESS, HODL_TOKEN_CONTRACT, 'hodl-token')
           ),
         ],
         network: NETWORK,

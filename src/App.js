@@ -17,6 +17,7 @@ import SpeedSpend from './pages/SpeedSpend';
 import Marketplace from './pages/Marketplace';
 import { NETWORK } from './lib/constants';
 import StackingActivies from './pages/StackingActivities';
+import Rockets from './pages/Rockets';
 
 export default function App(props) {
   const [userSession, setUserSession] = useState();
@@ -72,6 +73,7 @@ function AppBody(props) {
         <NavLink to="/at-two">Flip Coin at two</NavLink>
         <NavLink to="/monsters">Monsters</NavLink>
         <NavLink to="/openriff">Open Riff</NavLink>
+        <NavLink to="/rockets">Rockets</NavLink>
         <NavLink to="/me">Profile</NavLink>
       </nav>
       {props.children}
@@ -99,6 +101,7 @@ function Content({ userSession }) {
               <Monsters exact path="/monsters" decentralizedID={decentralizedID} />
               <Marketplace exact path="/openriff" decentralizedID={decentralizedID} />
               <MonsterDetails path="/monsters/:monsterId" decentralizedID={decentralizedID} />
+              <Rockets path="/rockets" decentralizedID={decentralizedID} />
               <MyProfile path="/me" decentralizedID={decentralizedID} />
               <ClarityValues path="/cv" />
               <StackingActivies path="/stacking"></StackingActivies>
