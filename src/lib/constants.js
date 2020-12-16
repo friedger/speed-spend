@@ -22,7 +22,7 @@ export const HODL_TOKEN_CONTRACT = 'hodl-token';
 export const MONSTERS_CONTRACT_NAME = 'monsters';
 export const STACK_API_URL = localNode
   ? 'http://localhost:3999'
-  : 'https://stacks-node-api.krypton.blockstack.org';
+  : 'https://stacks-node-api.xenon.blockstack.org';
 export const STACKS_API_WS_URL = localNode
   ? 'ws:localhost:3999/'
   : 'ws://stacks-node-api.blockstack.org/';

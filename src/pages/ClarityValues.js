@@ -7,7 +7,7 @@ import {
   contractPrincipalCV,
   tupleCV,
   cvToHex,
-} from '@blockstack/stacks-transactions';
+} from '@stacks/transactions';
 
 export default function ClarityValues(props) {
   const data = useRef();

@@ -44,7 +44,8 @@ export function Stacking({ ownerStxAddress }) {
 }
 
 const cvToData = hex => {
-  const tupleCV = hexToCV(hex);
+  const responseCV = hexToCV(hex);
+  const tupleCV = responseCV.value;
   const data = tupleCV.data;
   console.log(cvToString(tupleCV));
   return {

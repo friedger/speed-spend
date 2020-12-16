@@ -1,5 +1,6 @@
-import { AppConfig } from 'blockstack';
-import { addressToString } from '@blockstack/stacks-transactions';
+import { AppConfig } from '@stacks/auth';
+import { Storage } from '@stacks/storage';
+import { addressToString } from '@stacks/transactions';
 import { getStacksAccount } from './lib/account';
 import { didConnect } from 'react-blockstack';
 import { authOrigin } from './lib/constants';
@@ -14,9 +15,10 @@ function afterSTXAddressPublished() {
 
 const stxAddressSemaphore = { putting: false };
 export function putStxAddress(userSession, address) {
+  const storage = new Storage({ userSession });
   if (!stxAddressSemaphore.putting) {
     stxAddressSemaphore.putting = true;
-    userSession
+    storage
       .putFile(STX_JSON_PATH, JSON.stringify({ address }), {
         encrypt: false,
       })
@@ -24,7 +26,7 @@ export function putStxAddress(userSession, address) {
       .catch(r => {
         console.log(r);
         console.log('STX address NOT published, retrying');
-        userSession.getFile(STX_JSON_PATH, { decrypt: false }).then(s => {
+        storage.getFile(STX_JSON_PATH, { decrypt: false }).then(s => {
           console.log({ s });
           userSession
             .putFile(STX_JSON_PATH, JSON.stringify({ address }), {

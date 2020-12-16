@@ -4,7 +4,8 @@ import {
   addressFromPublicKeys,
   AddressVersion,
   AddressHashMode,
-} from '@blockstack/stacks-transactions';
+} from '@stacks/transactions';
+import { Storage } from '@stacks/storage';
 import { STX_JSON_PATH } from '../UserSession';
 import { accountsApi, STACKS_API_ACCOUNTS_URL } from './constants';
 
@@ -21,7 +22,8 @@ export function getStacksAccount(appPrivateKey) {
 }
 
 export async function getUserAddress(userSession, username) {
-  return userSession
+  const storage = new Storage({ userSession });
+  return storage
     .getFile(STX_JSON_PATH, {
       decrypt: false,
       username: username,
