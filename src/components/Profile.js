@@ -1,5 +1,6 @@
+import { getUserData, useConnect } from '@stacks/connect-react';
+import { Person } from '@stacks/profile';
 import React, { useRef, useState, useCallback, useEffect } from 'react';
-import { useBlockstack } from 'react-blockstack';
 import { fetchAccount } from '../lib/account';
 import { STACK_API_URL } from '../lib/constants';
 import { fetchHodlTokenBalance, fetchSpendableTokenBalance } from '../lib/holdTokens';
@@ -9,7 +10,9 @@ import { TxStatus } from '../lib/transactions';
 
 export default function Profile({ stxAddresses }) {
   const [status, setStatus] = useState('');
-  const { person, userData } = useBlockstack();
+  const { userSession } = useConnect();
+  const { userData } = getUserData(userSession);
+  const person = userData && new Person(userData.profile);
   const username = userData && userData.username;
 
   const updateStatus = status => {

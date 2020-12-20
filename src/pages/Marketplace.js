@@ -1,14 +1,13 @@
 import React from 'react';
 
-import { useBlockstack } from 'react-blockstack';
 import { BidNFTs } from '../components/BidNFTs';
-import { MarketState } from '../lib/monsters';
 import { SellNFTs } from '../components/SellNFTs';
 import { NFTsOnSale } from '../components/NFTsOnSale';
+import { MarketState } from '../lib/market';
+import { useStxAddresses } from '../lib/hooks';
 
 export default function Marketplace() {
-  const { userData } = useBlockstack();
-  const ownerStxAddress = userData.profile.stxAddress;
+  const { ownerStxAddress } = useStxAddresses();
 
   return (
     <main className="panel-welcome mt-5 container">

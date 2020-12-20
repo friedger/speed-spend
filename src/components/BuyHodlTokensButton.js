@@ -7,7 +7,7 @@ import {
   PostConditionMode,
   makeStandardSTXPostCondition,
   FungibleConditionCode,
-} from '@blockstack/stacks-transactions';
+} from '@stacks/transactions';
 import * as BigNum from 'bn.js';
 import { CONTRACT_ADDRESS, NETWORK } from '../lib/constants';
 import { TxStatus } from '../lib/transactions';

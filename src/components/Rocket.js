@@ -5,42 +5,41 @@ import { cvToHex, TxStatus } from '../lib/transactions';
 import { useConnect } from '@stacks/connect-react';
 import { PostConditionMode, uintCV } from '@stacks/transactions';
 import { fetchMonsterDetails } from '../lib/monsters';
-import { CreateMonsterButton } from './CreateMonsterButton';
-import { BuyMonsters } from './BuyMonsters';
+import { BuyRocket } from './BuyRocket';
 
-export function Monster({ monsterId, ownerStxAddress }) {
+export function Rocket({ rocketId, ownerStxAddress }) {
   const { doContractCall } = useConnect();
   const spinner = useRef();
   const [status, setStatus] = useState();
   const [txId, setTxId] = useState();
-  const [monsterDetails, setMonsterDetails] = useState();
+  const [rocketDetails, setRocketDetails] = useState();
 
-  const monsterIdNumber = parseInt(monsterId);
+  const monsterIdNumber = parseInt(rocketId);
 
   useEffect(() => {
-    if (monsterId) {
-      fetchMonsterDetails(monsterId)
+    if (rocketId) {
+      fetchMonsterDetails(rocketId)
         .then(details => {
           console.log({ details });
-          setMonsterDetails(details);
+          setRocketDetails(details);
         })
         .catch(e => console.log(e));
     } else {
-      console.log('no monsterId');
+      console.log('no rocketId');
     }
-  }, [monsterId]);
+  }, [rocketId]);
 
-  const feedAction = async () => {
+  const flyAction = async () => {
     spinner.current.classList.remove('d-none');
 
     try {
       setStatus(`Sending transaction`);
-      console.log({ monsterId });
+      console.log({ rocketId });
       await doContractCall({
         contractAddress: CONTRACT_ADDRESS,
-        contractName: 'monsters',
-        functionName: 'feed-monster',
-        functionArgs: [cvToHex(uintCV(monsterId))],
+        contractName: 'rocket-market',
+        functionName: 'fly-ship',
+        functionArgs: [cvToHex(uintCV(rocketId))],
         postConditionMode: PostConditionMode.Allow,
         postConditions: [],
         network: NETWORK,
@@ -60,57 +59,50 @@ export function Monster({ monsterId, ownerStxAddress }) {
 
   return (
     <div>
-      {monsterDetails ? (
+      {rocketDetails ? (
         <>
           <img
-            src={`/monsters/monster-${(monsterDetails.metaData.image - 1) % 109}.png`}
+            src={`/rockets/ship-${rocketDetails.metaData.size % 5}.png`}
             alt="monster"
             width="100"
-            className={monsterDetails.owner !== ownerStxAddress ? 'monster' : 'own-monster'}
           />
           <br />
-
-          <b>{monsterDetails.metaData.name}</b>
+          Size {rocketDetails.metaData.size}
           <br />
-          <small>
-            Last fed at: {new Date(monsterDetails.metaData.lastMeal * 1000).toUTCString()}
-          </small>
-          <br />
-          <small>Still alive: {monsterDetails.alive.toString()}</small>
-          {monsterDetails.owner !== ownerStxAddress && (
+          {rocketDetails.owner !== ownerStxAddress && (
             <>
               <br />
-              <small>Owned by: {monsterDetails.owner}</small>
+              <small>Owned by: {rocketDetails.owner}</small>
             </>
           )}
           <br />
           <small>ID: {monsterIdNumber}</small>
-          {monsterDetails.alive && (
+          {rocketDetails.claimed && (
             <>
               <br />
               <div className="input-group ">
-                <button className="btn btn-outline-secondary" type="button" onClick={feedAction}>
+                <button className="btn btn-outline-secondary" type="button" onClick={flyAction}>
                   <div
                     ref={spinner}
                     role="status"
                     className="d-none spinner-border spinner-border-sm text-info align-text-top mr-2"
                   />
-                  Feed
+                  Fly
                 </button>
               </div>
             </>
           )}
-          <BuyMonsters ownerStxAddress={ownerStxAddress} monsterId={monsterId} />
+          <BuyRocket ownerStxAddress={ownerStxAddress} rocketId={rocketId} />
           <br />
-          <TxStatus txId={txId} resultPrefix="Meal confirmed in block:" />
+          <TxStatus txId={txId} resultPrefix="Flight confirmed in block:" />
         </>
       ) : (
         <>
           <br />
-          This monster is not yet born.
+          This rocket has not yet been ordered.
           <br />
           <br />
-          <CreateMonsterButton ownerStxAddress={ownerStxAddress} />
+          <BuyRocket ownerStxAddress={ownerStxAddress} />
         </>
       )}
 

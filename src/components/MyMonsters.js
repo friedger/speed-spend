@@ -3,7 +3,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { fetchAccount } from '../lib/account';
 
 import { Monster } from './Monster';
-import { deserializeCV } from '@blockstack/stacks-transactions';
+import { deserializeCV } from '@stacks/transactions';
 import { fetchMonsterIds } from '../lib/monsters';
 
 export function MyMonsters({ ownerStxAddress }) {

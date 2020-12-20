@@ -2,7 +2,6 @@ import { AppConfig } from '@stacks/auth';
 import { Storage } from '@stacks/storage';
 import { addressToString } from '@stacks/transactions';
 import { getStacksAccount } from './lib/account';
-import { didConnect } from 'react-blockstack';
 import { authOrigin } from './lib/constants';
 
 export const appConfig = new AppConfig(['store_write', 'publish_data']);
@@ -44,7 +43,6 @@ export function putStxAddress(userSession, address) {
 }
 
 export const finished = onDidConnect => ({ userSession }) => {
-  didConnect({ userSession });
   onDidConnect({ userSession });
   console.log(userSession.loadUserData());
 

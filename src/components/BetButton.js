@@ -1,5 +1,4 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { useBlockstack } from 'react-blockstack';
 import {
   addressToString,
   trueCV,
@@ -8,7 +7,7 @@ import {
   FungibleConditionCode,
   makeContractSTXPostCondition,
   PostConditionMode,
-} from '@blockstack/stacks-transactions';
+} from '@stacks/transactions';
 import Switch from 'react-input-switch';
 
 import { getStacksAccount, fetchAccount } from '../lib/account';
@@ -27,8 +26,7 @@ import { connectWebSocketClient, TransactionsApi } from '@stacks/blockchain-api-
 const BigNum = require('bn.js');
 
 export function BetButton({ jackpot, ownerStxAddress }) {
-  const { userSession } = useBlockstack();
-  const { doContractCall } = useConnect();
+  const { doContractCall, userSession } = useConnect();
   const spinner = useRef();
   const [betValue, setBetValue] = useState(0);
   const [status, setStatus] = useState();

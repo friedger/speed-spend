@@ -8,55 +8,23 @@ export default function Overview(props) {
           <h1 className="card-title">Overview</h1>
         </div>
         <div className="col-xs-10 col-md-8 mx-auto mb-3 px-4">
-          <a href="/speed-spend">Speed Spend</a> allows you to send stacks token to other users of
-          this app via their blockstack username.
+          <a href="/speed-spend">Speed Spend</a> allows you experience the Stacks testnet with your
+          own username.
           <br />
-          <i>
-            It helps to understand the difference between your own stx address and your app stx
-            address.
-          </i>
+          <i>It helps to understand the difference aspects of the Stacks technology.</i>
         </div>
         <div className="col-xs-10 col-md-8 mx-auto mb-3 px-4">
-          <a href="/hodl">Hodl</a> allows you to send stacks token between your own stx address and
-          your app stx address.
-          <br />
-          <i>
-            It helps to understand the difference between your own stx address and your app stx
-            address.
-          </i>
+          <a href="/tokens">Tokens</a> section is all about Stacks tokens (STX) and other fungible
+          tokens. It explains the difference between your between your own stx address and your app
+          stx address.
         </div>
         <div className="col-xs-10 col-md-8 mx-auto mb-3 px-4">
-          <a href="/hodl-tokens">Hodl Tokens</a> allows you to buy "Hodl" tokens and stake ("hodl")
-          und unstake ("unhodl") them.
-          <br />
-          <i>
-            It helps to understand how to create and interact with fungible tokens and the
-            underlying native fungible token functions.
-          </i>
+          <a href="/nfts">NFTs</a> section explains how to use, sell and explore non-fungible
+          tokens.
         </div>
         <div className="col-xs-10 col-md-8 mx-auto mb-3 px-4">
-          <a href="/jackpot">Flip Coin with Jackpot</a> allows you to play the gambling game "Flip a
-          coin". If you bet on the correct value you can win the jackpot.
-          <br />
-          <i>
-            It helps to understand how to create and interact with a smart contract and how to get
-            values from read-only contract functions.
-          </i>
-        </div>
-        <div className="col-xs-10 col-md-8 mx-auto mb-3 px-4">
-          <a href="/at-two">Flip Coin At Two</a> allows you to play the gambling game "Flip a coin".
-          You are playing against somebody else, the prize is the stx bid by the other user.
-          <br />
-          <i>It helps to understand how to create and interact with a smart contract.</i>
-        </div>
-        <div className="col-xs-10 col-md-8 mx-auto mb-3 px-4">
-          <a href="/monsters">Monsters</a> allows you to create and sell monsters, the first digital
-          collectible on the stacks chain.
-          <br />
-          <i>
-            It helps to understand how to create and interact with a non-fungible tokens (NFT) and
-            interaction with a marketplace for NFTs.
-          </i>
+          <a href="/contracts">Contracts</a> section is about contract calls and how to protect your
+          digital assets when interacting with smart contracts.
         </div>
         <div className="col-xs-10 col-md-8 mx-auto mb-3 px-4">
           <a href="/me">Profile</a> allows you see your current balances.

@@ -4,7 +4,7 @@ import { CONTRACT_ADDRESS, NETWORK } from '../lib/constants';
 import { TxStatus } from '../lib/transactions';
 import { fetchAccount } from '../lib/account';
 import { useConnect } from '@stacks/connect-react';
-import { PostConditionMode, uintCV } from '@blockstack/stacks-transactions';
+import { PostConditionMode, uintCV } from '@stacks/transactions';
 
 export function BuyRocket({ ownerStxAddress }) {
   const { doContractCall } = useConnect();

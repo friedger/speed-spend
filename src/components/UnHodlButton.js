@@ -1,20 +1,20 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { useBlockstack } from 'react-blockstack';
 import {
   makeSTXTokenTransfer,
   privateKeyToString,
   addressToString,
   broadcastTransaction,
-} from '@blockstack/stacks-transactions';
+} from '@stacks/transactions';
 
 import { NETWORK } from '../lib/constants';
 import { getUserAddress, getStacksAccount, fetchAccount } from '../lib/account';
 import { putStxAddress } from '../UserSession';
 import { resultToStatus } from '../lib/transactions';
+import { useConnect } from '@stacks/connect-react';
 const BigNum = require('bn.js');
 
 export function UnHodlButton({ title, placeholder, ownerStxAddress }) {
-  const { userSession } = useBlockstack();
+  const { userSession } = useConnect();
   const textfield = useRef();
   const spinner = useRef();
   const [status, setStatus] = useState();

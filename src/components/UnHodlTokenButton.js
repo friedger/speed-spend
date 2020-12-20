@@ -7,7 +7,7 @@ import {
   makeContractFungiblePostCondition,
   FungibleConditionCode,
   createAssetInfo,
-} from '@blockstack/stacks-transactions';
+} from '@stacks/transactions';
 import { fetchAccount } from '../lib/account';
 import { fetchHodlTokenBalance } from '../lib/holdTokens';
 import { CONTRACT_ADDRESS, HODL_TOKEN_CONTRACT, NETWORK } from '../lib/constants';

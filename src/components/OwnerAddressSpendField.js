@@ -1,5 +1,4 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { useBlockstack } from 'react-blockstack';
 
 import { getUserAddress, fetchAccount } from '../lib/account';
 import { useConnect } from '@stacks/connect-react';
@@ -8,8 +7,7 @@ import { NETWORK } from '../lib/constants';
 const BigNum = require('bn.js');
 
 export function OwnerAddressSpendField({ title, path, placeholder, stxAddress }) {
-  const { userSession } = useBlockstack();
-  const { doSTXTransfer } = useConnect();
+  const { userSession, doSTXTransfer } = useConnect();
   const textfield = useRef();
   const spinner = useRef();
   const [status, setStatus] = useState();

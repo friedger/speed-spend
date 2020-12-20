@@ -1,23 +1,21 @@
+import { useConnect } from '@stacks/connect-react';
 import React from 'react';
-import { useBlockstack } from 'react-blockstack';
 
 // Authentication button adapting to status
 
 export default function Auth(props) {
-  const { signOut, userSession } = useBlockstack();
+  const { userSession } = useConnect();
 
-  if (signOut) {
+  if (userSession) {
     return (
       <button
         className="btn btn-primary btn-lg"
-        disabled={!signOut}
         onClick={() => {
           console.log('signOut');
-          signOut();
-          userSession.signUserOut('/');
+          userSession.signUserOut();
         }}
       >
-        {signOut ? 'Log Out' : '...'}
+        {userSession ? 'Log Out' : '...'}
       </button>
     );
   } else {

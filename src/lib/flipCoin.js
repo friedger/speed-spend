@@ -1,4 +1,4 @@
-import { cvToString, deserializeCV, uintCV } from '@blockstack/stacks-transactions';
+import { cvToString, deserializeCV, uintCV } from '@stacks/transactions';
 import {
   connectWebSocketClient,
   ReadOnlyFunctionArgsFromJSON,

@@ -1,11 +1,11 @@
 import React from 'react';
 
-import { useBlockstack } from 'react-blockstack';
 import { BuyRocket } from '../components/BuyRocket';
+import { MyRockets } from '../components/MyRockets';
+import { useStxAddresses } from '../lib/hooks';
 
 export default function Rockets() {
-  const { userData } = useBlockstack();
-  const ownerStxAddress = userData.profile.stxAddress;
+  const { ownerStxAddress } = useStxAddresses();
 
   return (
     <main className="panel-welcome mt-5 container">
@@ -16,6 +16,9 @@ export default function Rockets() {
         </div>
         <div className="col-xs-10 col-md-8 mx-auto mb-4 px-4">
           <BuyRocket ownerStxAddress={ownerStxAddress} />
+        </div>
+        <div className="col-xs-10 col-md-8 mx-auto mb-4 px-4">
+          <MyRockets ownerStxAddress={ownerStxAddress} />
         </div>
 
         <div className="card col-md-8 mx-auto mt-5 mb-5 text-center px-0 border-warning">

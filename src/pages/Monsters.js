@@ -1,13 +1,12 @@
 import React from 'react';
 
-import { useBlockstack } from 'react-blockstack';
 import { CreateMonsterButton } from '../components/CreateMonsterButton';
 import { MyMonsters } from '../components/MyMonsters';
 import { BuyMonsters } from '../components/BuyMonsters';
+import { useStxAddresses } from '../lib/hooks';
 
 export default function Monsters(props) {
-  const { userData } = useBlockstack();
-  const ownerStxAddress = userData.profile.stxAddress;
+  const { ownerStxAddress } = useStxAddresses();
 
   return (
     <main className="panel-welcome mt-5 container">

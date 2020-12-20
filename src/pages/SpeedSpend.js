@@ -2,11 +2,10 @@ import React from 'react';
 
 import { SpendField } from '../components/SpendField';
 import { OwnerAddressSpendField } from '../components/OwnerAddressSpendField';
-import { useBlockstack } from 'react-blockstack';
+import { useStxAddresses } from '../lib/hooks';
 
 export default function SpeedSpend(props) {
-  const { userData } = useBlockstack();
-  const ownerStxAddress = userData.profile.stxAddress;
+  const { ownerStxAddress } = useStxAddresses();
   return (
     <main className="panel-welcome mt-5 container">
       <div className="lead row mt-5">

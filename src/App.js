@@ -4,7 +4,7 @@ import Overview from './pages/Overview';
 import Hodl from './pages/Hodl';
 import HodlTokens from './pages/HodlTokens';
 import { Connect } from '@stacks/connect-react';
-import { useBlockstack, useConnectOptions } from 'react-blockstack';
+import { useConnect } from '@stacks/connect-react';
 import { connectOptions } from './UserSession';
 import { Link, Router } from '@reach/router';
 import Jackpot from './pages/Jackpot';
@@ -21,7 +21,7 @@ import Rockets from './pages/Rockets';
 
 export default function App(props) {
   const [userSession, setUserSession] = useState();
-  const { userSession: session } = useBlockstack();
+  const { userSession: session } = useConnect();
 
   useEffect(() => {
     if (session.isUserSignedIn()) {
@@ -30,12 +30,9 @@ export default function App(props) {
     }
   }, [session]);
 
+  const authOptions = connectOptions(({ userSession }) => setUserSession(userSession));
   return (
-    <Connect
-      authOptions={useConnectOptions(
-        connectOptions(({ userSession }) => setUserSession(userSession))
-      )}
-    >
+    <Connect authOptions={authOptions}>
       <Content userSession={userSession} />
     </Connect>
   );

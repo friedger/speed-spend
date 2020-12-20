@@ -1,16 +1,12 @@
 import React from 'react';
 
-import { useBlockstack } from 'react-blockstack';
-import { getStacksAccount } from '../lib/account';
-import { addressToString } from '@blockstack/stacks-transactions';
 import { UnHodlButton } from '../components/UnHodlButton';
 import { HodlButton } from '../components/HodlButton';
+import { useStxAddresses } from '../lib/hooks';
 
 export default function Hodl(props) {
-  const { userData } = useBlockstack();
-  const { address } = getStacksAccount(userData.appPrivateKey);
-  const appStxAddress = addressToString(address);
-  const ownerStxAddress = userData.profile.stxAddress;
+  const { ownerStxAddress, appStxAddress } = useStxAddresses();
+
   return (
     <main className="panel-welcome mt-5 container">
       <div className="lead row mt-5">

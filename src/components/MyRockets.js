@@ -2,13 +2,14 @@ import React, { useRef, useState, useEffect } from 'react';
 
 import { fetchAccount } from '../lib/account';
 
-import { fetchNFTs } from '../lib/market';
-import { NFT } from './NFT';
+import { deserializeCV } from '@stacks/transactions';
+import { Rocket } from './Rocket';
+import { fetchNFTIds } from '../lib/nft';
 
-export function NFTsOnSale({ ownerStxAddress }) {
+export function MyRockets({ ownerStxAddress }) {
   const spinner = useRef();
   const [status, setStatus] = useState();
-  const [nfts, setNfts] = useState();
+  const [rockets, setRockets] = useState();
 
   useEffect(() => {
     fetchAccount(ownerStxAddress)
@@ -19,30 +20,31 @@ export function NFTsOnSale({ ownerStxAddress }) {
       .then(async acc => {
         console.log({ acc });
       });
-    fetchNFTs(ownerStxAddress)
-      .then(async nfts => {
-        console.log(nfts);
-        setNfts(nfts);
+    fetchNFTIds(ownerStxAddress)
+      .then(async rocketIds => {
+        console.log(rocketIds);
+        setRockets(rocketIds);
       })
       .catch(e => {
-        setStatus('Failed to get balances of your account', e);
+        setStatus('Failed to get rockets of your account', e);
         console.log(e);
       });
   }, [ownerStxAddress]);
-  console.log({ nfts });
+
   return (
     <div>
-      <h5>NFTs on Sale</h5>
+      <h5>My current and previous rocket ships</h5>
       <div
         ref={spinner}
         role="status"
         className="d-none spinner-border spinner-border-sm text-info align-text-top mr-2"
       />
-      {nfts &&
-        nfts.map((nftTx, key) => {
-          return <NFT key={key} nftTx={nftTx} ownerStxAddress={ownerStxAddress} />;
+      {rockets &&
+        rockets.map((rocketIdHex, key) => {
+          const rocketId = deserializeCV(Buffer.from(rocketIdHex.substr(2), 'hex'));
+          return <Rocket key={key} rocketId={rocketId.value} ownerStxAddress={ownerStxAddress} />;
         })}
-      {!nfts && <>No NFTs on sale. Create onea and sell it here!</>}
+      {!rockets && <>No rocket ships yet. Create one!</>}
       {status && (
         <>
           <div>{status}</div>

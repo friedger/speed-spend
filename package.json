@@ -19,13 +19,11 @@
     "blockstack": "^21.1.1",
     "bn.js": "^5.1.3",
     "react": "^16.13.1",
-    "react-blockstack": "friedger/react-blockstack#06f0c6e305c5a15858411452135666cc56472ef8",
-    "react-blockstack-button": "^0.1.0",
     "react-dom": "^16.13.1",
     "react-input-switch": "^2.2.2",
     "react-router-dom": "^5.2.0"
   },
-  "prettier": "@blockstack/prettier-config",
+  "prettier": "@stacks/prettier-config",
   "scripts": {
     "start": "netlify dev",
     "build": "CI= react-scripts build",
@@ -48,7 +46,7 @@
     ]
   },
   "devDependencies": {
-    "@blockstack/prettier-config": "0.0.6",
+    "@stacks/prettier-config": "0.0.7",
     "bootstrap": "^4.5.0",
     "netlify-cli": "^2.54.0",
     "prettier": "^2.0.5",
