@@ -38,9 +38,13 @@ export async function getUserAddress(userSession, username) {
  */
 export function fetchAccount(addressAsString) {
   console.log(`Checking account "${addressAsString}"`);
-  return accountsApi
-    .getAccountBalance({ principal: addressAsString })
-    .then(response => response.stx);
+  if (addressAsString) {
+    return accountsApi
+      .getAccountBalance({ principal: addressAsString })
+      .then(response => response.stx);
+  } else {
+    return Promise.reject();
+  }
 }
 
 /**

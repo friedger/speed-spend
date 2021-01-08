@@ -18,11 +18,13 @@ export function MyRockets({ ownerStxAddress }) {
         console.log(e);
       })
       .then(async acc => {
+        setStatus(undefined);
         console.log({ acc });
       });
     fetchNFTIds(ownerStxAddress)
       .then(async rocketIds => {
         console.log(rocketIds);
+        setStatus(undefined);
         setRockets(rocketIds);
       })
       .catch(e => {

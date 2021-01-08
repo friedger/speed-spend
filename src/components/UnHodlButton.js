@@ -14,7 +14,7 @@ import { useConnect } from '@stacks/connect-react';
 const BigNum = require('bn.js');
 
 export function UnHodlButton({ title, placeholder, ownerStxAddress }) {
-  const { userSession } = useConnect();
+  const { userData } = useConnect();
   const textfield = useRef();
   const spinner = useRef();
   const [status, setStatus] = useState();
@@ -22,7 +22,7 @@ export function UnHodlButton({ title, placeholder, ownerStxAddress }) {
   const [identity, setIdentity] = useState();
 
   useEffect(() => {
-    const userData = userSession.loadUserData();
+    if (!userData) return;
     const appPrivateKey = userData.appPrivateKey;
     const id = getStacksAccount(appPrivateKey);
     const addrAsString = addressToString(id.address);
@@ -35,14 +35,14 @@ export function UnHodlButton({ title, placeholder, ownerStxAddress }) {
       .then(async acc => {
         setAccount(acc);
         console.log({ acc });
-        const address = await getUserAddress(userSession, userData.username);
+        const address = await getUserAddress({}, userData.username);
         console.log(address);
 
         if (!address) {
-          await putStxAddress(userSession, addrAsString);
+          await putStxAddress({}, addrAsString);
         }
       });
-  }, [userSession]);
+  }, [userData]);
 
   const sendAction = async () => {
     spinner.current.classList.remove('d-none');

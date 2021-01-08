@@ -1,6 +1,5 @@
 import {
   callReadOnlyFunction,
-  cvToHex,
   deserializeCV,
   serializeCV,
   standardPrincipalCV,
@@ -8,12 +7,12 @@ import {
 import { CONTRACT_ADDRESS, HODL_TOKEN_CONTRACT, NETWORK } from './constants';
 
 export function fetchHodlTokenBalance(sender) {
-  console.log(sender);
+  console.log({ sender, cv: standardPrincipalCV(sender) });
   return callReadOnlyFunction({
     contractAddress: CONTRACT_ADDRESS,
     contractName: HODL_TOKEN_CONTRACT,
     functionName: 'hodl-balance-of',
-    functionArgs: [cvToHex(standardPrincipalCV(sender))],
+    functionArgs: [standardPrincipalCV(sender)],
   }).then(hodlBalanceOf => {
     console.log({ hodlBalanceOf });
     if (hodlBalanceOf.value) {

@@ -2,8 +2,9 @@ import React from 'react';
 import Profile from '../components/Profile';
 import { useStxAddresses } from '../lib/hooks';
 
-export default function MyProfile(props) {
-  const { ownerStxAddress, appStxAddress } = useStxAddresses();
+export default function MyProfile({ userSession }) {
+  console.log(userSession);
+  const { ownerStxAddress, appStxAddress } = useStxAddresses(userSession);
 
   return (
     <main className="panel-welcome mt-5 container">
@@ -14,6 +15,7 @@ export default function MyProfile(props) {
               appStxAddress: appStxAddress,
               ownerStxAddress: ownerStxAddress,
             }}
+            userSession={userSession}
           />
         </div>
       </div>

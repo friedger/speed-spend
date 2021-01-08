@@ -1,11 +1,8 @@
-import { useConnect } from '@stacks/connect-react';
 import React from 'react';
 
 // Authentication button adapting to status
 
-export default function Auth(props) {
-  const { userSession } = useConnect();
-
+export default function Auth({ userSession }) {
   if (userSession) {
     return (
       <button

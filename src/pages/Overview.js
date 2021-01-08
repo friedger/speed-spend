@@ -8,10 +8,8 @@ export default function Overview(props) {
           <h1 className="card-title">Overview</h1>
         </div>
         <div className="col-xs-10 col-md-8 mx-auto mb-3 px-4">
-          <a href="/speed-spend">Speed Spend</a> allows you experience the Stacks testnet with your
-          own username.
-          <br />
-          <i>It helps to understand the difference aspects of the Stacks technology.</i>
+          This site allows you experience the Stacks testnet with your own username. It helps to
+          understand the difference aspects of the Stacks technology.
         </div>
         <div className="col-xs-10 col-md-8 mx-auto mb-3 px-4">
           <a href="/tokens">Tokens</a> section is all about Stacks tokens (STX) and other fungible

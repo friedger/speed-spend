@@ -2,7 +2,6 @@ import { AppConfig } from '@stacks/auth';
 import { Storage } from '@stacks/storage';
 import { addressToString } from '@stacks/transactions';
 import { getStacksAccount } from './lib/account';
-import { authOrigin } from './lib/constants';
 
 export const appConfig = new AppConfig(['store_write', 'publish_data']);
 export const STX_JSON_PATH = 'stx.json';
@@ -50,15 +49,4 @@ export const finished = onDidConnect => ({ userSession }) => {
   const { address } = getStacksAccount(userData.appPrivateKey);
   console.log(JSON.stringify({ address: addressToString(address) }));
   putStxAddress(userSession, addressToString(address));
-};
-
-export const connectOptions = onDidConnect => {
-  return {
-    authOrigin: authOrigin,
-    finished: finished(onDidConnect),
-    appDetails: {
-      name: 'Speed Spend',
-      icon: 'https://speed-spend.netlify.app/speedspend.png',
-    },
-  };
 };

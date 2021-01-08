@@ -3,22 +3,26 @@ import { accountsApi, CONTRACT_ADDRESS, smartContractsApi } from './constants';
 import { cvToHex } from './transactions';
 
 export async function fetchNFTIds(ownerStxAddress, nativeNFTType) {
-  return accountsApi
-    .getAccountAssets({ principal: ownerStxAddress })
-    .then(assetList => {
-      console.log({ assetList });
-      return assetList;
-    })
-    .then(assetList =>
-      assetList.results
-        .filter(
-          a =>
-            a.event_type === 'non_fungible_token_asset' &&
-            a.asset.asset_id === `${CONTRACT_ADDRESS}.${nativeNFTType}`
-        )
-        .map(a => a.asset.value.hex)
-    )
-    .then(idsHex => [...new Set(idsHex)]);
+  if (ownerStxAddress) {
+    return accountsApi
+      .getAccountAssets({ principal: ownerStxAddress })
+      .then(assetList => {
+        console.log({ assetList });
+        return assetList;
+      })
+      .then(assetList =>
+        assetList.results
+          .filter(
+            a =>
+              a.event_type === 'non_fungible_token_asset' &&
+              a.asset.asset_id === `${CONTRACT_ADDRESS}.${nativeNFTType}`
+          )
+          .map(a => a.asset.value.hex)
+      )
+      .then(idsHex => [...new Set(idsHex)]);
+  } else {
+    return Promise.reject();
+  }
 }
 
 export function fetchNFTDetails(nftId, contractName, metaDataMapName, nftIdProperty = 'id') {

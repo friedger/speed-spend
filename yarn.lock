@@ -1030,11 +1030,6 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
-"@blockstack/prettier-config@0.0.6":
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/@blockstack/prettier-config/-/prettier-config-0.0.6.tgz#8a41cd378ba061b79770987f2a6ad0c92b64bd72"
-  integrity sha512-ke0MdyblmoUqSJBEutsG8/6G7KAjCB+uOcgZHPJvJr4R+i5yRhT4GSe5nV/wREINuK0jj2GvaA6qlx4PQTKQUA==
-
 "@blockstack/stacks-blockchain-api-types@^0.34.1":
   version "0.34.2"
   resolved "https://registry.yarnpkg.com/@blockstack/stacks-blockchain-api-types/-/stacks-blockchain-api-types-0.34.2.tgz#de65f6556f8b988784718aca0d8e14284a81d914"
@@ -1124,13 +1119,6 @@
   version "10.1.0"
   resolved "https://registry.yarnpkg.com/@csstools/normalize.css/-/normalize.css-10.1.0.tgz#f0950bba18819512d42f7197e56c518aa491cf18"
   integrity sha512-ij4wRiunFfaJxjB0BdrYHIH8FxBJpOwNPhhAcunlmPdXudL1WQV1qoP9un6JsEBAgQH+7UXyyjh0g7jTxXK6tg==
-
-"@dbeining/react-atom@^4.1.4":
-  version "4.1.8"
-  resolved "https://registry.yarnpkg.com/@dbeining/react-atom/-/react-atom-4.1.8.tgz#f7dee1a57ce4eeedee8fea21280ff66ea0a86e88"
-  integrity sha512-Gne++huPnxHFWioSBma1p4UvmgNZEq5N/goBzEMuXbyXxc2GKjDMI1EqKjOoPOYy8oY0B4cnZBGmjZcbijlaug==
-  dependencies:
-    "@libre/atom" "^1.3.2"
 
 "@emotion/cache@^10.0.27":
   version "10.0.29"
@@ -1388,11 +1376,6 @@
     "@types/istanbul-lib-coverage" "^2.0.0"
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^13.0.0"
-
-"@libre/atom@^1.3.2":
-  version "1.3.3"
-  resolved "https://registry.yarnpkg.com/@libre/atom/-/atom-1.3.3.tgz#b14e5fdac836e281d7206d19255c798a50046816"
-  integrity sha512-u6VDBBeSYuxBIdyGV1FybaeYndP/E8npGKzbYJgxUKQ0L9MsBMWuEP0O/45KcdNhnEaxm+GozSvkGgMJtoWBqg==
 
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
@@ -1915,10 +1898,10 @@
     jsontokens "^3.0.0"
     query-string "^6.13.1"
 
-"@stacks/blockchain-api-client@0.35.1":
-  version "0.35.1"
-  resolved "https://registry.yarnpkg.com/@stacks/blockchain-api-client/-/blockchain-api-client-0.35.1.tgz#074f197d5692ddeff67bb1e5d78f3d520a8fde2c"
-  integrity sha512-22w9CMB5LiemKWCjHpcKrGRQLdAPnojd4B8urXM332oumr0mZXtHJbdnOq5TXPExIq84GseS9u8XAAVcNU3R2A==
+"@stacks/blockchain-api-client@0.38.0":
+  version "0.38.0"
+  resolved "https://registry.yarnpkg.com/@stacks/blockchain-api-client/-/blockchain-api-client-0.38.0.tgz#620d75580c2d9a6cc1bf81da04193bc000f39f01"
+  integrity sha512-WU3bZCm0h9tauEVFH2EbuGUSGiSf6OlmoEDXf8ijMHcUPM7LKKkn9MCGusPLJZsxteMfbQX3U8MS1HOY+6rXjg==
   dependencies:
     "@blockstack/stacks-blockchain-api-types" "^0.34.1"
     "@types/ws" "^7.4.0"
@@ -1934,29 +1917,29 @@
   dependencies:
     cross-fetch "^3.0.5"
 
-"@stacks/connect-react@^2.17.3":
-  version "2.17.3"
-  resolved "https://registry.yarnpkg.com/@stacks/connect-react/-/connect-react-2.17.3.tgz#51fdbf4c84c2b9d2f36f1bbf3946b4f2a1c1966d"
-  integrity sha512-7+wttBj8n3C5sSgISClBAnJFN3ctfHLfLLSDzPfb4ty6SaBqjOcAWARqqh11c/bnmRlBDPnpQjjJluucwOKiBw==
+"@stacks/connect-react@^2.17.7":
+  version "2.17.7"
+  resolved "https://registry.yarnpkg.com/@stacks/connect-react/-/connect-react-2.17.7.tgz#8c5187405916a347851d314843b99d21623f978c"
+  integrity sha512-aEXWseNnPgUw758uRzGvu3tiU0XRagOQ2YY9Rx5T0YtQ7CHPV2choHfO4RPmhJpj8HLXUKnBrA3VC+vk7IEMog==
   dependencies:
-    "@stacks/connect" "^4.3.3"
+    "@stacks/connect" "^4.3.7"
     jsontokens "^3.0.0"
 
-"@stacks/connect-ui@^2.17.4":
-  version "2.17.4"
-  resolved "https://registry.yarnpkg.com/@stacks/connect-ui/-/connect-ui-2.17.4.tgz#c43b41feb7c690090872112dfa713f5ba6b2a95a"
-  integrity sha512-Zmqlt6Y/N4scwOYHlnr3xIDLfXY6zhUy/jruojrL+r3DfhS5YxSR84hc8HCroaM9GyBC1+x29BpSHTuZES93AQ==
+"@stacks/connect-ui@^2.17.8":
+  version "2.17.8"
+  resolved "https://registry.yarnpkg.com/@stacks/connect-ui/-/connect-ui-2.17.8.tgz#17a2e04cb6815b861e432525372e6e6a5d5cb24e"
+  integrity sha512-kLXH42aFn08YbY9e16oINIaZMX86ES1uKf/PIrDtxfsW46TUSvkX1cTb+hzIcWV1Jk9YjB15AKErvgpWXIEekA==
   dependencies:
     "@stencil/core" "^1.17.3"
 
-"@stacks/connect@^4.3.3":
-  version "4.3.3"
-  resolved "https://registry.yarnpkg.com/@stacks/connect/-/connect-4.3.3.tgz#fbd05a29783a4c3e61e1ab8d60492e292cac5677"
-  integrity sha512-JFE58Iip3seKqFPdXgi5MYkNiiXYJOMOK73hfGMn5W4GXHKMBnO4iOA2gX/4lHUYdwxEYkPvnjW5x1elwlvm+g==
+"@stacks/connect@^4.3.7":
+  version "4.3.7"
+  resolved "https://registry.yarnpkg.com/@stacks/connect/-/connect-4.3.7.tgz#d959d86647ebb644fb0df95ac79f3c13af930de6"
+  integrity sha512-oLOfyWjxo3yO9Q3NHk+ZBBV2m7HewbmFV0WUndiwgzLNH4Cnjxz3BNcfMT8gCu3PIhgVGg2d8Z8xTl8fQhFDbw==
   dependencies:
     "@blockstack/stacks-transactions" "0.7.0"
     "@stacks/auth" "^1.0.0-beta.19"
-    "@stacks/connect-ui" "^2.17.4"
+    "@stacks/connect-ui" "^2.17.8"
     jsontokens "^3.0.0"
 
 "@stacks/encryption@^1.0.0-beta.20":
@@ -1979,6 +1962,11 @@
   integrity sha512-wHGnX1D0k9N0UJzZcQ9JmvDmLOmQPTPEKz1w/8Daa9ok7HYl/Fs8Fu1CPd+q97o5+8myLGIhidsysro0ojEGOA==
   dependencies:
     "@stacks/common" "^1.0.0-beta.20"
+
+"@stacks/prettier-config@0.0.7":
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/@stacks/prettier-config/-/prettier-config-0.0.7.tgz#22525c623fce6a5f1965fd29867df3d791ea7ef5"
+  integrity sha512-fXd5X4SV5GqskCYZxqExZJ7wF5sOggmzFP4Q7ttmR/eXZKar3c9fqEpbrpRZyHUBZv2Nss46MvwTLQk2YlpIeg==
 
 "@stacks/profile@^1.0.0-beta.20":
   version "1.0.0-beta.20"
@@ -2186,9 +2174,9 @@
     "@types/node" "*"
 
 "@types/cheerio@^0.22.13":
-  version "0.22.22"
-  resolved "https://registry.yarnpkg.com/@types/cheerio/-/cheerio-0.22.22.tgz#ae71cf4ca59b8bbaf34c99af7a5d6c8894988f5f"
-  integrity sha512-05DYX4zU96IBfZFY+t3Mh88nlwSMtmmzSYaQkKN48T495VV1dkHSah6qYyDTN5ngaS0i0VonH37m+RuzSM0YiA==
+  version "0.22.23"
+  resolved "https://registry.yarnpkg.com/@types/cheerio/-/cheerio-0.22.23.tgz#74bcfee9c5ee53f619711dca953a89fe5cfa4eb4"
+  integrity sha512-QfHLujVMlGqcS/ePSf3Oe5hK3H8wi/yN2JYuxSB1U10VvW1fO3K8C+mURQesFYS1Hn7lspOsTT75SKq/XtydQg==
   dependencies:
     "@types/node" "*"
 
@@ -2312,9 +2300,9 @@
   integrity sha512-90hiq6/VqtQgX8Sp0EzeIsv3r+ellbGj4URKj5j30tLlZvRUpnAe9YbYnjl3pJM93GyXU0tghHhvXHq+5rnCKA==
 
 "@types/node@^12.7.12":
-  version "12.19.5"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.19.5.tgz#9be3946136e818597c71c62d04240d0602c645d4"
-  integrity sha512-Wgdl27uw/jUYUFyajUGKSjDNGxmJrZi9sjeG6UJImgUtKbJoO9aldx+1XODN1EpNDX9DirvbvHHmTsNlb8GwMA==
+  version "12.19.12"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.19.12.tgz#04793c2afa4ce833a9972e4c476432e30f9df47b"
+  integrity sha512-UwfL2uIU9arX/+/PRcIkT08/iBadGN2z6ExOROA2Dh5mAuWTBj6iJbQX4nekiV5H8cTrEG569LeX+HRco9Cbxw==
 
 "@types/node@^8.0.0":
   version "8.10.63"
@@ -12140,10 +12128,19 @@ query-string@^5.0.1:
     object-assign "^4.1.0"
     strict-uri-encode "^1.0.0"
 
-query-string@^6.13.1, query-string@^6.8.3:
+query-string@^6.13.1:
   version "6.13.7"
   resolved "https://registry.yarnpkg.com/query-string/-/query-string-6.13.7.tgz#af53802ff6ed56f3345f92d40a056f93681026ee"
   integrity sha512-CsGs8ZYb39zu0WLkeOhe0NMePqgYdAuCqxOYKDR5LVCytDZYMGx3Bb+xypvQvPHVPijRXB0HZNFllCzHRe4gEA==
+  dependencies:
+    decode-uri-component "^0.2.0"
+    split-on-first "^1.0.0"
+    strict-uri-encode "^2.0.0"
+
+query-string@^6.8.3:
+  version "6.13.8"
+  resolved "https://registry.yarnpkg.com/query-string/-/query-string-6.13.8.tgz#8cf231759c85484da3cf05a851810d8e825c1159"
+  integrity sha512-jxJzQI2edQPE/NPUOusNjO/ZOGqr1o2OBa/3M00fU76FsLXDVbJDv/p7ng5OdQyorKrkRz1oqfwmbe5MAMePQg==
   dependencies:
     decode-uri-component "^0.2.0"
     split-on-first "^1.0.0"
@@ -12227,18 +12224,6 @@ react-app-polyfill@^1.0.6:
     raf "^3.4.1"
     regenerator-runtime "^0.13.3"
     whatwg-fetch "^3.0.0"
-
-react-blockstack-button@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/react-blockstack-button/-/react-blockstack-button-0.1.0.tgz#e8995b4e4f821e6fbc1d1c9b316cda4ef065347b"
-  integrity sha512-Ez+R36CWqF4gS4GfXrUi8A0D8q8TC7dJh5G1Gb8T8nNMF41Rai4Q8rgyjyDu090/s7KShSfTW5vdVFvP7eBVMw==
-
-react-blockstack@friedger/react-blockstack#06f0c6e305c5a15858411452135666cc56472ef8:
-  version "0.6.10"
-  resolved "https://codeload.github.com/friedger/react-blockstack/tar.gz/06f0c6e305c5a15858411452135666cc56472ef8"
-  dependencies:
-    "@dbeining/react-atom" "^4.1.4"
-    lodash "^4.17.5"
 
 react-dev-utils@^10.2.1:
   version "10.2.1"

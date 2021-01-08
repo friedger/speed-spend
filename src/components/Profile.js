@@ -1,4 +1,4 @@
-import { getUserData, useConnect } from '@stacks/connect-react';
+import { getUserData } from '@stacks/connect-react';
 import { Person } from '@stacks/profile';
 import React, { useRef, useState, useCallback, useEffect } from 'react';
 import { fetchAccount } from '../lib/account';
@@ -8,9 +8,12 @@ import { TxStatus } from '../lib/transactions';
 
 // Demonstrating BlockstackContext for legacy React Class Components.
 
-export default function Profile({ stxAddresses }) {
+export default function Profile({ stxAddresses, userSession }) {
   const [status, setStatus] = useState('');
-  const { userSession } = useConnect();
+  if (!userSession || !stxAddresses.ownerStxAddress) {
+    return <div>Loading</div>;
+  }
+  console.log({ stxAddresses, userSession });
   const { userData } = getUserData(userSession);
   const person = userData && new Person(userData.profile);
   const username = userData && userData.username;

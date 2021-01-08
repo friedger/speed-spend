@@ -20,6 +20,7 @@ export function BuyRocket({ ownerStxAddress }) {
         console.log(e);
       })
       .then(async acc => {
+        setStatus(undefined);
         console.log({ acc });
       });
   }, [ownerStxAddress]);

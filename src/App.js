@@ -4,8 +4,6 @@ import Overview from './pages/Overview';
 import Hodl from './pages/Hodl';
 import HodlTokens from './pages/HodlTokens';
 import { Connect } from '@stacks/connect-react';
-import { useConnect } from '@stacks/connect-react';
-import { connectOptions } from './UserSession';
 import { Link, Router } from '@reach/router';
 import Jackpot from './pages/Jackpot';
 import AtTwo from './pages/AtTwo';
@@ -18,21 +16,34 @@ import Marketplace from './pages/Marketplace';
 import { NETWORK } from './lib/constants';
 import StackingActivies from './pages/StackingActivities';
 import Rockets from './pages/Rockets';
+import Auth from './components/Auth';
+import OverviewTokens from './pages/OverviewTokens';
+import OverviewContracts from './pages/OverviewContracts';
+import OverviewNFTs from './pages/OverviewNFTs';
+import { authOptions, session } from './lib/auth';
 
 export default function App(props) {
   const [userSession, setUserSession] = useState();
-  const { userSession: session } = useConnect();
-
   useEffect(() => {
     if (session.isUserSignedIn()) {
       setUserSession(session);
       console.log({ userData: session.loadUserData() });
+    } else if (session.isSignInPending()) {
+      session.handlePendingSignIn().then(userData => {
+        console.log({ userData });
+      });
     }
-  }, [session]);
+  }, []);
 
-  const authOptions = connectOptions(({ userSession }) => setUserSession(userSession));
   return (
     <Connect authOptions={authOptions}>
+      <nav className="navbar sticky-top navbar-dark bg-dark text-light">
+        <a className="navbar-brand" href="https://testnet.blockstack.org">
+          <img src="/stackstestnet.png" alt="Logo" />
+        </a>
+        <Auth className="ml-auto" userSession={userSession} />
+      </nav>
+
       <Content userSession={userSession} />
     </Connect>
   );
@@ -56,12 +67,7 @@ const NavLink = props => {
     />
   );
 };
-
-function AppBody(props) {
-  return (
-    <div>
-      <nav className="navbar navbar-expand-md nav-pills nav-justified mx-auto">
-        <NavLink to="/">Overview</NavLink>
+/*
         <NavLink to="/speed-spend">Speed Spend</NavLink>
         <NavLink to="/stacking">Stacking</NavLink>
         <NavLink to="/hodl">Hodl</NavLink>
@@ -71,6 +77,15 @@ function AppBody(props) {
         <NavLink to="/monsters">Monsters</NavLink>
         <NavLink to="/openriff">Open Riff</NavLink>
         <NavLink to="/rockets">Rockets</NavLink>
+*/
+function AppBody(props) {
+  return (
+    <div>
+      <nav className="navbar navbar-expand-md nav-pills nav-justified mx-auto">
+        <NavLink to="/">Overview</NavLink>
+        <NavLink to="/tokens">Tokens</NavLink>
+        <NavLink to="/contracts">Contracts</NavLink>
+        <NavLink to="/nfts">NFTs</NavLink>
         <NavLink to="/me">Profile</NavLink>
       </nav>
       {props.children}
@@ -90,6 +105,9 @@ function Content({ userSession }) {
           <Router>
             <AppBody path="/">
               <Overview path="/" decentralizedID={decentralizedID} />
+              <OverviewTokens path="/tokens" />
+              <OverviewContracts path="/contracts" />
+              <OverviewNFTs path="/nfts" />
               <SpeedSpend path="/speed-spend" decentralizedID={decentralizedID} />
               <Hodl path="/hodl" decentralizedID={decentralizedID} />
               <HodlTokens path="/hodl-tokens" decentralizedID={decentralizedID} />
@@ -99,7 +117,7 @@ function Content({ userSession }) {
               <Marketplace exact path="/openriff" decentralizedID={decentralizedID} />
               <MonsterDetails path="/monsters/:monsterId" decentralizedID={decentralizedID} />
               <Rockets path="/rockets" decentralizedID={decentralizedID} />
-              <MyProfile path="/me" decentralizedID={decentralizedID} />
+              <MyProfile path="/me" decentralizedID={decentralizedID} userSession={userSession} />
               <ClarityValues path="/cv" />
               <StackingActivies path="/stacking"></StackingActivies>
             </AppBody>

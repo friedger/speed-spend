@@ -8,12 +8,17 @@ import {
 import { StacksTestnet } from '@stacks/network';
 
 export const localMocknet = window.location.search.includes('mocknet=local');
+export const beta = window.location.search.includes('authorigin=beta');
 export const localNode = localMocknet;
 export const localAuth = false;
 export const mocknet = localMocknet;
 
-console.log({ localNode, localAuth, mocknet });
-export const authOrigin = localAuth ? 'http://localhost:8080' : 'https://app.blockstack.org';
+console.log({ localNode, localAuth, beta, mocknet });
+export const authOrigin = localAuth
+  ? 'http://localhost:8080'
+  : beta
+  ? 'https://pr-725.app.stacks.engineering/'
+  : 'https://app.blockstack.org';
 
 export const CONTRACT_ADDRESS = mocknet
   ? 'STB44HYPYAT2BB2QE513NSP81HTMYWBJP02HPGK6' //ADDR1 from Stacks.toml
