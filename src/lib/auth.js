@@ -8,7 +8,6 @@ export const authOptions = {
   authOrigin: authOrigin,
   onFinish: ({ userSession }) => {
     console.log({ onfinsihedusersession: userSession });
-    window.location.reload();
   },
   appDetails: {
     name: 'Speed Spend',

@@ -20,6 +20,7 @@ import Auth from './components/Auth';
 import OverviewTokens from './pages/OverviewTokens';
 import OverviewContracts from './pages/OverviewContracts';
 import OverviewNFTs from './pages/OverviewNFTs';
+import PoxLite from './pages/PoxLite';
 import { authOptions, session } from './lib/auth';
 
 export default function App(props) {
@@ -117,6 +118,7 @@ function Content({ userSession }) {
               <Marketplace exact path="/openriff" decentralizedID={decentralizedID} />
               <MonsterDetails path="/monsters/:monsterId" decentralizedID={decentralizedID} />
               <Rockets path="/rockets" decentralizedID={decentralizedID} />
+              <PoxLite path="/poxlite" decentralizedID={decentralizedID} />
               <MyProfile path="/me" decentralizedID={decentralizedID} userSession={userSession} />
               <ClarityValues path="/cv" />
               <StackingActivies path="/stacking"></StackingActivies>

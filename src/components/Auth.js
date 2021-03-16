@@ -9,10 +9,10 @@ export default function Auth({ userSession }) {
         className="btn btn-primary btn-lg"
         onClick={() => {
           console.log('signOut');
-          userSession.signUserOut();
+          userSession.signUserOut('/');
         }}
       >
-        {userSession ? 'Log Out' : '...'}
+        Log Out
       </button>
     );
   } else {

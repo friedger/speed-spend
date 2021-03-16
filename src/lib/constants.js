@@ -22,7 +22,7 @@ export const authOrigin = localAuth
 
 export const CONTRACT_ADDRESS = mocknet
   ? 'STB44HYPYAT2BB2QE513NSP81HTMYWBJP02HPGK6' //ADDR1 from Stacks.toml
-  : 'ST12EY99GS4YKP0CP2CFW6SEPWQ2CGVRWK5GHKDRV';
+  : 'ST33GW755MQQP6FZ58S423JJ23GBKK5ZKH3MGR55N';
 export const HODL_TOKEN_CONTRACT = 'hodl-token';
 export const MONSTERS_CONTRACT_NAME = 'monsters';
 export const STACK_API_URL = localNode

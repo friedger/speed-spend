@@ -13,6 +13,8 @@ export function fetchHodlTokenBalance(sender) {
     contractName: HODL_TOKEN_CONTRACT,
     functionName: 'hodl-balance-of',
     functionArgs: [standardPrincipalCV(sender)],
+    senderAddress: CONTRACT_ADDRESS,
+    network: NETWORK,
   }).then(hodlBalanceOf => {
     console.log({ hodlBalanceOf });
     if (hodlBalanceOf.value) {

@@ -11,7 +11,7 @@ export function useStxAddresses(userSession) {
     getUserData(userSession).then(userData => {
       const { address } = getStacksAccount(userData.appPrivateKey);
       setAppStxAddress(addressToString(address));
-      setOwnerStxAddress(userData.profile.stxAddress);
+      setOwnerStxAddress(userData.profile.stxAddress.testnet);
     });
   }, [userSession]);
 
