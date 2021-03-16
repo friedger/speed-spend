@@ -29,7 +29,7 @@ export default function Landing(props) {
 
             <div className="card mt-4 border-info">
               <div className="card-header">
-                <h5 className="card-title">About Stacks Testnet (Xenon)</h5>
+                <h5 className="card-title">About Stacks Testnet</h5>
               </div>
               <div className="row">
                 <div className="col col-md-12 p-4">
@@ -41,9 +41,9 @@ export default function Landing(props) {
                     Stacks Testnet
                   </a>{' '}
                   is blockchain based on Proof of Transfer. The testnet is initiated by Blockstack
-                  PBC, a New York based public benefit corporation. In the current phase{' '}
-                  <i>Xenon</i> all nodes validate the network, they can mine new blocks, and they
-                  connect to the public bitcoin testnet.
+                  PBC, a New York based public benefit corporation. It is connected to the public
+                  bitcoin testnet. This does not use real STXs or Bitcoin. Stacks addresses on testnet start
+                  with ST..
                 </div>
               </div>
             </div>

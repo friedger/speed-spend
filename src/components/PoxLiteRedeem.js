@@ -53,11 +53,13 @@ export function PoxLiteRedeem({ title, path, placeholder, ownerStxAddress, appSt
             new BN(amount),
             createAssetInfo(contractAddress, contractName, "stinger")
           ),
+          /*
           createSTXPostCondition(
             `${contractAddress}.${contractName}`,
             FungibleConditionCode.Equal,
             new BN(amount)
           ),
+          */
         ],
         finished: data => {
           console.log(data);

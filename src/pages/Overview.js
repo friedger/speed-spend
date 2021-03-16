@@ -13,8 +13,7 @@ export default function Overview(props) {
         </div>
         <div className="col-xs-10 col-md-8 mx-auto mb-3 px-4">
           <a href="/tokens">Tokens</a> section is all about Stacks tokens (STX) and other fungible
-          tokens. It explains the difference between your between your own stx address and your app
-          stx address.
+          tokens. It explains the difference between your own stx address and your app stx address.
         </div>
         <div className="col-xs-10 col-md-8 mx-auto mb-3 px-4">
           <a href="/nfts">NFTs</a> section explains how to use, sell and explore non-fungible
@@ -26,8 +25,6 @@ export default function Overview(props) {
         </div>
         <div className="col-xs-10 col-md-8 mx-auto mb-3 px-4">
           <a href="/me">Profile</a> allows you see your current balances.
-          <br />
-          <i>It helps to understand how to read account balances.</i>
         </div>
       </div>
     </main>
