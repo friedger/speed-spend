@@ -10050,6 +10050,11 @@ jmespath@0.15.0:
   resolved "https://registry.yarnpkg.com/jmespath/-/jmespath-0.15.0.tgz#a3f222a9aae9f966f5d27c796510e28091764217"
   integrity sha1-o/Iiqarp+Wb10nx5ZRDigJF2Qhc=
 
+jotai@^0.15.3:
+  version "0.15.3"
+  resolved "https://registry.yarnpkg.com/jotai/-/jotai-0.15.3.tgz#323dcdc2b1a7f7ec777997b2d827e61bada2ede3"
+  integrity sha512-4+0Ie61mSQjyEuh/vCKKr7JFclDe/9DxV2rhzGRRZwnCcmgld8AdGX9BnRqfjMedyYpS3qATzLjIcCG0CopgMg==
+
 js-string-escape@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/js-string-escape/-/js-string-escape-1.0.1.tgz#e2625badbc0d67c7533e9edc1068c587ae4137ef"

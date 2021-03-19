@@ -23,30 +23,29 @@ import { fetchHodlTokenBalance } from '../lib/holdTokens';
 
 import { useConnect } from '@stacks/connect-react';
 import { connectWebSocketClient, TransactionsApi } from '@stacks/blockchain-api-client';
+import { useAtomValue } from 'jotai/utils';
+import { userSessionState } from '../lib/auth';
+import { useStxAddresses } from '../lib/hooks';
 const BigNum = require('bn.js');
 
-export function BetButton({ jackpot, ownerStxAddress }) {
-  const { doContractCall, userSession } = useConnect();
+export function BetButton({ jackpot }) {
+  const userSession = useAtomValue(userSessionState);
+  const { doContractCall } = useConnect();
   const spinner = useRef();
   const [betValue, setBetValue] = useState(0);
   const [status, setStatus] = useState();
   const [account, setAccount] = useState();
-  const [identity, setIdentity] = useState();
   const [jackpotValue, setJackpotValue] = useState();
   const [txId, setTxId] = useState();
+  const { ownerStxAddress, appStxAddress } = useStxAddresses(userSession);
 
   useEffect(() => {
     if (userSession.isUserSignedIn()) {
       const userData = userSession.loadUserData();
       const appPrivateKey = userData.appPrivateKey;
       const id = getStacksAccount(appPrivateKey);
-      setIdentity({
-        appPrivateKey: id.appPrivateKey,
-        appStxAddress: id.address,
-        stxAddress: userData.profile.stxAddress,
-      });
       console.log({ userData, id });
-      fetchAccount(addressToString(id.address))
+      fetchAccount(ownerStxAddress)
         .catch(e => {
           setStatus('Failed to access your account', e);
           console.log(e);
@@ -55,7 +54,7 @@ export function BetButton({ jackpot, ownerStxAddress }) {
           setAccount(acc);
           console.log({ acc });
         });
-      fetchJackpot(addressToString(id.address)).then(jackpot => {
+      fetchJackpot(ownerStxAddress).then(jackpot => {
         if (jackpot) {
           setJackpotValue(jackpot);
         }
@@ -65,19 +64,19 @@ export function BetButton({ jackpot, ownerStxAddress }) {
         console.log(r);
       });
     }
-  }, [userSession]);
+  }, [userSession, ownerStxAddress]);
 
   const betAction = async () => {
     spinner.current.classList.remove('d-none');
 
     // check balance
-    const acc = await fetchAccount(addressToString(identity.appStxAddress)).catch(e => {
+    const acc = await fetchAccount(appStxAddress).catch(e => {
       setStatus('Failed to access your account', e);
       console.log(e);
     });
     const balance = acc ? parseInt(acc.balance, 16) : 0;
     if (balance < 1000) {
-      const hodlBalanceString = await fetchHodlTokenBalance(identity.stxAddress);
+      const hodlBalanceString = await fetchHodlTokenBalance(ownerStxAddress);
       const hodlBalance = hodlBalanceString ? parseInt(hodlBalanceString) : 0;
       console.log(hodlBalanceString, hodlBalance);
       if (hodlBalance < 10) {

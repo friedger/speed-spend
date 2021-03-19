@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 
 import { fetchAccount } from '../lib/account';
-import { useConnect } from '@stacks/connect-react';
+import { useConnect } from '../lib/auth';
 import { TxStatus } from '../lib/transactions';
 import { NETWORK } from '../lib/constants';
 import { createAssetInfo, createFungiblePostCondition, createSTXPostCondition, FungibleConditionCode, PostConditionMode, uintCV } from '@stacks/transactions';

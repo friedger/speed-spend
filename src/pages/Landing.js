@@ -1,10 +1,10 @@
 import React from 'react';
-import { useConnect } from '@stacks/connect-react';
+import { useConnect } from '../lib/auth';
 
 // Landing page demonstrating Blockstack connect for registration
 
 export default function Landing(props) {
-  const { doOpenAuth } = useConnect();
+  const { handleOpenAuth } = useConnect();
 
   return (
     <div className="Landing">
@@ -42,8 +42,8 @@ export default function Landing(props) {
                   </a>{' '}
                   is blockchain based on Proof of Transfer. The testnet is initiated by Blockstack
                   PBC, a New York based public benefit corporation. It is connected to the public
-                  bitcoin testnet. This does not use real STXs or Bitcoin. Stacks addresses on testnet start
-                  with ST..
+                  bitcoin testnet. This does not use real STXs or Bitcoin. Stacks addresses on
+                  testnet start with ST..
                 </div>
               </div>
             </div>
@@ -63,7 +63,7 @@ export default function Landing(props) {
               </div>
 
               <p className="card-link mb-5">
-                <button className="btn btn-outline-primary" type="button" onClick={doOpenAuth}>
+                <button className="btn btn-outline-primary" type="button" onClick={handleOpenAuth}>
                   Start now
                 </button>
               </p>

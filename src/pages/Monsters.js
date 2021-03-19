@@ -7,7 +7,7 @@ import { useStxAddresses } from '../lib/hooks';
 
 export default function Monsters(props) {
   const { ownerStxAddress } = useStxAddresses();
-
+  console.log({ ownerStxAddress });
   return (
     <main className="panel-welcome mt-5 container">
       <div className="lead row mt-5">

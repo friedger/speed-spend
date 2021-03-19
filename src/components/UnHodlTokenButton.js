@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 
-import { useConnect } from '@stacks/connect-react';
+import { useConnect } from '../lib/auth';
 import {
   uintCV,
   makeStandardFungiblePostCondition,

@@ -14,14 +14,16 @@ export function BuyMonsters({ ownerStxAddress, monsterId }) {
   const [txId, setTxId] = useState();
 
   useEffect(() => {
-    fetchAccount(ownerStxAddress)
-      .catch(e => {
-        setStatus('Failed to access your account', e);
-        console.log(e);
-      })
-      .then(async acc => {
-        console.log({ acc });
-      });
+    if (ownerStxAddress) {
+      fetchAccount(ownerStxAddress)
+        .catch(e => {
+          setStatus('Failed to access your account', e);
+          console.log(e);
+        })
+        .then(async acc => {
+          console.log({ acc });
+        });
+    }
   }, [ownerStxAddress]);
 
   const bidAction = async () => {

@@ -12,23 +12,25 @@ export function MyMonsters({ ownerStxAddress }) {
   const [monsters, setMonsters] = useState();
 
   useEffect(() => {
-    fetchAccount(ownerStxAddress)
-      .catch(e => {
-        setStatus('Failed to access your account', e);
-        console.log(e);
-      })
-      .then(async acc => {
-        console.log({ acc });
-      });
-    fetchMonsterIds(ownerStxAddress)
-      .then(async monsterIds => {
-        console.log(monsterIds);
-        setMonsters(monsterIds);
-      })
-      .catch(e => {
-        setStatus('Failed to get balances of your account', e);
-        console.log(e);
-      });
+    if (ownerStxAddress) {
+      fetchAccount(ownerStxAddress)
+        .catch(e => {
+          setStatus('Failed to access your account', e);
+          console.log(e);
+        })
+        .then(async acc => {
+          console.log({ acc });
+        });
+      fetchMonsterIds(ownerStxAddress)
+        .then(async monsterIds => {
+          console.log(monsterIds);
+          setMonsters(monsterIds);
+        })
+        .catch(e => {
+          setStatus('Failed to get balances of your account', e);
+          console.log(e);
+        });
+    }
   }, [ownerStxAddress]);
 
   return (

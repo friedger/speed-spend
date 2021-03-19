@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import Landing from './pages/Landing';
 import Overview from './pages/Overview';
 import Hodl from './pages/Hodl';
@@ -21,20 +21,20 @@ import OverviewTokens from './pages/OverviewTokens';
 import OverviewContracts from './pages/OverviewContracts';
 import OverviewNFTs from './pages/OverviewNFTs';
 import PoxLite from './pages/PoxLite';
-import { authOptions, session } from './lib/auth';
+import { userDataState, userSessionState, useConnect } from './lib/auth';
+import { useAtom } from 'jotai';
 
 export default function App(props) {
-  const [userSession, setUserSession] = useState();
+  const { authOptions } = useConnect();
+  const [userSession] = useAtom(userSessionState);
+  const [, setUserData] = useAtom(userDataState);
   useEffect(() => {
-    if (session.isUserSignedIn()) {
-      setUserSession(session);
-      console.log({ userData: session.loadUserData() });
-    } else if (session.isSignInPending()) {
-      session.handlePendingSignIn().then(userData => {
-        console.log({ userData });
-      });
+    if (userSession?.isUserSignedIn()) {
+      setUserData(userSession.loadUserData());
+    } else if (userSession.isSignInPending()) {
+      userSession.handlePendingSignIn();
     }
-  }, []);
+  }, [userSession, setUserData]);
 
   return (
     <Connect authOptions={authOptions}>

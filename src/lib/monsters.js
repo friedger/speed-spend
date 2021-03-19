@@ -34,14 +34,17 @@ export function fetchMonsterDetails(monsterId) {
       .callReadOnlyFunction({
         contractAddress: CONTRACT_ADDRESS,
         contractName: MONSTERS_CONTRACT_NAME,
-        functionName: 'owner-of?',
+        functionName: 'get-owner',
         readOnlyFunctionArgs: {
           sender: CONTRACT_ADDRESS,
           arguments: [cvToHex(uintCV(monsterId))],
         },
       })
-      .then(response =>
-        cvToString(deserializeCV(Buffer.from(response.result.substr(2), 'hex')).value)
+      .then(response => {
+        console.log(response)
+        console.log(cvToString(deserializeCV(Buffer.from(response.result.substr(2), 'hex')).value))
+        return cvToString(deserializeCV(Buffer.from(response.result.substr(2), 'hex')).value)
+      }
       ),
 
     smartContractsApi
@@ -58,7 +61,7 @@ export function fetchMonsterDetails(monsterId) {
         return {
           image: parseInt(metaData['image'].value),
           lastMeal: parseInt(metaData['last-meal'].value),
-          name: metaData['name'].buffer.toString(),
+          name: metaData['name'].data,
           dateOfBirth: parseInt(metaData['date-of-birth'].value),
         };
       }),

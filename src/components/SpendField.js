@@ -10,7 +10,7 @@ import { NETWORK } from '../lib/constants';
 import { getUserAddress, getStacksAccount, fetchAccount } from '../lib/account';
 import { putStxAddress } from '../UserSession';
 import { resultToStatus } from '../lib/transactions';
-import { useConnect } from '@stacks/connect-react';
+import { useConnect } from '../lib/auth';
 
 const BigNum = require('bn.js');
 

@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 
 import { fetchAccount } from '../lib/account';
 import { useConnect } from '@stacks/connect-react';
-import { PostConditionMode, bufferCVFromString, uintCV } from '@stacks/transactions';
+import { PostConditionMode, bufferCVFromString, uintCV, stringAsciiCV } from '@stacks/transactions';
 import { CONTRACT_ADDRESS, NETWORK } from '../lib/constants';
 import { TxStatus } from '../lib/transactions';
 
@@ -14,14 +14,16 @@ export function CreateMonsterButton({ ownerStxAddress }) {
   const [txId, setTxId] = useState();
 
   useEffect(() => {
-    fetchAccount(ownerStxAddress)
-      .catch(e => {
-        setStatus('Failed to access your account', e);
-        console.log(e);
-      })
-      .then(async acc => {
-        console.log({ acc });
-      });
+    if (ownerStxAddress) {
+      fetchAccount(ownerStxAddress)
+        .catch(e => {
+          setStatus('Failed to access your account', e);
+          console.log(e);
+        })
+        .then(async acc => {
+          console.log({ acc });
+        });
+    }
   }, [ownerStxAddress]);
 
   const sendAction = async () => {
@@ -36,7 +38,7 @@ export function CreateMonsterButton({ ownerStxAddress }) {
         contractAddress: CONTRACT_ADDRESS,
         contractName: 'monsters',
         functionName: 'create-monster',
-        functionArgs: [bufferCVFromString(name), uintCV(Math.floor(Math.random() * 109))],
+        functionArgs: [stringAsciiCV(name), uintCV(Math.floor(Math.random() * 109))],
         postConditionMode: PostConditionMode.Allow,
         postConditions: [],
         network: NETWORK,

@@ -12,7 +12,7 @@ import {
   STACKS_API_WS_URL,
   transactionsApi,
 } from './constants';
-import { useConnect } from '@stacks/connect-react';
+import { useConnect } from '../lib/auth';
 import { connectWebSocketClient } from '@stacks/blockchain-api-client';
 import { hexToCV, TxStatus } from './transactions';
 import { fetchNFTIds } from './nft';

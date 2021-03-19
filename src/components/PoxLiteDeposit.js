@@ -4,11 +4,17 @@ import { fetchAccount } from '../lib/account';
 import { useConnect } from '@stacks/connect-react';
 import { TxStatus } from '../lib/transactions';
 import { NETWORK } from '../lib/constants';
-import { bufferCVFromString, createSTXPostCondition, FungibleConditionCode, PostConditionMode, uintCV } from '@stacks/transactions';
+import {
+  bufferCVFromString,
+  createSTXPostCondition,
+  FungibleConditionCode,
+  PostConditionMode,
+  uintCV,
+} from '@stacks/transactions';
 import * as BN from 'bn.js';
 
-const contractAddress = "STSJHY3X84C0KV5NDB12FR07ETP5XXG51B8XAWSK";
-const contractName = "experimental-yellow-stinger";
+const contractAddress = 'STSJHY3X84C0KV5NDB12FR07ETP5XXG51B8XAWSK';
+const contractName = 'experimental-yellow-stinger';
 
 export function PoxLiteDeposit({ title, path, placeholder, ownerStxAddress, appStxAddress }) {
   const { doContractCall } = useConnect();
@@ -48,16 +54,12 @@ export function PoxLiteDeposit({ title, path, placeholder, ownerStxAddress, appS
       await doContractCall({
         contractAddress,
         contractName,
-        functionName: "deposit",
-        functionArgs: [uintCV(amount), bufferCVFromString("from stacks.js")],
+        functionName: 'deposit',
+        functionArgs: [uintCV(amount), bufferCVFromString('from stacks.js')],
         network: NETWORK,
         postConditionMode: PostConditionMode.Allow,
         postConditions: [
-          createSTXPostCondition(
-            ownerStxAddress,
-            FungibleConditionCode.Equal,
-            new BN(amount)
-          ),
+          createSTXPostCondition(ownerStxAddress, FungibleConditionCode.Equal, new BN(amount)),
         ],
         finished: data => {
           console.log(data);
