@@ -54,7 +54,7 @@ export default function AtTwo(props) {
             </li>
             <li className="list-group-item">
               You can also search for your transcation and your friend's transaction at the
-              <a href="https://testnet-explorer.blockstack.org/transactions">
+              <a href="https://explorer.stacks.co/transactions?chain=testnet">
                 Testnet Explorer
               </a>{' '}
               and check the next flip-coin-at-two transaction above your transactions. It contains

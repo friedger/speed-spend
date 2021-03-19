@@ -34,7 +34,7 @@ export function txUrl(txId) {
   if (mocknet) {
     return `${STACK_API_URL}/extended/v1/tx/0x${txId}`;
   } else {
-    return `https://testnet-explorer.blockstack.org/txid/0x${txId}`;
+    return `https://explorer.stacks.co/txid/0x${txId}?chain=testnet`;
   }
 }
 
@@ -85,7 +85,7 @@ export function TxStatus({ txId, resultPrefix }) {
       {processingResult.loading && (
         <>
           Checking transaction status:{' '}
-          <a href={`https://testnet-explorer.blockstack.org/txid/0x${txId}`}>{txId}</a>
+          <a href={`https://explorer.stacks.co/txid/0x${txId}?chain=testnet`}>{txId}</a>
         </>
       )}
       {!processingResult.loading && processingResult.result && (

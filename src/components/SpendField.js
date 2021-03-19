@@ -10,7 +10,9 @@ import { NETWORK } from '../lib/constants';
 import { getUserAddress, getStacksAccount, fetchAccount } from '../lib/account';
 import { putStxAddress } from '../UserSession';
 import { resultToStatus } from '../lib/transactions';
-import { useConnect } from '../lib/auth';
+import { useConnect, userDataState } from '../lib/auth';
+import { useStxAddresses } from '../lib/hooks';
+import { useAtomValue } from 'jotai/utils';
 
 const BigNum = require('bn.js');
 
@@ -20,30 +22,30 @@ export function SpendField({ title, path, placeholder }) {
   const spinner = useRef();
   const [status, setStatus] = useState();
   const [account, setAccount] = useState();
-  const [identity, setIdentity] = useState();
+  const { ownerStxAddress } = useStxAddresses(userSession);
+  const userData = useAtomValue(userDataState);
 
   useEffect(() => {
-    const userData = userSession.loadUserData();
-    const appPrivateKey = userData.appPrivateKey;
-    const id = getStacksAccount(appPrivateKey);
-    const addrAsString = addressToString(id.address);
-    setIdentity(id);
-    fetchAccount(addrAsString)
-      .catch(e => {
-        setStatus('Failed to access your account', e);
-        console.log(e);
-      })
-      .then(async acc => {
-        setAccount(acc);
-        console.log({ acc });
-        const address = await getUserAddress(userSession, userData.username);
-        console.log(address);
+    if (userSession?.isUserSignedIn()) {
+      const userData = userSession.loadUserData();
 
-        if (!address) {
-          await putStxAddress(userSession, addrAsString);
-        }
-      });
-  }, [userSession]);
+      fetchAccount(ownerStxAddress)
+        .catch(e => {
+          setStatus('Failed to access your account', e);
+          console.log(e);
+        })
+        .then(async acc => {
+          setAccount(acc);
+          console.log({ acc });
+          const address = await getUserAddress(userSession, userData.username);
+          console.log(address);
+
+          if (!address) {
+            await putStxAddress(userSession, ownerStxAddress);
+          }
+        });
+    }
+  }, [userSession, ownerStxAddress]);
 
   const sendAction = async () => {
     spinner.current.classList.remove('d-none');
@@ -64,7 +66,7 @@ export function SpendField({ title, path, placeholder }) {
     }
 
     // check balance
-    const acc = await fetchAccount(addressToString(identity.address));
+    const acc = await fetchAccount(ownerStxAddress);
     const balance = acc ? parseInt(acc.balance, 16) : 0;
     if (balance < 1000) {
       setStatus('Your balance is below 1000 uSTX');
@@ -73,11 +75,12 @@ export function SpendField({ title, path, placeholder }) {
     }
 
     console.log('STX address of recipient ' + recipient.address);
+    console.log(privateKeyToString(userData.appPrivateKey))
     try {
       const transaction = await makeSTXTokenTransfer({
         recipient: recipient.address,
         amount: new BigNum(1000),
-        senderKey: privateKeyToString(identity.privateKey),
+        senderKey: privateKeyToString(userData.appPrivateKey),
         network: NETWORK,
       });
       setStatus(`Sending transaction`);

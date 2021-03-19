@@ -4,10 +4,13 @@ import { getUserAddress, fetchAccount } from '../lib/account';
 import { useConnect } from '@stacks/connect-react';
 import { TxStatus } from '../lib/transactions';
 import { NETWORK } from '../lib/constants';
+import { useAtomValue } from 'jotai/utils';
+import { userSessionState } from '../lib/auth';
 const BigNum = require('bn.js');
 
 export function OwnerAddressSpendField({ title, path, placeholder, stxAddress }) {
-  const { userSession, doSTXTransfer } = useConnect();
+  const { doSTXTransfer } = useConnect();
+  const userSession = useAtomValue(userSessionState);
   const textfield = useRef();
   const spinner = useRef();
   const [status, setStatus] = useState();

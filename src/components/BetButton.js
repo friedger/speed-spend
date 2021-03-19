@@ -40,7 +40,7 @@ export function BetButton({ jackpot }) {
   const { ownerStxAddress, appStxAddress } = useStxAddresses(userSession);
 
   useEffect(() => {
-    if (userSession.isUserSignedIn()) {
+    if (userSession?.isUserSignedIn()) {
       const userData = userSession.loadUserData();
       const appPrivateKey = userData.appPrivateKey;
       const id = getStacksAccount(appPrivateKey);
@@ -279,7 +279,7 @@ export function BetResult({ txId }) {
       {processingResult.loading && (
         <>
           Checking transaction status:{' '}
-          <a href={`https://testnet-explorer.blockstack.org/txid/0x${txId}`}>{txId}</a>
+          <a href={`https://explorer.stacks.co/txid/0x${txId}?chain=testnet`}>{txId}</a>
         </>
       )}
       {!processingResult.loading && processingResult.result && <>{processingResult.result.repr}</>}{' '}

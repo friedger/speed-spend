@@ -53,7 +53,7 @@ export default function Jackpot(props) {
             </li>
             <li className="list-group-item">
               You can also search for your transcation at the
-              <a href="https://testnet-explorer.blockstack.org/transactions">
+              <a href="https://explorer.stacks.co/transactions?chain=testnet">
                 Testnet Explorer
               </a>{' '}
               and check the flip-coin-jackpot transaction above your transaction. If it contains two
