@@ -1,33 +1,31 @@
 import React from 'react';
 
-import {  PoxLiteRedeem } from '../components/PoxLiteRedeem';
-import {  PoxLiteDeposit } from '../components/PoxLiteDeposit';
 import { useStxAddresses } from '../lib/hooks';
+import { PoolList } from '../components/PoolList';
+import { PoolRegister } from '../components/PoolRegister';
 
-export default function PoxLite(props) {
+export default function PoolRegistry(props) {
   const { ownerStxAddress } = useStxAddresses();
 
   return (
     <main className="panel-welcome mt-5 container">
       <div className="lead row mt-5">
         <div className="col-xs-10 col-md-8 mx-auto px-4">
-          <h1 className="card-title">Pox Lite</h1>
+          <h1 className="card-title">Pool Registry</h1>
         </div>
 
         <div className="col-xs-10 col-md-8 mx-auto mb-4 px-4">
-          <PoxLiteDeposit ownerStxAddress={ownerStxAddress} />
+          <PoolList ownerStxAddress={ownerStxAddress} />
         </div>
         <div className="col-xs-10 col-md-8 mx-auto mb-4 px-4">
-          <PoxLiteRedeem ownerStxAddress={ownerStxAddress} />
+          <PoolRegister ownerStxAddress={ownerStxAddress} />
         </div>
 
         <div className="card col-md-8 mx-auto mt-5 mb-5 text-center px-0 border-warning">
           <div className="card-header">
             <h5 className="card-title">Instructions</h5>
             (Read the technical details at the{' '}
-            <a href="https://github.com/unclematis/pox-lite">
-              source code repo
-            </a>
+            <a href="https://gitlab.com/riot.ai/clarity-pool-registry">source code repo</a>
             .)
           </div>
           <ul className="list-group list-group-flush">
@@ -38,15 +36,15 @@ export default function PoxLite(props) {
               Wait a few minutes and refresh the account balance. You should see 500,000 uSTX more
               on your account.
             </li>
+            <li className="list-group-item">Select the pool you trust</li>
             <li className="list-group-item">
-              Deposit some STX.
+              Enter the amount, duration, and reward address to define how you would like to stack
+              and click delegate.
             </li>
             <li className="list-group-item">
-             Check your balance for the stinger token. if you have won some stinger tokens.
+              Wait for the pool admin to do the necessary and collect your rewards
             </li>
-            <li className="list-group-item">
-             Redeem your stinger tokens for STX.
-            </li>
+            <li className="list-group-item"></li>
           </ul>
         </div>
       </div>

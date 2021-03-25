@@ -23,6 +23,7 @@ import OverviewNFTs from './pages/OverviewNFTs';
 import PoxLite from './pages/PoxLite';
 import { userDataState, userSessionState, useConnect } from './lib/auth';
 import { useAtom } from 'jotai';
+import PoolRegistry from './pages/PoolRegistry';
 
 export default function App(props) {
   const { authOptions } = useConnect();
@@ -118,6 +119,7 @@ function Content({ userSession }) {
               <Marketplace exact path="/openriff" decentralizedID={decentralizedID} />
               <MonsterDetails path="/monsters/:monsterId" decentralizedID={decentralizedID} />
               <Rockets path="/rockets" decentralizedID={decentralizedID} />
+              <PoolRegistry path="/pools" decentralizedID={decentralizedID} />
               <PoxLite path="/poxlite" decentralizedID={decentralizedID} />
               <MyProfile path="/me" decentralizedID={decentralizedID} userSession={userSession} />
               <ClarityValues path="/cv" />
