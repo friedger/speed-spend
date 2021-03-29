@@ -1,7 +1,7 @@
 import { AddressHashMode, bufferCV, tupleCV } from '@stacks/transactions';
 import { address } from 'bitcoinjs-lib';
 import BN from 'bn.js';
-import * as c32 from "c32check";
+import * as c32 from 'c32check';
 
 function getAddressHashMode(btcAddress) {
   if (btcAddress.startsWith('bc1') || btcAddress.startsWith('tb1')) {
@@ -56,12 +56,12 @@ function decodeBtcAddress(btcAddress) {
   }
 }
 
-function decodeStxAddress(stxAddress: string) {
+function decodeStxAddress(stxAddress) {
   const btcAddress = c32.c32ToB58(stxAddress);
   return decodeBtcAddress(btcAddress);
 }
 
-export function poxAddrCVFromBitcoin(btcAddress: string) {
+export function poxAddrCVFromBitcoin(btcAddress) {
   const { hashMode, data } = decodeBtcAddress(btcAddress);
   return tupleCV({
     hashbytes: bufferCV(data),
@@ -71,15 +71,16 @@ export function poxAddrCVFromBitcoin(btcAddress: string) {
 
 export function poxAddrCV(stxAddress) {
   const { hashMode, data } = decodeStxAddress(stxAddress);
+  console.log({hashMode, data})
   return tupleCV({
     hashbytes: bufferCV(data),
-    version: bufferCV(new BN(hashMode, 10).toBuffer()),
+    version: bufferCV(Buffer.from([hashMode])),
   });
 }
 
 export function poxCVToBtcAddress(poxAddrCV) {
   return address.toBase58Check(
     poxAddrCV.data.hashbytes.buffer,
-    addressHashModeToBtcVersion(poxAddrCV.data.version.buffer.valueOf()[0])
+    addressHashModeToBtcVersion(poxAddrCV.data.version.buffer.valueOf()[0], false)
   );
 }

@@ -1,20 +1,33 @@
+import { useConnect } from '@stacks/connect-react';
+import { ClarityType, cvToString, PostConditionMode, uintCV } from '@stacks/transactions';
 import React, { useRef, useState } from 'react';
+import { NETWORK } from '../lib/constants';
+import { poxCVToBtcAddress } from '../lib/pools-utils';
 
 import { TxStatus } from '../lib/transactions';
+import { useNavigate } from '@reach/router';
+import PoolInfo from './PoolInfo';
 
-export function Pool({ pool, ownerStxAddress }) {
+export function Pool({ pool, poolId, ownerStxAddress }) {
+  const navigate = useNavigate();
+
   const spinner = useRef();
   const [status, setStatus] = useState();
   const [txId, setTxId] = useState();
+
   return (
     <div>
       {pool ? (
         <>
-          <h5>{pool.name}</h5>
-          <h5>{pool.address}</h5>
-          <br />
+          <PoolInfo pool={pool} />
           <div className="input-group ">
-            <button className="btn btn-outline-secondary" type="button">
+            <button
+              className="btn btn-outline-secondary"
+              type="button"
+              onClick={() => {
+                navigate(`/pools/${poolId}`, { state: { pool } });
+              }}
+            >
               <div
                 ref={spinner}
                 role="status"

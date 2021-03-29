@@ -1,10 +1,18 @@
 import React, { useRef, useState, useEffect } from 'react';
 
-import { CONTRACT_ADDRESS, NETWORK } from '../lib/constants';
+import { NETWORK } from '../lib/constants';
 import { TxStatus } from '../lib/transactions';
 import { fetchAccount } from '../lib/account';
 import { useConnect } from '@stacks/connect-react';
-import { noneCV, PostConditionMode, someCV, stringAsciiCV, uintCV } from '@stacks/transactions';
+import {
+  contractPrincipalCV,
+  noneCV,
+  PostConditionMode,
+  someCV,
+  standardPrincipalCV,
+  stringAsciiCV,
+  uintCV,
+} from '@stacks/transactions';
 import * as c32 from 'c32check';
 import { nameToUsernameCV } from '../lib/pools';
 import { poxAddrCVFromBitcoin } from '../lib/pools-utils';
@@ -12,6 +20,7 @@ import { poxAddrCVFromBitcoin } from '../lib/pools-utils';
 export function PoolRegister({ ownerStxAddress, username }) {
   const { doContractCall } = useConnect();
   const name = useRef();
+  const delegateeAddress = useRef();
   const url = useRef();
   const rewardBtcAddress = useRef();
   const contract = useRef();
@@ -41,12 +50,19 @@ export function PoolRegister({ ownerStxAddress, username }) {
 
   const registerAction = async () => {
     spinner.current.classList.remove('d-none');
-    const useExt = extendedCheckbox.current.value;
+    const useExt = extendedCheckbox.current.checked;
+    console.log({ useExt, c: extendedCheckbox.current });
     const usernameCV = nameToUsernameCV(name.current.value.trim());
     if (!usernameCV) {
       setStatus('username must contain exactly one dot (.)');
       return;
     }
+    const delegateeParts = delegateeAddress.current.value.trim().split('.');
+
+    const delegateeCV =
+      delegateeParts.length === 1
+        ? standardPrincipalCV(delegateeParts[0])
+        : contractPrincipalCV(delegateeParts[0], delegateeParts[1]);
     const poxAddressCV = poxAddrCVFromBitcoin(rewardBtcAddress.current.value.trim());
     const urlCV = stringAsciiCV(url.current.value.trim());
     let minimumCV;
@@ -60,15 +76,29 @@ export function PoolRegister({ ownerStxAddress, username }) {
       ? someCV(uintCV(parseInt(lockingPeriod.current.value)))
       : noneCV();
     const payoutCV = stringAsciiCV(payout.current.value.trim());
+    const [poolCtrAddress, poolCtrName] = contract.current.value.trim().split('.');
+    const contractCV = contractPrincipalCV(poolCtrAddress, poolCtrName);
+    const statusCV = uintCV(1);
     const functionName = useExt ? 'register-ext' : 'register';
+    console.log({ functionName });
     try {
       setStatus(`Sending transaction`);
 
       await doContractCall({
-        contractAddress: "ST2ZRX0K27GW0SP3GJCEMHD95TQGJMKB7G9Y0X1MH",
+        contractAddress: 'ST2ZRX0K27GW0SP3GJCEMHD95TQGJMKB7G9Y0X1MH',
         contractName: 'pool-registry',
         functionName,
-        functionArgs: [usernameCV, poxAddressCV, urlCV, minimumCV, lockingPeriodCV, payoutCV],
+        functionArgs: [
+          usernameCV,
+          delegateeCV,
+          poxAddressCV,
+          urlCV,
+          contractCV,
+          minimumCV,
+          lockingPeriodCV,
+          payoutCV,
+          statusCV,
+        ],
         postConditionMode: PostConditionMode.Allow,
         postConditions: [],
         network: NETWORK,
@@ -97,6 +127,21 @@ export function PoolRegister({ ownerStxAddress, username }) {
           className="form-control"
           defaultValue={username}
           placeholder="Name, e.g. alice.id"
+          onKeyUp={e => {
+            if (e.key === 'Enter') delegateeAddress.current.focus();
+          }}
+          onBlur={e => {
+            setStatus(undefined);
+          }}
+        />
+        <br />
+        Pool's Stacks address for delegation
+        <input
+          type="text"
+          ref={delegateeAddress}
+          className="form-control"
+          defaultValue={ownerStxAddress}
+          placeholder="Stacks address"
           onKeyUp={e => {
             if (e.key === 'Enter') url.current.focus();
           }}
@@ -154,6 +199,7 @@ export function PoolRegister({ ownerStxAddress, username }) {
           type="checkbox"
           ref={extendedCheckbox}
           className="checkbox"
+          defaultChecked={false}
           placeholder="Use extended trait"
           onKeyUp={e => {
             if (e.key === 'Enter') minimum.current.focus();

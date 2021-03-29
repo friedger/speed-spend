@@ -11,6 +11,7 @@ export function PoolList({ ownerStxAddress }) {
   useEffect(() => {
     fetchPools()
       .then(async pools => {
+        setStatus(undefined);
         console.log(pools);
         setPools(pools);
       })
@@ -31,7 +32,7 @@ export function PoolList({ ownerStxAddress }) {
       {pools &&
         pools.map((pool, key) => {
           return (
-            <Pool key={key} pool={pool} />
+            <Pool key={key} pool={pool} poolId={key + 1} />
           );
         })}
       {!pools && <>No pools yet. Register one!</>}
