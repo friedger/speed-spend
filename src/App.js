@@ -25,6 +25,7 @@ import { userDataState, userSessionState, useConnect } from './lib/auth';
 import { useAtom } from 'jotai';
 import PoolRegistry from './pages/PoolRegistry';
 import PoolDetails from './pages/PoolDetails';
+import OverviewPox from './pages/OverviewPox';
 
 export default function App(props) {
   const { authOptions } = useConnect();
@@ -89,6 +90,7 @@ function AppBody(props) {
         <NavLink to="/tokens">Tokens</NavLink>
         <NavLink to="/contracts">Contracts</NavLink>
         <NavLink to="/nfts">NFTs</NavLink>
+        <NavLink to="/pox">PoX</NavLink>
         <NavLink to="/me">Profile</NavLink>
       </nav>
       {props.children}
@@ -111,6 +113,7 @@ function Content({ userSession }) {
               <OverviewTokens path="/tokens" />
               <OverviewContracts path="/contracts" />
               <OverviewNFTs path="/nfts" />
+              <OverviewPox path="/pox" />
               <SpeedSpend path="/speed-spend" decentralizedID={decentralizedID} userSession={userSession}  />
               <Hodl path="/hodl" decentralizedID={decentralizedID} userSession={userSession} />
               <HodlTokens path="/hodl-tokens" decentralizedID={decentralizedID} userSession={userSession} />

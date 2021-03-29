@@ -24,6 +24,9 @@ export default function Overview(props) {
           digital assets when interacting with smart contracts.
         </div>
         <div className="col-xs-10 col-md-8 mx-auto mb-3 px-4">
+          <a href="/pox">PoX</a> section is about the consenus algorithm Proof of Transfer.
+        </div>
+        <div className="col-xs-10 col-md-8 mx-auto mb-3 px-4">
           <a href="/me">Profile</a> allows you see your current balances.
         </div>
       </div>
