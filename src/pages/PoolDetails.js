@@ -2,23 +2,19 @@ import React, { useEffect, useState } from 'react';
 import { useStxAddresses } from '../lib/hooks';
 import { PoolJoin } from '../components/PoolJoin';
 import { fetchPool } from '../lib/pools';
-import { userSessionState } from '../lib/auth';
 
 export default function PoolDetails({ poolId, location, userSession }) {
-  const pool = location?.state?.pool;
   const { ownerStxAddress } = useStxAddresses(userSession);
-  const [poolData, setPoolData] = useState(pool);
+  const [poolData, setPoolData] = useState();
   console.log({ poolData });
   useEffect(() => {
-    if (!pool) {
-      const fn = async () => {
-        const p = await fetchPool(poolId);
-        console.log(p);
-        setPoolData(p);
-      };
-      fn();
-    }
-  }, [pool, poolId]);
+    const fn = async () => {
+      const p = await fetchPool(poolId);
+      console.log(p);
+      setPoolData(p);
+    };
+    fn();
+  }, [poolId]);
   return (
     <main className="panel-welcome mt-5 container">
       <div className="lead row mt-5">

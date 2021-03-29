@@ -19,9 +19,6 @@ import {
 import * as c32 from 'c32check';
 import { poxAddrCV, poxAddrCVFromBitcoin } from '../lib/pools-utils';
 import PoolInfo from './PoolInfo';
-import { useConnect, userSessionState } from '../lib/auth';
-import { useStxAddresses } from '../lib/hooks';
-import { useAtom } from 'jotai';
 
 function getPayout(pool) {
   switch (pool.data.payout.data) {
@@ -97,7 +94,7 @@ export function PoolJoin({ pool, ownerStxAddress, userSession }) {
   const parts = delegatee.split('.');
   const delegateeCV =
     parts.length < 2 ? standardPrincipalCV(parts[0]) : contractPrincipalCV(parts[0], parts[1]);
-  const rewardBtcAddressCV = pool.data['pox-address'];
+  const rewardBtcAddressCV = someCV(pool.data['pox-address']);
   const payout = getPayout(pool);
   const userPayoutAddress = getPayoutAddress(payout, ownerStxAddress);
 
@@ -180,6 +177,7 @@ export function PoolJoin({ pool, ownerStxAddress, userSession }) {
           ref={lockingPeriod}
           className="form-control"
           placeholder="Number of cycles"
+          disabled={!useExt}
           readOnly={pool && pool.data["locking-period"].type === ClarityType.OptionalSome}
           defaultValue={
             pool && pool.data["locking-period"].type === ClarityType.OptionalSome
@@ -200,6 +198,7 @@ export function PoolJoin({ pool, ownerStxAddress, userSession }) {
           ref={payoutAddress}
           className="form-control"
           defaultValue={userPayoutAddress}
+          disabled={!useExt}
           onKeyUp={e => {
             if (e.key === 'Enter') joinAction();
           }}
@@ -220,7 +219,7 @@ export function PoolJoin({ pool, ownerStxAddress, userSession }) {
         </div>
       </div>
       <div>
-        <TxStatus txId={txId} resultPrefix="Order placed in block " />
+        <TxStatus txId={txId} resultPrefix="You joined the pool " />
       </div>
       {status && (
         <>
