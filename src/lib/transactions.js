@@ -53,9 +53,13 @@ export function TxStatus({ txId, resultPrefix }) {
 
     let sub;
     const subscribe = async (txId, update) => {
-      const client = await connectWebSocketClient(STACKS_API_WS_URL);
-      sub = await client.subscribeTxUpdates(txId, update);
-      console.log({ client, sub });
+      try {
+        const client = await connectWebSocketClient(STACKS_API_WS_URL);
+        sub = await client.subscribeTxUpdates(txId, update);
+        console.log({ client, sub });
+      } catch (e) {
+        console.log(e);
+      }
     };
 
     subscribe(txId, async event => {

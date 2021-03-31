@@ -25,6 +25,8 @@ export const CONTRACT_ADDRESS = mocknet
   : 'ST33GW755MQQP6FZ58S423JJ23GBKK5ZKH3MGR55N';
 export const HODL_TOKEN_CONTRACT = 'hodl-token';
 export const MONSTERS_CONTRACT_NAME = 'monsters';
+export const POOL_REGISTRY_CONTRACT_NAME = 'pool-registry-v1';
+
 export const STACK_API_URL = localNode
   ? 'http://localhost:3999'
   : 'https://stacks-node-api.testnet.stacks.co';

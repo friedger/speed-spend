@@ -1,11 +1,13 @@
 import React, { useRef, useState, useEffect } from 'react';
 
-import { NETWORK } from '../lib/constants';
+import { CONTRACT_ADDRESS, NETWORK, POOL_REGISTRY_CONTRACT_NAME } from '../lib/constants';
 import { TxStatus } from '../lib/transactions';
 import { fetchAccount } from '../lib/account';
 import { useConnect } from '@stacks/connect-react';
 import {
   contractPrincipalCV,
+  FungibleConditionCode,
+  makeStandardSTXPostCondition,
   noneCV,
   PostConditionMode,
   someCV,
@@ -16,6 +18,7 @@ import {
 import * as c32 from 'c32check';
 import { nameToUsernameCV } from '../lib/pools';
 import { poxAddrCVFromBitcoin } from '../lib/pools-utils';
+import BN from 'bn.js';
 
 export function PoolRegister({ ownerStxAddress, username }) {
   const { doContractCall } = useConnect();
@@ -85,8 +88,8 @@ export function PoolRegister({ ownerStxAddress, username }) {
       setStatus(`Sending transaction`);
 
       await doContractCall({
-        contractAddress: 'ST2ZRX0K27GW0SP3GJCEMHD95TQGJMKB7G9Y0X1MH',
-        contractName: 'pool-registry',
+        contractAddress: CONTRACT_ADDRESS,
+        contractName: POOL_REGISTRY_CONTRACT_NAME,
         functionName,
         functionArgs: [
           usernameCV,
@@ -100,7 +103,13 @@ export function PoolRegister({ ownerStxAddress, username }) {
           statusCV,
         ],
         postConditionMode: PostConditionMode.Allow,
-        postConditions: [],
+        postConditions: [
+          makeStandardSTXPostCondition(
+            ownerStxAddress,
+            FungibleConditionCode.GreaterEqual,
+            new BN(0)
+          ),
+        ],
         network: NETWORK,
         finished: data => {
           console.log(data);

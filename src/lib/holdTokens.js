@@ -11,7 +11,7 @@ export function fetchHodlTokenBalance(sender) {
   return callReadOnlyFunction({
     contractAddress: CONTRACT_ADDRESS,
     contractName: HODL_TOKEN_CONTRACT,
-    functionName: 'hodl-balance-of',
+    functionName: 'get-hodl-balance',
     functionArgs: [standardPrincipalCV(sender)],
     senderAddress: CONTRACT_ADDRESS,
     network: NETWORK,

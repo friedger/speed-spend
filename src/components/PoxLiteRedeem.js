@@ -1,17 +1,23 @@
 import React, { useRef, useState, useEffect } from 'react';
 
 import { fetchAccount } from '../lib/account';
-import { useConnect } from '../lib/auth';
+import { useConnect as useStacksJsConnect } from '@stacks/connect-react';
 import { TxStatus } from '../lib/transactions';
 import { NETWORK } from '../lib/constants';
-import { createAssetInfo, createFungiblePostCondition, createSTXPostCondition, FungibleConditionCode, PostConditionMode, uintCV } from '@stacks/transactions';
-import * as BN from "bn.js"
+import {
+  createAssetInfo,
+  createFungiblePostCondition,
+  createSTXPostCondition,
+  FungibleConditionCode,
+  uintCV,
+} from '@stacks/transactions';
+import * as BN from 'bn.js';
 
-const contractAddress = "STSJHY3X84C0KV5NDB12FR07ETP5XXG51B8XAWSK";
-const contractName = "experimental-yellow-stinger";
+const contractAddress = 'STSJHY3X84C0KV5NDB12FR07ETP5XXG51B8XAWSK';
+const contractName = 'experimental-yellow-stinger';
 
-export function PoxLiteRedeem({ title, path, placeholder, ownerStxAddress, appStxAddress }) {
-  const { doContractCall } = useConnect();
+export function PoxLiteRedeem({ ownerStxAddress, userSession }) {
+  const { doContractCall } = useStacksJsConnect();
   const textfield = useRef();
   const spinner = useRef();
   const [status, setStatus] = useState();
@@ -43,23 +49,22 @@ export function PoxLiteRedeem({ title, path, placeholder, ownerStxAddress, appSt
       await doContractCall({
         contractAddress,
         contractName,
-        functionName: "redeem-stinger",
+        functionName: 'redeem-stinger',
         functionArgs: [uintCV(amount)],
+        userSession,
         network: NETWORK,
         postConditions: [
           createFungiblePostCondition(
             ownerStxAddress,
             FungibleConditionCode.Equal,
             new BN(amount),
-            createAssetInfo(contractAddress, contractName, "stinger")
+            createAssetInfo(contractAddress, contractName, 'stinger')
           ),
-          /*
           createSTXPostCondition(
             `${contractAddress}.${contractName}`,
             FungibleConditionCode.Equal,
             new BN(amount)
           ),
-          */
         ],
         finished: data => {
           console.log(data);
@@ -83,7 +88,6 @@ export function PoxLiteRedeem({ title, path, placeholder, ownerStxAddress, appSt
           ref={textfield}
           className="form-control"
           defaultValue={''}
-          placeholder={placeholder}
           onKeyUp={e => {
             if (e.key === 'Enter') sendAction();
           }}

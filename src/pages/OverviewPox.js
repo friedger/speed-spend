@@ -14,7 +14,7 @@ export default function OverviewPox(props) {
           <i>It helps you to understand how to do delegated stacking.</i>
         </div>
         <div className="col-xs-10 col-md-8 mx-auto mb-3 px-4">
-          <a href="/pox-lite">PoX Lite</a> allows you to mint Stinger tokens by committing STX.
+          <a href="/poxlite">PoX Lite</a> allows you to mint Stinger tokens by committing STX.
           <br />
           <i>It helps to understand how to app chains might work in the future.</i>
         </div>

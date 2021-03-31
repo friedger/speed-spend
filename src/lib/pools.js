@@ -7,10 +7,10 @@ import {
   tupleCV,
   uintCV,
 } from '@stacks/transactions';
-import { NETWORK } from './constants';
+import { CONTRACT_ADDRESS, NETWORK, POOL_REGISTRY_CONTRACT_NAME } from './constants';
 
-const contractAddress = 'ST2ZRX0K27GW0SP3GJCEMHD95TQGJMKB7G9Y0X1MH';
-const contractName = 'pool-registry';
+const contractAddress = CONTRACT_ADDRESS;
+const contractName = POOL_REGISTRY_CONTRACT_NAME;
 
 export async function fetchPool(poolId) {
   const receipt = await callReadOnlyFunction({
