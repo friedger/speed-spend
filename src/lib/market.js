@@ -47,7 +47,7 @@ export function MarketState({ ownerStxAddress }) {
   const [ownedMonsterIds, setOwnedMonsterIds] = useState();
 
   useEffect(() => {
-    fetchNFTIds(ownerStxAddress, 'monster::nft-monsters')
+    fetchNFTIds(ownerStxAddress, `${CONTRACT_ADDRESS}.monster::nft-monsters`)
       .then(async monsterIds => {
         console.log({ monsterIds });
         setOwnedMonsterIds(monsterIds);

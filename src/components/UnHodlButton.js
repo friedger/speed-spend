@@ -7,14 +7,14 @@ import {
 } from '@stacks/transactions';
 
 import { NETWORK } from '../lib/constants';
-import { getUserAddress, getStacksAccount, fetchAccount } from '../lib/account';
-import { putStxAddress } from '../UserSession';
+import { getStacksAccount, fetchAccount } from '../lib/account';
 import { resultToStatus } from '../lib/transactions';
-import { useConnect } from '../lib/auth';
+import { userDataState } from '../lib/auth';
+import { useAtomValue } from 'jotai/utils';
 const BigNum = require('bn.js');
 
 export function UnHodlButton({ title, placeholder, ownerStxAddress }) {
-  const { userData } = useConnect();
+  const userData = useAtomValue(userDataState);
   const textfield = useRef();
   const spinner = useRef();
   const [status, setStatus] = useState();
@@ -35,12 +35,6 @@ export function UnHodlButton({ title, placeholder, ownerStxAddress }) {
       .then(async acc => {
         setAccount(acc);
         console.log({ acc });
-        const address = await getUserAddress({}, userData.username);
-        console.log(address);
-
-        if (!address) {
-          await putStxAddress({}, addrAsString);
-        }
       });
   }, [userData]);
 

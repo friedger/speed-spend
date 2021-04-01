@@ -18,15 +18,17 @@ export function OwnerAddressSpendField({ title, path, placeholder, stxAddress })
   const [account, setAccount] = useState();
 
   useEffect(() => {
-    fetchAccount(stxAddress)
-      .catch(e => {
-        setStatus('Failed to access your account', e);
-        console.log(e);
-      })
-      .then(async acc => {
-        setAccount(acc);
-        console.log({ acc });
-      });
+    if (stxAddress) {
+      fetchAccount(stxAddress)
+        .catch(e => {
+          setStatus('Failed to access your account', e);
+          console.log(e);
+        })
+        .then(async acc => {
+          setAccount(acc);
+          console.log({ acc });
+        });
+    }
   }, [stxAddress]);
 
   const sendAction = async () => {

@@ -60,24 +60,28 @@ export function AtTwoState() {
       const atTwoState = await fetchAtTwoState();
       setAtTwoState(atTwoState);
 
-      const client = await connectWebSocketClient(STACKS_API_WS_URL);
-      await client.subscribeAddressTransactions(
-        `${CONTRACT_ADDRESS}.flip-coin-at-two`,
-        async event => {
-          console.log(event);
+      try {
+        const client = await connectWebSocketClient(STACKS_API_WS_URL);
+        await client.subscribeAddressTransactions(
+          `${CONTRACT_ADDRESS}.flip-coin-at-two`,
+          async event => {
+            console.log(event);
 
-          if (event.tx_status === 'pending') {
-            const mempooltx = await transactionsApi.getMempoolTransactionList();
-            console.log(mempooltx);
-            return;
-          } else if (event.tx_status === 'success') {
-            const tx = await transactionsApi.getTransactionById({ txId: event.tx_id });
-            console.log({ tx });
-            const atTwoState = await fetchAtTwoState();
-            setAtTwoState(atTwoState);
+            if (event.tx_status === 'pending') {
+              const mempooltx = await transactionsApi.getMempoolTransactionList();
+              console.log(mempooltx);
+              return;
+            } else if (event.tx_status === 'success') {
+              const tx = await transactionsApi.getTransactionById({ txId: event.tx_id });
+              console.log({ tx });
+              const atTwoState = await fetchAtTwoState();
+              setAtTwoState(atTwoState);
+            }
           }
-        }
-      );
+        );
+      } catch (error) {
+        console.log(error);
+      }
     };
 
     subscribe();
@@ -131,24 +135,28 @@ export function JackpotState() {
       const jackpotState = await fetchJackpotState();
       setJackpotState(jackpotState);
 
-      const client = await connectWebSocketClient(STACKS_API_WS_URL);
-      await client.subscribeAddressTransactions(
-        `${CONTRACT_ADDRESS}.flip-coin-jackpot`,
-        async event => {
-          console.log(event);
+      try {
+        const client = await connectWebSocketClient(STACKS_API_WS_URL);
+        await client.subscribeAddressTransactions(
+          `${CONTRACT_ADDRESS}.flip-coin-jackpot`,
+          async event => {
+            console.log(event);
 
-          if (event.tx_status === 'pending') {
-            const mempooltx = await transactionsApi.getMempoolTransactionList();
-            console.log(mempooltx);
-            return;
-          } else if (event.tx_status === 'success') {
-            const tx = await transactionsApi.getTransactionById({ txId: event.tx_id });
-            console.log({ tx });
-            const jackpotState = await fetchJackpotState();
-            setJackpotState(jackpotState);
+            if (event.tx_status === 'pending') {
+              const mempooltx = await transactionsApi.getMempoolTransactionList();
+              console.log(mempooltx);
+              return;
+            } else if (event.tx_status === 'success') {
+              const tx = await transactionsApi.getTransactionById({ txId: event.tx_id });
+              console.log({ tx });
+              const jackpotState = await fetchJackpotState();
+              setJackpotState(jackpotState);
+            }
           }
-        }
-      );
+        );
+      } catch (error) {
+        console.log(error);
+      }
     };
 
     subscribe();

@@ -2,31 +2,31 @@ import React, { useRef, useState, useEffect } from 'react';
 import {
   makeSTXTokenTransfer,
   privateKeyToString,
-  addressToString,
   broadcastTransaction,
 } from '@stacks/transactions';
 
 import { NETWORK } from '../lib/constants';
-import { getUserAddress, getStacksAccount, fetchAccount } from '../lib/account';
+import { getUserAddress, fetchAccount } from '../lib/account';
 import { putStxAddress } from '../UserSession';
 import { resultToStatus } from '../lib/transactions';
-import { useConnect, userDataState } from '../lib/auth';
+import { userDataState, userSessionState } from '../lib/auth';
 import { useStxAddresses } from '../lib/hooks';
 import { useAtomValue } from 'jotai/utils';
 
 const BigNum = require('bn.js');
 
-export function SpendField({ title, path, placeholder }) {
-  const { userSession } = useConnect();
+export function SpendField({ title, placeholder }) {
+  const userSession = useAtomValue(userSessionState);
+  const userData = useAtomValue(userDataState);
   const textfield = useRef();
   const spinner = useRef();
   const [status, setStatus] = useState();
   const [account, setAccount] = useState();
   const { ownerStxAddress } = useStxAddresses(userSession);
-  const userData = useAtomValue(userDataState);
 
+  console.log({ ownerStxAddress, userSession });
   useEffect(() => {
-    if (userSession?.isUserSignedIn()) {
+    if (userSession?.isUserSignedIn() && ownerStxAddress) {
       const userData = userSession.loadUserData();
 
       fetchAccount(ownerStxAddress)
@@ -75,12 +75,11 @@ export function SpendField({ title, path, placeholder }) {
     }
 
     console.log('STX address of recipient ' + recipient.address);
-    console.log(privateKeyToString(userData.appPrivateKey))
     try {
       const transaction = await makeSTXTokenTransfer({
         recipient: recipient.address,
         amount: new BigNum(1000),
-        senderKey: privateKeyToString(userData.appPrivateKey),
+        senderKey: userData.appPrivateKey,
         network: NETWORK,
       });
       setStatus(`Sending transaction`);

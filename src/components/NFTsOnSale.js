@@ -11,23 +11,25 @@ export function NFTsOnSale({ ownerStxAddress }) {
   const [nfts, setNfts] = useState();
 
   useEffect(() => {
-    fetchAccount(ownerStxAddress)
-      .catch(e => {
-        setStatus('Failed to access your account', e);
-        console.log(e);
-      })
-      .then(async acc => {
-        console.log({ acc });
-      });
-    fetchNFTs(ownerStxAddress)
-      .then(async nfts => {
-        console.log(nfts);
-        setNfts(nfts);
-      })
-      .catch(e => {
-        setStatus('Failed to get balances of your account', e);
-        console.log(e);
-      });
+    if (ownerStxAddress) {
+      fetchAccount(ownerStxAddress)
+        .catch(e => {
+          setStatus('Failed to access your account', e);
+          console.log(e);
+        })
+        .then(async acc => {
+          console.log({ acc });
+        });
+      fetchNFTs(ownerStxAddress)
+        .then(async nfts => {
+          console.log(nfts);
+          setNfts(nfts);
+        })
+        .catch(e => {
+          setStatus('Failed to get balances of your account', e);
+          console.log(e);
+        });
+    }
   }, [ownerStxAddress]);
   console.log({ nfts });
   return (

@@ -1,10 +1,11 @@
 import React, { useRef, useState, useEffect } from 'react';
 
-import { fetchAccount } from '../lib/account';
+import { fetchAccount } from '../../lib/account';
 
 import { deserializeCV } from '@stacks/transactions';
 import { Rocket } from './Rocket';
-import { fetchNFTIds } from '../lib/nft';
+import { fetchNFTIds } from '../../lib/nft';
+import { CONTRACT_ADDRESS, ROCKET_MARKET_CONTRACT_NAME } from '../../lib/constants';
 
 export function MyRockets({ ownerStxAddress }) {
   const spinner = useRef();
@@ -12,25 +13,29 @@ export function MyRockets({ ownerStxAddress }) {
   const [rockets, setRockets] = useState();
 
   useEffect(() => {
-    fetchAccount(ownerStxAddress)
-      .catch(e => {
-        setStatus('Failed to access your account', e);
-        console.log(e);
-      })
-      .then(async acc => {
-        setStatus(undefined);
-        console.log({ acc });
-      });
-    fetchNFTIds(ownerStxAddress)
-      .then(async rocketIds => {
-        console.log(rocketIds);
-        setStatus(undefined);
-        setRockets(rocketIds);
-      })
-      .catch(e => {
-        setStatus('Failed to get rockets of your account', e);
-        console.log(e);
-      });
+    if (ownerStxAddress) {
+      fetchAccount(ownerStxAddress)
+        .catch(e => {
+          setStatus('Failed to access your account', e);
+          console.log(e);
+        })
+        .then(async acc => {
+          setStatus(undefined);
+          console.log({ acc });
+        });
+      fetchNFTIds(ownerStxAddress, `${CONTRACT_ADDRESS}.${ROCKET_MARKET_CONTRACT_NAME}::rocket`)
+        .then(async rocketIds => {
+          console.log(rocketIds);
+          setStatus(undefined);
+          if (rocketIds.length > 0) {
+            setRockets(rocketIds);
+          }
+        })
+        .catch(e => {
+          setStatus('Failed to get rockets of your account', e);
+          console.log(e);
+        });
+    }
   }, [ownerStxAddress]);
 
   return (

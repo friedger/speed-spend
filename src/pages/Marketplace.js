@@ -6,8 +6,8 @@ import { NFTsOnSale } from '../components/NFTsOnSale';
 import { MarketState } from '../lib/market';
 import { useStxAddresses } from '../lib/hooks';
 
-export default function Marketplace() {
-  const { ownerStxAddress } = useStxAddresses();
+export default function Marketplace({ userSession }) {
+  const { ownerStxAddress } = useStxAddresses(userSession);
 
   return (
     <main className="panel-welcome mt-5 container">

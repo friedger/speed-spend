@@ -2,24 +2,19 @@ import { cvToString, deserializeCV, tupleCV, uintCV, cvToJSON } from '@stacks/tr
 import { accountsApi, CONTRACT_ADDRESS, smartContractsApi } from './constants';
 import { cvToHex } from './transactions';
 
-export async function fetchNFTIds(ownerStxAddress, nativeNFTType) {
+export async function fetchNFTIds(ownerStxAddress, assetIdentifier) {
   if (ownerStxAddress) {
     return accountsApi
-      .getAccountAssets({ principal: ownerStxAddress })
+      .getAccountNft({ principal: ownerStxAddress })
       .then(assetList => {
         console.log({ assetList });
         return assetList;
       })
       .then(assetList =>
-        assetList.results
-          .filter(
-            a =>
-              a.event_type === 'non_fungible_token_asset' &&
-              a.asset.asset_id === `${CONTRACT_ADDRESS}.${nativeNFTType}`
-          )
-          .map(a => a.asset.value.hex)
-      )
-      .then(idsHex => [...new Set(idsHex)]);
+        assetList.nft_events
+          .filter(a => a.asset_identifier === assetIdentifier)
+          .map(a => a.value.hex)
+      );
   } else {
     return Promise.reject();
   }

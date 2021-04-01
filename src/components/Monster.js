@@ -40,7 +40,7 @@ export function Monster({ monsterId, ownerStxAddress }) {
         contractAddress: CONTRACT_ADDRESS,
         contractName: 'monsters',
         functionName: 'feed-monster',
-        functionArgs: [cvToHex(uintCV(monsterId))],
+        functionArgs: [uintCV(monsterId)],
         postConditionMode: PostConditionMode.Allow,
         postConditions: [],
         network: NETWORK,

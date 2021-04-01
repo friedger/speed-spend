@@ -1,8 +1,8 @@
 import React, { useRef, useState, useEffect } from 'react';
 
-import { CONTRACT_ADDRESS, NETWORK } from '../lib/constants';
-import { TxStatus } from '../lib/transactions';
-import { fetchAccount } from '../lib/account';
+import { CONTRACT_ADDRESS, NETWORK, ROCKET_FACTORY_CONTRACT_NAME } from '../../lib/constants';
+import { TxStatus } from '../../lib/transactions';
+import { fetchAccount } from '../../lib/account';
 import { useConnect } from '@stacks/connect-react';
 import { PostConditionMode, uintCV } from '@stacks/transactions';
 
@@ -14,29 +14,37 @@ export function BuyRocket({ ownerStxAddress }) {
   const [txId, setTxId] = useState();
 
   useEffect(() => {
-    fetchAccount(ownerStxAddress)
-      .catch(e => {
-        setStatus('Failed to access your account', e);
-        console.log(e);
-      })
-      .then(async acc => {
-        setStatus(undefined);
-        console.log({ acc });
-      });
+    if (ownerStxAddress) {
+      fetchAccount(ownerStxAddress)
+        .catch(e => {
+          setStatus('Failed to access your account', e);
+          console.log(e);
+        })
+        .then(async acc => {
+          setStatus(undefined);
+          console.log({ acc });
+        });
+    }
   }, [ownerStxAddress]);
 
   const orderAction = async () => {
-    spinner.current.classList.remove('d-none');
-
+    spinner.current.classList.add('d-none');
     var size = textfield.current.value.trim();
-
+    if (size < 2) {
+      setStatus("Rocket size needs to be bigger than 1")
+      return
+    }
+    if (size > 20) {
+      setStatus("Rocket size needs to be smaller than 21")
+    }
+    spinner.current.classList.remove('d-none');
     try {
       setStatus(`Sending transaction`);
 
       await doContractCall({
         contractAddress: CONTRACT_ADDRESS,
-        contractName: 'rockets',
-        functionName: 'order',
+        contractName: ROCKET_FACTORY_CONTRACT_NAME,
+        functionName: 'order-rocket',
         functionArgs: [uintCV(parseInt(size))],
         postConditionMode: PostConditionMode.Allow,
         postConditions: [],
@@ -58,6 +66,7 @@ export function BuyRocket({ ownerStxAddress }) {
   return (
     <div>
       <h5>Order a rocket</h5>
+      Size can be between 2 and 20
       <div className="NoteField input-group ">
         <input
           type="text"

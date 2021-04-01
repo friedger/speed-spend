@@ -16,6 +16,7 @@ import Marketplace from './pages/Marketplace';
 import { NETWORK } from './lib/constants';
 import StackingActivies from './pages/StackingActivities';
 import Rockets from './pages/Rockets';
+import RocketDetails from './pages/RocketDetails';
 import Auth from './components/Auth';
 import OverviewTokens from './pages/OverviewTokens';
 import OverviewContracts from './pages/OverviewContracts';
@@ -123,6 +124,7 @@ function Content({ userSession }) {
               <Marketplace exact path="/openriff" decentralizedID={decentralizedID} userSession={userSession}  />
               <MonsterDetails path="/monsters/:monsterId" decentralizedID={decentralizedID} userSession={userSession}  />
               <Rockets path="/rockets" decentralizedID={decentralizedID}userSession={userSession}  />
+              <RocketDetails path="/rockets/:rocketId" decentralizedID={decentralizedID}userSession={userSession}  />
               <PoolRegistry path="/pools" decentralizedID={decentralizedID} userSession={userSession} />
               <PoolDetails path="/pools/:poolId" decentralizedID={decentralizedID} userSession={userSession}  />
               <PoxLite path="/poxlite" decentralizedID={decentralizedID} userSession={userSession} />

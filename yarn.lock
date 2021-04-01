@@ -2458,10 +2458,10 @@
     jsontokens "^3.0.0"
     query-string "^6.13.1"
 
-"@stacks/blockchain-api-client@^0.53.4":
-  version "0.53.4"
-  resolved "https://registry.yarnpkg.com/@stacks/blockchain-api-client/-/blockchain-api-client-0.53.4.tgz#d227cd589e2fa61ae8b9bc8c07a04044ff991ba9"
-  integrity sha512-84FfdZc37kL9rrqWpJMiLDT7NSaxfmgmlSA7rRlyPXffq5rr3CEHcdOosjFdwe1P3K0znCQE4oLfslJhu+/6XQ==
+"@stacks/blockchain-api-client@^0.55.3":
+  version "0.55.3"
+  resolved "https://registry.yarnpkg.com/@stacks/blockchain-api-client/-/blockchain-api-client-0.55.3.tgz#3f771c4046aca8bbfdd8489e5f0f45612e722b9f"
+  integrity sha512-FXCV6wuXDSLt7H17Nh3r7X9vkj/G3dmOoDdzF1KRQ0T3gbYscbEfqVxlvMHbon8xEIDNMsgDLjSreY312EpspQ==
   dependencies:
     "@blockstack/stacks-blockchain-api-types" "^0.34.1"
     "@types/ws" "^7.4.0"
@@ -2484,29 +2484,29 @@
   dependencies:
     cross-fetch "^3.0.6"
 
-"@stacks/connect-react@3.0.3":
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/@stacks/connect-react/-/connect-react-3.0.3.tgz#8e82dab077f76feab10d5f623077157ffe099f3a"
-  integrity sha512-NI2XJjvaxcBW7DP3O6iNuN3YTCP0NGWI8laBMYaPRmVIGutMokbWXa47yGygwFHhfvFEysvakjQCmBWx5sR5Fw==
+"@stacks/connect-react@5.0.5":
+  version "5.0.5"
+  resolved "https://registry.yarnpkg.com/@stacks/connect-react/-/connect-react-5.0.5.tgz#bbd78ed051875ac64fc3dfa33bab268037052b5e"
+  integrity sha512-/+wEDnMTRzMBiAM+3c/4rm6CxJ8yXjbIJ7/ElaXhPWk3B7IsdyhT7nMUnqj+W9k6KQDwD37U1a2J+JHv27wKJQ==
   dependencies:
     "@stacks/auth" "^1.0.2"
-    "@stacks/connect" "^5.0.3"
+    "@stacks/connect" "^5.0.5"
     jsontokens "^3.0.0"
 
-"@stacks/connect-ui@^3.0.3":
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/@stacks/connect-ui/-/connect-ui-3.0.3.tgz#4a673b6345438bc27c12416aaaea2dd683cfd277"
-  integrity sha512-EmiJ+3xEMSvT80y0DdPFcAJI9O5K8xLv2frEuvcf29SbjC2qiEcI+6bsTMRUv2MuPyRW5f6DAbwYVqs8sdzxZQ==
+"@stacks/connect-ui@^5.0.5":
+  version "5.0.5"
+  resolved "https://registry.yarnpkg.com/@stacks/connect-ui/-/connect-ui-5.0.5.tgz#451bcebfe32753b4ec513be16d85e12895be83bb"
+  integrity sha512-5LRdR0rMu0oEbvyksOrUy6dn5REcJJYD6b2ydaxjW0i7n82iuiNaKNEbYDit8S7mHA8922f4qSd647g/Kz6XCg==
   dependencies:
     "@stencil/core" "^1.17.3"
 
-"@stacks/connect@5.0.3", "@stacks/connect@^5.0.3":
-  version "5.0.3"
-  resolved "https://registry.yarnpkg.com/@stacks/connect/-/connect-5.0.3.tgz#dbc4ee0a45e68e7e90e3528c972703048cfd8c36"
-  integrity sha512-iYIIvSJCvXofp+y2s87W0s7APzERtoSA1EQr1KdIQLAx8qGI9s0Z8znKo7jk8rg16C6/+p0i0SzeeUysaqI7rg==
+"@stacks/connect@5.0.5", "@stacks/connect@^5.0.5":
+  version "5.0.5"
+  resolved "https://registry.yarnpkg.com/@stacks/connect/-/connect-5.0.5.tgz#300a5cf94321de8c7c51977c5dae07d5a2ea1bc9"
+  integrity sha512-6vOR86UNweuCEc/gFj4KwI/kJ9nnMA3100AgfhxFziXBpA/IR70FigXyGiRYoAOELHv6uGXiqYyM9R2DGeKrNQ==
   dependencies:
     "@stacks/auth" "^1.0.2"
-    "@stacks/connect-ui" "^3.0.3"
+    "@stacks/connect-ui" "^5.0.5"
     "@stacks/network" "^1.0.2"
     "@stacks/transactions" "^1.1.1-alpha.0"
     buffer "5.6.0"
@@ -2592,10 +2592,10 @@
     schema-inspector "^1.7.0"
     zone-file "^1.0.0"
 
-"@stacks/storage@^1.2.3":
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/@stacks/storage/-/storage-1.2.3.tgz#9d29a97140771f5f01b29b5f0efe3f7722c49f56"
-  integrity sha512-8REHZxmS5V6JfTCuYaAk+6zXP+2umwWsRXwdZZHdhO//ouKpwxLiEJo76FaAAVzVKK1Hp6OYQ6vKfDZUej90zQ==
+"@stacks/storage@^1.3.3":
+  version "1.3.3"
+  resolved "https://registry.yarnpkg.com/@stacks/storage/-/storage-1.3.3.tgz#b30d6af93f8aba76e81598abead7c8f238e2cdd6"
+  integrity sha512-HSob/SSIF+doiMP8ScDYNNmTK/8vnd1HyNtZk3rpE3PSEqpU1bRPqMF3ehlzMcDsCjCvOx6Ow3OlWBWPQA4QhA==
   dependencies:
     "@stacks/auth" "^1.2.3"
     "@stacks/common" "^1.2.2"
@@ -2623,10 +2623,10 @@
     sha.js "^2.4.11"
     smart-buffer "^4.1.0"
 
-"@stacks/transactions@^1.2.3":
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/@stacks/transactions/-/transactions-1.3.0.tgz#0651b64757a1152a6a7bf3c7841a58848895cb08"
-  integrity sha512-OnocNS8qO/qPd7vYMbBLgEdd3/XehcZeBHmZZDr6YBRsYeJlGjGLnIQyG7/3pioRZWfTujghVklwxanm0ue3RA==
+"@stacks/transactions@^1.3.5":
+  version "1.3.5"
+  resolved "https://registry.yarnpkg.com/@stacks/transactions/-/transactions-1.3.5.tgz#af2d6722ec4c1a365361893eb9e83b678a6604bc"
+  integrity sha512-KhZ9y48KnOB+Es3whxbpxtPm6o5CYLrhxCCG5Tfglmj9AcFtpWCBjkcFwZJ/R3eI4OYthD5aMB9nYY31xGiULA==
   dependencies:
     "@stacks/common" "^1.2.2"
     "@stacks/network" "^1.2.2"
@@ -4368,10 +4368,15 @@ bn.js@^4.11.9:
   resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-4.11.9.tgz#26d556829458f9d1e81fc48952493d0ba3507828"
   integrity sha512-E6QoYqCKZfgatHTdHzs1RRKP7ip4vvm+EyRUeE2RF0NblwVvb0p6jSVeNTOFxPn26QXN2o6SMfNxKp6kU8zQaw==
 
-bn.js@^5.1.2, bn.js@^5.1.3:
+bn.js@^5.1.2:
   version "5.1.3"
   resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-5.1.3.tgz#beca005408f642ebebea80b042b4d18d2ac0ee6b"
   integrity sha512-GkTiFpjFtUzU9CbMeJ5iazkCzGL3jrhzerzZIuqLABjbwRaFt33I9tUdSNryIptM+RxDet6OKm2WnLXzW51KsQ==
+
+bn.js@^5.2.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-5.2.0.tgz#358860674396c6997771a9d051fcc1b57d4ae002"
+  integrity sha512-D7iWRBvnZE8ecXiLj/9wbxH7Tk79fAh8IHaTNq1RWRixsS02W+5qS+iE9yq6RYl0asXx5tw0bLhmT5pIfbSquw==
 
 body-parser@1.19.0, body-parser@^1.19.0:
   version "1.19.0"
@@ -10050,10 +10055,10 @@ jmespath@0.15.0:
   resolved "https://registry.yarnpkg.com/jmespath/-/jmespath-0.15.0.tgz#a3f222a9aae9f966f5d27c796510e28091764217"
   integrity sha1-o/Iiqarp+Wb10nx5ZRDigJF2Qhc=
 
-jotai@^0.15.3:
-  version "0.15.3"
-  resolved "https://registry.yarnpkg.com/jotai/-/jotai-0.15.3.tgz#323dcdc2b1a7f7ec777997b2d827e61bada2ede3"
-  integrity sha512-4+0Ie61mSQjyEuh/vCKKr7JFclDe/9DxV2rhzGRRZwnCcmgld8AdGX9BnRqfjMedyYpS3qATzLjIcCG0CopgMg==
+jotai@^0.16.0:
+  version "0.16.0"
+  resolved "https://registry.yarnpkg.com/jotai/-/jotai-0.16.0.tgz#f31faea08c03eb6fffd3839c2b4e1b5ba3a14bc6"
+  integrity sha512-1DjHUnTWIZD9Qh/cM+snmgJbI13AYccqfcDu0Vs8+sXHfzUi6zNyJUKfmJAjTH6vM4y81ljooTj8jSLyQauQuw==
 
 js-string-escape@^1.0.1:
   version "1.0.1"
@@ -13460,14 +13465,14 @@ react-dev-utils@^11.0.2:
     strip-ansi "6.0.0"
     text-table "0.2.0"
 
-react-dom@^17.0.1:
-  version "17.0.1"
-  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-17.0.1.tgz#1de2560474ec9f0e334285662ede52dbc5426fc6"
-  integrity sha512-6eV150oJZ9U2t9svnsspTMrWNyHc6chX0KzDeAOXftRa8bNeOKTTfCJ7KorIwenkHd2xqVTBTCZd79yk/lx/Ug==
+react-dom@^17.0.2:
+  version "17.0.2"
+  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-17.0.2.tgz#ecffb6845e3ad8dbfcdc498f0d0a939736502c23"
+  integrity sha512-s4h96KtLDUQlsENhMn1ar8t2bEa+q/YAtj8pPPdIjPDGBDIVNsrD9aXNWqspUe6AzKCIG0C1HZZLqLV7qpOBGA==
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
-    scheduler "^0.20.1"
+    scheduler "^0.20.2"
 
 react-error-overlay@^6.0.9:
   version "6.0.9"
@@ -13615,10 +13620,10 @@ react-test-renderer@^17.0.1:
     react-shallow-renderer "^16.13.1"
     scheduler "^0.20.1"
 
-react@^17.0.1:
-  version "17.0.1"
-  resolved "https://registry.yarnpkg.com/react/-/react-17.0.1.tgz#6e0600416bd57574e3f86d92edba3d9008726127"
-  integrity sha512-lG9c9UuMHdcAexXtigOZLX8exLWkW0Ku29qPRU8uhF2R9BN96dLCt0psvzPLlHc5OWkgymP3qwTRgbnw5BKx3w==
+react@^17.0.2:
+  version "17.0.2"
+  resolved "https://registry.yarnpkg.com/react/-/react-17.0.2.tgz#d0b5cc516d29eb3eee383f75b62864cfb6800037"
+  integrity sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA==
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
@@ -14308,6 +14313,14 @@ scheduler@^0.20.1:
   version "0.20.1"
   resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.20.1.tgz#da0b907e24026b01181ecbc75efdc7f27b5a000c"
   integrity sha512-LKTe+2xNJBNxu/QhHvDR14wUXHRQbVY5ZOYpOGWRzhydZUqrLb2JBvLPY7cAqFmqrWuDED0Mjk7013SZiOz6Bw==
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
+
+scheduler@^0.20.2:
+  version "0.20.2"
+  resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.20.2.tgz#4baee39436e34aa93b4874bddcbf0fe8b8b50e91"
+  integrity sha512-2eWfGgAqqWFGqtdMmcL5zCMK1U8KlXv8SQFGglL3CEtd0aDVDWgeF/YoCmvln55m5zSk3J/20hTaSBeSObsQDQ==
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"

@@ -84,12 +84,15 @@ export function TxStatus({ txId, resultPrefix }) {
     return null;
   }
 
+  const normalizedTxId = txId.startsWith('0x') ? txId : `0x${txId}`;
   return (
     <>
       {processingResult.loading && (
         <>
           Checking transaction status:{' '}
-          <a href={`https://explorer.stacks.co/txid/0x${txId}?chain=testnet`}>{txId}</a>
+          <a href={`https://explorer.stacks.co/txid/${normalizedTxId}?chain=testnet`}>
+            {normalizedTxId}
+          </a>
         </>
       )}
       {!processingResult.loading && processingResult.result && (

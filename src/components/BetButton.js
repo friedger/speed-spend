@@ -40,7 +40,7 @@ export function BetButton({ jackpot }) {
   const { ownerStxAddress, appStxAddress } = useStxAddresses(userSession);
 
   useEffect(() => {
-    if (userSession?.isUserSignedIn()) {
+    if (userSession?.isUserSignedIn() && ownerStxAddress) {
       const userData = userSession.loadUserData();
       const appPrivateKey = userData.appPrivateKey;
       const id = getStacksAccount(appPrivateKey);

@@ -1,20 +1,18 @@
 import React, { useRef, useState, useEffect } from 'react';
 
-import { useConnect } from '../lib/auth';
+import { fetchAccount } from '../../lib/account';
+import { useConnect } from '@stacks/connect-react';
 import {
   uintCV,
-  makeStandardFungiblePostCondition,
-  makeContractFungiblePostCondition,
+  PostConditionMode,
+  makeStandardSTXPostCondition,
   FungibleConditionCode,
-  createAssetInfo,
 } from '@stacks/transactions';
-import { fetchAccount } from '../lib/account';
-import { fetchHodlTokenBalance } from '../lib/holdTokens';
-import { CONTRACT_ADDRESS, HODL_TOKEN_CONTRACT, NETWORK } from '../lib/constants';
-import { TxStatus } from '../lib/transactions';
-const BigNum = require('bn.js');
+import * as BigNum from 'bn.js';
+import { CONTRACT_ADDRESS, NETWORK, ROCKET_TOKEN_CONTRACT_NAME } from '../../lib/constants';
+import { TxStatus } from '../../lib/transactions';
 
-export function UnHodlTokenButton({ title, placeholder, ownerStxAddress }) {
+export function BuyRocketTokensButton({ placeholder, ownerStxAddress }) {
   const { doContractCall } = useConnect();
   const textfield = useRef();
   const spinner = useRef();
@@ -37,46 +35,28 @@ export function UnHodlTokenButton({ title, placeholder, ownerStxAddress }) {
   const sendAction = async () => {
     spinner.current.classList.remove('d-none');
 
-    var amountString = textfield.current.value.trim();
-    const amount = parseInt(amountString);
-
-    // check balance
-    const acc = await fetchHodlTokenBalance(ownerStxAddress);
-    const balance = acc ? parseInt(acc.balance, 16) : 0;
-    if (balance < amount) {
-      setStatus(`Your balance is below ${amount} uSTX`);
-      spinner.current.classList.add('d-none');
-      return;
-    }
+    var amountAsString = textfield.current.value.trim();
+    var amount = parseInt(amountAsString);
 
     try {
       setStatus(`Sending transaction`);
 
       await doContractCall({
         contractAddress: CONTRACT_ADDRESS,
-        contractName: HODL_TOKEN_CONTRACT,
-        functionName: 'unhodl',
+        contractName: ROCKET_TOKEN_CONTRACT_NAME,
+        functionName: 'buy',
         functionArgs: [uintCV(amount)],
+        postConditionMode: PostConditionMode.Deny,
         postConditions: [
-          makeStandardFungiblePostCondition(
+          makeStandardSTXPostCondition(
             ownerStxAddress,
             FungibleConditionCode.LessEqual,
-            new BigNum(amount),
-            new createAssetInfo(CONTRACT_ADDRESS, HODL_TOKEN_CONTRACT, 'hodl-token')
-          ),
-          makeContractFungiblePostCondition(
-            CONTRACT_ADDRESS,
-            HODL_TOKEN_CONTRACT,
-            FungibleConditionCode.LessEqual,
-            new BigNum(amount),
-            new createAssetInfo(CONTRACT_ADDRESS, HODL_TOKEN_CONTRACT, 'spendable-token')
+            new BigNum(amount)
           ),
         ],
         network: NETWORK,
-
         finished: data => {
           console.log(data);
-          setStatus(undefined);
           setTxId(data.txId);
           spinner.current.classList.add('d-none');
         },
@@ -90,7 +70,7 @@ export function UnHodlTokenButton({ title, placeholder, ownerStxAddress }) {
 
   return (
     <div>
-      Unhodl tokens (make them spendable)
+      Buy Rocket tokens (1 uSTX = 1 Rocket token)
       <div className="NoteField input-group ">
         <input
           type="decimal"
@@ -112,11 +92,13 @@ export function UnHodlTokenButton({ title, placeholder, ownerStxAddress }) {
               role="status"
               className="d-none spinner-border spinner-border-sm text-info align-text-top mr-2"
             />
-            Unhodl
+            Buy
           </button>
         </div>
       </div>
-      <TxStatus txId={txId} />
+      <div>
+        <TxStatus txId={txId} resultPrefix="Purchase request placed in block " />
+      </div>
       {status && (
         <>
           <div>{status}</div>

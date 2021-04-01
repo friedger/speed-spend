@@ -1,15 +1,19 @@
 import React, { useRef, useState, useEffect } from 'react';
 
-import { CONTRACT_ADDRESS, NETWORK } from '../lib/constants';
-import { TxStatus } from '../lib/transactions';
-import { fetchAccount } from '../lib/account';
-import { useConnect } from '../lib/auth';
-import { contractPrincipalCV, PostConditionMode, uintCV } from '@stacks/transactions';
+import {
+  CONTRACT_ADDRESS,
+  NETWORK,
+  ROCKET_FACTORY_CONTRACT_NAME,
+  ROCKET_MARKET_CONTRACT_NAME,
+} from '../../lib/constants';
+import { TxStatus } from '../../lib/transactions';
+import { fetchAccount } from '../../lib/account';
+import { useConnect } from '@stacks/connect-react';
+import { PostConditionMode, standardPrincipalCV, uintCV } from '@stacks/transactions';
 
-export function SellNFTs({ ownerStxAddress }) {
+export function AuthorizePilotButton({ ownerStxAddress, rocketId }) {
   const { doContractCall } = useConnect();
-  const textfieldContractId = useRef();
-  const textfieldNFTId = useRef();
+  const textfield = useRef();
   const spinner = useRef();
   const [status, setStatus] = useState();
   const [txId, setTxId] = useState();
@@ -22,31 +26,25 @@ export function SellNFTs({ ownerStxAddress }) {
           console.log(e);
         })
         .then(async acc => {
+          setStatus(undefined);
           console.log({ acc });
         });
     }
   }, [ownerStxAddress]);
 
-  const sellAction = async () => {
+  const authAction = async () => {
     spinner.current.classList.remove('d-none');
 
-    var contractId = textfieldContractId.current.value.trim();
-    var [nftAddress, nftName] = contractId.split('.');
-    var nftId = textfieldNFTId.current.value.trim();
+    var pilot = textfield.current.value.trim();
 
     try {
       setStatus(`Sending transaction`);
 
       await doContractCall({
         contractAddress: CONTRACT_ADDRESS,
-        contractName: 'market',
-        functionName: 'offer-tradable',
-        functionArgs: [
-          contractPrincipalCV(nftAddress, nftName),
-          uintCV(parseInt(nftId)),
-          uintCV(1000),
-          uintCV(7),
-        ],
+        contractName: ROCKET_MARKET_CONTRACT_NAME,
+        functionName: 'authorize-pilot',
+        functionArgs: [uintCV(rocketId), standardPrincipalCV(pilot)],
         postConditionMode: PostConditionMode.Deny,
         postConditions: [],
         network: NETWORK,
@@ -66,44 +64,32 @@ export function SellNFTs({ ownerStxAddress }) {
 
   return (
     <div>
-      <h5>Put an NFT on sale for 1000 uSTX for 7 days</h5>
       <div className="NoteField input-group ">
         <input
           type="text"
-          ref={textfieldContractId}
+          ref={textfield}
           className="form-control"
-          placeholder="ID of NFT Contract (ST1234.monsters)"
-          onBlur={e => {
-            setStatus(undefined);
-          }}
-        />
-      </div>
-      <div className="NoteField input-group ">
-        <input
-          type="text"
-          ref={textfieldNFTId}
-          className="form-control"
-          placeholder="ID of NFT"
+          placeholder="Pilot's address"
           onKeyUp={e => {
-            if (e.key === 'Enter') sellAction();
+            if (e.key === 'Enter') authAction();
           }}
           onBlur={e => {
             setStatus(undefined);
           }}
         />
         <div className="input-group-append">
-          <button className="btn btn-outline-secondary" type="button" onClick={sellAction}>
+          <button className="btn btn-outline-secondary" type="button" onClick={authAction}>
             <div
               ref={spinner}
               role="status"
               className="d-none spinner-border spinner-border-sm text-info align-text-top mr-2"
             />
-            Sell
+            Authorize Pilot to fly
           </button>
         </div>
       </div>
       <div>
-        <TxStatus txId={txId} resultPrefix="NFT put on sale in block " />
+        <TxStatus txId={txId} resultPrefix="Order placed in block " />
       </div>
       {status && (
         <>

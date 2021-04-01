@@ -4,10 +4,20 @@ import {
   addressFromPublicKeys,
   AddressVersion,
   AddressHashMode,
+  callReadOnlyFunction,
+  bufferCVFromString,
+  ClarityType,
+  cvToString,
 } from '@stacks/transactions';
 import { Storage } from '@stacks/storage';
 import { STX_JSON_PATH } from '../UserSession';
-import { accountsApi, STACKS_API_ACCOUNTS_URL } from './constants';
+import {
+  accountsApi,
+  BNS_CONTRACT_NAME,
+  GENESIS_CONTRACT_ADDRESS,
+  NETWORK,
+  STACKS_API_ACCOUNTS_URL,
+} from './constants';
 
 export function getStacksAccount(appPrivateKey) {
   const privateKey = createStacksPrivateKey(appPrivateKey);
@@ -22,14 +32,25 @@ export function getStacksAccount(appPrivateKey) {
 }
 
 export async function getUserAddress(userSession, username) {
-  const storage = new Storage({ userSession });
-  return storage
-    .getFile(STX_JSON_PATH, {
-      decrypt: false,
-      username: username,
-    })
-    .then(r => JSON.parse(r))
-    .catch(e => console.log(e, username));
+  const parts = username.split('.');
+  if (parts.length === 2) {
+    console.log(parts);
+    const result = await callReadOnlyFunction({
+      contractAddress: GENESIS_CONTRACT_ADDRESS,
+      contractName: BNS_CONTRACT_NAME,
+      functionName: 'name-resolve',
+      functionArgs: [bufferCVFromString(parts[1]), bufferCVFromString(parts[0])],
+      network: NETWORK,
+      senderAddress: GENESIS_CONTRACT_ADDRESS,
+    });
+    if (result.type === ClarityType.ResponseOk) {
+      return { address: cvToString(result.value.data.owner) };
+    } else {
+      return undefined;
+    }
+  } else {
+    return undefined;
+  }
 }
 
 /**

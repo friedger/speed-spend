@@ -1,32 +1,20 @@
 import React from 'react';
 
-import { BuyRocket } from '../components/rockets/BuyRocket';
-import { BuyRocketTokensButton } from '../components/rockets/BuyRocketTokensButton';
-import { ClaimRocket } from '../components/rockets/ClaimRocket';
-import { MyRockets } from '../components/rockets/MyRockets';
+import { Rocket } from '../components/rockets/Rocket';
 import { useStxAddresses } from '../lib/hooks';
 
-export default function Rockets() {
+export default function Rockets({rocketId}) {
   const { ownerStxAddress } = useStxAddresses();
   console.log({ ownerStxAddress });
   return (
     <main className="panel-welcome mt-5 container">
       <div className="lead row mt-5">
         <div className="col-xs-10 col-md-8 mx-auto px-4">
-          <h1 className="card-title">Rockets</h1>
+          <h1 className="card-title">Rocket {rocketId}</h1>
           Fly to the moon
         </div>
         <div className="col-xs-10 col-md-8 mx-auto mb-4 px-4">
-          <BuyRocketTokensButton ownerStxAddress={ownerStxAddress} />
-        </div>
-        <div className="col-xs-10 col-md-8 mx-auto mb-4 px-4">
-          <BuyRocket ownerStxAddress={ownerStxAddress} />
-        </div>
-        <div className="col-xs-10 col-md-8 mx-auto mb-4 px-4">
-          <ClaimRocket ownerStxAddress={ownerStxAddress} />
-        </div>
-        <div className="col-xs-10 col-md-8 mx-auto mb-4 px-4">
-          <MyRockets ownerStxAddress={ownerStxAddress} />
+          <Rocket ownerStxAddress={ownerStxAddress} rocketId={rocketId} showPilots/>
         </div>
 
         <div className="card col-md-8 mx-auto mt-5 mb-5 text-center px-0 border-warning">
