@@ -25,6 +25,7 @@ export const CONTRACT_ADDRESS = mocknet
   : 'ST33GW755MQQP6FZ58S423JJ23GBKK5ZKH3MGR55N';
 export const HODL_TOKEN_CONTRACT = 'hodl-token';
 export const MONSTERS_CONTRACT_NAME = 'monsters';
+export const MARKET_CONTRACT_NAME = 'market-v1';
 export const ROCKET_MARKET_CONTRACT_NAME = 'rocket-market-v3';
 export const ROCKET_FACTORY_CONTRACT_NAME = 'rocket-factory-v5';
 export const ROCKET_TOKEN_CONTRACT_NAME = 'rocket-token';

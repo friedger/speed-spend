@@ -21,7 +21,14 @@ export default function OverviewNFTs(props) {
           <br />
           <i>
             It helps to understand how to create and interact with a non-fungible tokens (NFT) and
-            interaction with a marketplace for NFTs.
+            how to handle user permissions.
+          </i>
+        </div>
+        <div className="col-xs-10 col-md-8 mx-auto mb-3 px-4">
+          <a href="/openriff">OpenRiff</a> allows you to sell and trade NFTs.
+          <br />
+          <i>
+            It helps to understand how to spaw assets through an escrow.
           </i>
         </div>
       </div>

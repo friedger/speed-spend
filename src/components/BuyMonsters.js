@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 
-import { CONTRACT_ADDRESS, NETWORK } from '../lib/constants';
+import { CONTRACT_ADDRESS, MARKET_CONTRACT_NAME, NETWORK } from '../lib/constants';
 import { TxStatus } from '../lib/transactions';
 import { fetchAccount } from '../lib/account';
 import { useConnect } from '@stacks/connect-react';
@@ -36,7 +36,7 @@ export function BuyMonsters({ ownerStxAddress, monsterId }) {
 
       await doContractCall({
         contractAddress: CONTRACT_ADDRESS,
-        contractName: 'market',
+        contractName: MARKET_CONTRACT_NAME,
         functionName: 'bid',
         functionArgs: [
           contractPrincipalCV(CONTRACT_ADDRESS, 'monsters'),

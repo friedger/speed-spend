@@ -8,6 +8,7 @@ import {
 import {
   accountsApi,
   CONTRACT_ADDRESS,
+  MARKET_CONTRACT_NAME,
   NETWORK,
   STACKS_API_WS_URL,
   transactionsApi,
@@ -19,7 +20,7 @@ import { fetchNFTIds } from './nft';
 
 export async function fetchNFTs(ownerStxAddress) {
   let response = await accountsApi.getAccountTransactions({
-    principal: `${CONTRACT_ADDRESS}.market`,
+    principal: `${CONTRACT_ADDRESS}.${MARKET_CONTRACT_NAME}`,
   });
   const transactions = response.results.filter(
     tx =>
@@ -33,7 +34,7 @@ export async function fetchNFTs(ownerStxAddress) {
 
 export async function fetchMarketState() {
   let response = await accountsApi.getAccountTransactions({
-    principal: `${CONTRACT_ADDRESS}.market`,
+    principal: `${CONTRACT_ADDRESS}.${MARKET_CONTRACT_NAME}`,
   });
   const transactions = response.results.filter(
     tx => tx.tx_type === 'contract_call' && tx.tx_status === 'success'
@@ -61,20 +62,23 @@ export function MarketState({ ownerStxAddress }) {
       setMarketState(marketState);
 
       const client = await connectWebSocketClient(STACKS_API_WS_URL);
-      await client.subscribeAddressTransactions(`${CONTRACT_ADDRESS}.market`, async event => {
-        console.log(event);
+      await client.subscribeAddressTransactions(
+        `${CONTRACT_ADDRESS}.${MARKET_CONTRACT_NAME}`,
+        async event => {
+          console.log(event);
 
-        if (event.tx_status === 'pending') {
-          const mempooltx = await transactionsApi.getMempoolTransactionList();
-          console.log(mempooltx);
-          return;
-        } else if (event.tx_status === 'success') {
-          const tx = await transactionsApi.getTransactionById({ txId: event.tx_id });
-          console.log({ tx });
-          const marketState = await fetchMarketState();
-          setMarketState(marketState);
+          if (event.tx_status === 'pending') {
+            const mempooltx = await transactionsApi.getMempoolTransactionList();
+            console.log(mempooltx);
+            return;
+          } else if (event.tx_status === 'success') {
+            const tx = await transactionsApi.getTransactionById({ txId: event.tx_id });
+            console.log({ tx });
+            const marketState = await fetchMarketState();
+            setMarketState(marketState);
+          }
         }
-      });
+      );
     };
 
     subscribe();
@@ -133,7 +137,7 @@ export function BidTransaction({ tx, ownedMonsterIds }) {
 
       doContractCall({
         contractAddress: CONTRACT_ADDRESS,
-        contractName: 'market',
+        contractName: MARKET_CONTRACT_NAME,
         functionName: 'accept',
         functionArgs: [tradableCV, tradableIdCV, sender],
         network: NETWORK,
@@ -204,7 +208,7 @@ export function AcceptTransaction({ tx, ownedMonsterIds, ownerStxAddress }) {
 
       doContractCall({
         contractAddress: CONTRACT_ADDRESS,
-        contractName: 'market',
+        contractName: MARKET_CONTRACT_NAME,
         functionName: 'pay',
         functionArgs: [tradableCV, tradableIdCV],
         network: NETWORK,
@@ -232,7 +236,7 @@ export function AcceptTransaction({ tx, ownedMonsterIds, ownerStxAddress }) {
 
       doContractCall({
         contractAddress: CONTRACT_ADDRESS,
-        contractName: 'market',
+        contractName: MARKET_CONTRACT_NAME,
         functionName: 'cancel',
         functionArgs: [tradableCV, tradableIdCV, bidOwnerCV],
         network: NETWORK,
