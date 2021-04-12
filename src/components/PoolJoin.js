@@ -178,10 +178,10 @@ export function PoolJoin({ pool, ownerStxAddress, userSession }) {
           className="form-control"
           placeholder="Number of cycles"
           disabled={!useExt}
-          readOnly={pool && pool.data["locking-period"].type === ClarityType.OptionalSome}
+          readOnly={pool && pool.data["locking-period"].type === ClarityType.List}
           defaultValue={
-            pool && pool.data["locking-period"].type === ClarityType.OptionalSome
-              ? pool.data["locking-period"].value.value.toString(10)
+            pool && pool.data["locking-period"].type === ClarityType.List
+              ? pool.data["locking-period"].list.map(lp => lp.value.toString(10)).join(" - ")
               : ''
           }
           onKeyUp={e => {
