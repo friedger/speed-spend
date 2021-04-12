@@ -43,11 +43,10 @@ export function TxStatus({ txId, resultPrefix }) {
   const spinner = useRef();
 
   useEffect(() => {
-    console.log(txId);
     if (!txId) {
       return;
     }
-
+    console.log(txId);
     spinner.current.classList.remove('d-none');
     setProcessingResult({ loading: true });
 

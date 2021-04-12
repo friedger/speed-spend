@@ -26,7 +26,7 @@ export default function PoolInfo({ pool }) {
           ? `${pool.data['minimum-ustx'].value.value.toNumber() / 1000000} STX`
           : 'No minimum STX required'}
         <br />
-        {poxCVToBtcAddress(pool.data['pox-address'])}
+        {poxCVToBtcAddress(pool.data['pox-address'].list[0])}
       </p>
     </>
   );

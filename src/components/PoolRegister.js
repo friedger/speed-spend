@@ -7,6 +7,7 @@ import { useConnect } from '@stacks/connect-react';
 import {
   contractPrincipalCV,
   FungibleConditionCode,
+  listCV,
   makeStandardSTXPostCondition,
   noneCV,
   PostConditionMode,
@@ -30,6 +31,8 @@ export function PoolRegister({ ownerStxAddress, username }) {
   const minimum = useRef();
   const lockingPeriod = useRef();
   const payout = useRef();
+  const dateOfPayout = useRef();
+  const fees = useRef();
   const extendedCheckbox = useRef();
 
   const spinner = useRef();
@@ -66,7 +69,7 @@ export function PoolRegister({ ownerStxAddress, username }) {
       delegateeParts.length === 1
         ? standardPrincipalCV(delegateeParts[0])
         : contractPrincipalCV(delegateeParts[0], delegateeParts[1]);
-    const poxAddressCV = poxAddrCVFromBitcoin(rewardBtcAddress.current.value.trim());
+    const poxAddressCV = listCV([poxAddrCVFromBitcoin(rewardBtcAddress.current.value.trim())]);
     const urlCV = stringAsciiCV(url.current.value.trim());
     let minimumCV;
     if (minimum.current.value) {
@@ -75,15 +78,19 @@ export function PoolRegister({ ownerStxAddress, username }) {
       minimumCV = noneCV();
     }
 
+    console.log(lockingPeriod.current.value.trim())
+    console.log(lockingPeriod.current.value.split(",").map(lp => uintCV(parseInt(lp.trim()))))
     const lockingPeriodCV = lockingPeriod.current.value.trim()
-      ? someCV(uintCV(parseInt(lockingPeriod.current.value)))
-      : noneCV();
+      ? listCV(lockingPeriod.current.value.split(",").map(lp => uintCV(parseInt(lp.trim()))))
+      : listCV([]);
     const payoutCV = stringAsciiCV(payout.current.value.trim());
+    const dateOfPayoutCV = stringAsciiCV(dateOfPayout.current.value.trim());
+    const feesCV = stringAsciiCV(fees.current.value.trim());
     const [poolCtrAddress, poolCtrName] = contract.current.value.trim().split('.');
     const contractCV = contractPrincipalCV(poolCtrAddress, poolCtrName);
     const statusCV = uintCV(1);
     const functionName = useExt ? 'register-ext' : 'register';
-    console.log({ functionName });
+    console.log({ functionName, lockingPeriodCV, poxAddressCV });
     try {
       setStatus(`Sending transaction`);
 
@@ -100,6 +107,8 @@ export function PoolRegister({ ownerStxAddress, username }) {
           minimumCV,
           lockingPeriodCV,
           payoutCV,
+          dateOfPayoutCV,
+          feesCV,
           statusCV,
         ],
         postConditionMode: PostConditionMode.Allow,
@@ -234,9 +243,10 @@ export function PoolRegister({ ownerStxAddress, username }) {
           }}
         />
         <br />
-        Locking period/number of locking cycles. Leave empty if variable.
+        Locking period/number of locking cycles (comma separated list of cycles). Leave empty if
+        variable.
         <input
-          type="number"
+          type="text"
           ref={lockingPeriod}
           className="form-control"
           placeholder="Leave empty if not fixed by contract"
@@ -255,6 +265,36 @@ export function PoolRegister({ ownerStxAddress, username }) {
           className="form-control"
           defaultValue="BTC"
           placeholder="e.g. BTC, STX, WMNO"
+          onKeyUp={e => {
+            if (e.key === 'Enter') dateOfPayout.current.focus();
+          }}
+          onBlur={e => {
+            setStatus(undefined);
+          }}
+        />
+        <br />
+        When the Pool payouts rewards (optional, max 80 char.)
+        <input
+          type="text"
+          ref={dateOfPayout}
+          className="form-control"
+          defaultValue=""
+          placeholder="e.g. end of cycle, instant"
+          onKeyUp={e => {
+            if (e.key === 'Enter') fees.current.focus();
+          }}
+          onBlur={e => {
+            setStatus(undefined);
+          }}
+        />
+        <br />
+        What are the fees (optional, max 80 char.)
+        <input
+          type="text"
+          ref={fees}
+          className="form-control"
+          defaultValue=""
+          placeholder="e.g. 10%, 5 STX"
           onKeyUp={e => {
             if (e.key === 'Enter') registerAction();
           }}

@@ -2,7 +2,6 @@ import {
   bufferCVFromString,
   callReadOnlyFunction,
   ClarityType,
-  cvToJSON,
   listCV,
   tupleCV,
   uintCV,

@@ -42,7 +42,7 @@ export default function PoolRegistry(props) {
               and click delegate.
             </li>
             <li className="list-group-item">
-              Wait for the pool admin to do the necessary and collect your rewards
+              Wait for the pool admin to do the necessary and collect your rewards.
             </li>
             <li className="list-group-item"></li>
           </ul>
