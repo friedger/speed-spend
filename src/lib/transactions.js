@@ -54,7 +54,7 @@ export async function saveTxData(data, userSession) {
   }
   indexArray.push(data.txId);
   await storage.putFile(indexFileName, JSON.stringify(indexArray));
-  await storage.putFile(`txs/${data.txId}.json`, JSON.stringify(data));
+  await storage.putFile(`txs/${data.txId}.json`, JSON.stringify({ data }));
 }
 
 export async function getTxs(userSession) {
@@ -65,7 +65,15 @@ export async function getTxs(userSession) {
     indexArray = JSON.parse(indexFile);
     return Promise.all(
       indexArray.map(async txId => {
-        return storage.getFile(`txs/${txId}.json`);
+        const txFile = await storage.getFile(`txs/${txId}.json`);
+        const tx = JSON.parse(txFile);
+        console.log({tx})
+        if (!tx.status) {
+          const status = await transactionsApi.getTransactionById({ txId });
+          tx.status = status;
+          await storage.putFile(`txs/${txId}.json`, JSON.stringify(tx));
+        }
+        return tx;
       })
     );
   } catch (e) {

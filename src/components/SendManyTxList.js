@@ -32,17 +32,26 @@ export function SendManyTxList({ ownerStxAddress, userSession }) {
       />
       {txs &&
         txs.map((tx, key) => {
+          const transaction = tx.data;
+          const status = tx.status;
           return (
             <>
               <div key={key}>
-                {JSON.parse(tx).stacksTransaction.payload.functionArgs[0].list.map(p => {
+                {status ? (
+                  <>
+                    {status.burn_block_time_iso} ({status.tx_status})
+                  </>
+                ) : (
+                  transaction.txId
+                )}
+                <br />
+
+                {transaction.stacksTransaction.payload.functionArgs[0].list.map(p => {
                   console.log(p.data.ustx.value);
                   return (
                     <>
-                      <div>
-                        {cvToString(p.data.to)}:{' '}
-                        {(new BigNum(p.data.ustx.value, 'hex') / 1000000).toFixed(6)} STX
-                      </div>{' '}
+                      {cvToString(p.data.to)}:{' '}
+                      {Number((new BigNum(p.data.ustx.value, 'hex') / 1000000).toFixed(6))} STX
                       <br />
                     </>
                   );

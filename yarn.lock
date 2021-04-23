@@ -2623,10 +2623,10 @@
     sha.js "^2.4.11"
     smart-buffer "^4.1.0"
 
-"@stacks/transactions@^1.3.5":
-  version "1.3.5"
-  resolved "https://registry.yarnpkg.com/@stacks/transactions/-/transactions-1.3.5.tgz#af2d6722ec4c1a365361893eb9e83b678a6604bc"
-  integrity sha512-KhZ9y48KnOB+Es3whxbpxtPm6o5CYLrhxCCG5Tfglmj9AcFtpWCBjkcFwZJ/R3eI4OYthD5aMB9nYY31xGiULA==
+"@stacks/transactions@^1.4.1":
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/@stacks/transactions/-/transactions-1.4.1.tgz#7b1d046051065a28707bac58c39d021fa49575f4"
+  integrity sha512-7LFA9yQqlmN+oVJeYaj+NfZyuInJxF8ozJ8kypCmJ9rUrbbGC/es1KyseB96YBiiOh4eLUfRlD1j6boSdNR8aA==
   dependencies:
     "@stacks/common" "^1.2.2"
     "@stacks/network" "^1.2.2"
