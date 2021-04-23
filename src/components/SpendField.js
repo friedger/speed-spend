@@ -1,7 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import {
   makeSTXTokenTransfer,
-  privateKeyToString,
   broadcastTransaction,
 } from '@stacks/transactions';
 

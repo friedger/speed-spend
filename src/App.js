@@ -27,6 +27,7 @@ import { useAtom } from 'jotai';
 import PoolRegistry from './pages/PoolRegistry';
 import PoolDetails from './pages/PoolDetails';
 import OverviewPox from './pages/OverviewPox';
+import SendMany from './pages/SendMany';
 
 export default function App(props) {
   const { authOptions } = useConnect();
@@ -120,6 +121,7 @@ function Content({ userSession }) {
               <HodlTokens path="/hodl-tokens" decentralizedID={decentralizedID} userSession={userSession} />
               <Jackpot path="/jackpot" decentralizedID={decentralizedID} userSession={userSession}  />
               <AtTwo path="/at-two" decentralizedID={decentralizedID} userSession={userSession} />
+              <SendMany path="/send-many" decentralizedID={decentralizedID} userSession={userSession} />
               <Monsters exact path="/monsters" decentralizedID={decentralizedID} userSession={userSession} />
               <Marketplace exact path="/openriff" decentralizedID={decentralizedID} userSession={userSession}  />
               <MonsterDetails path="/monsters/:monsterId" decentralizedID={decentralizedID} userSession={userSession}  />
