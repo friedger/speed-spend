@@ -16,7 +16,7 @@ import { userSessionState } from '../lib/auth';
 import { useStxAddresses } from '../lib/hooks';
 import { useAtomValue } from 'jotai/utils';
 import { useConnect } from '@stacks/connect-react';
-import { TxStatus } from '../lib/transactions';
+import { saveTxData, TxStatus } from '../lib/transactions';
 import { c32addressDecode } from 'c32check';
 import BigNum from 'bn.js';
 
@@ -35,8 +35,6 @@ export function SendManyButton({ parts }) {
   console.log({ ownerStxAddress, userSession });
   useEffect(() => {
     if (userSession?.isUserSignedIn() && ownerStxAddress) {
-      const userData = userSession.loadUserData();
-
       fetchAccount(ownerStxAddress)
         .catch(e => {
           setStatus('Failed to access your account', e);
@@ -131,7 +129,13 @@ export function SendManyButton({ parts }) {
           console.log(data);
           setStatus(undefined);
           setTxId(data.txId);
-          spinner.current.classList.add('d-none');
+          saveTxData(data, userSession)
+            .then(r => {
+              spinner.current.classList.add('d-none');
+            })
+            .catch(e => {
+              console.log(e);
+            });
         },
       });
       setStatus(`Sending transaction`);

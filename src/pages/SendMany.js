@@ -1,7 +1,9 @@
 import React from 'react';
 import { SendManyButton } from '../components/SendManyButton';
+import { SendManyTxList } from '../components/SendManyTxList';
 import { useStxAddresses } from '../lib/hooks';
-export default function SendMany() {
+
+export default function SendMany({ userSession }) {
   const { ownerStxAddress } = useStxAddresses();
   return (
     <main className="panel-welcome mt-5 container">
@@ -13,7 +15,9 @@ export default function SendMany() {
         <div className="col-xs-10 col-md-8 mx-auto mb-4 px-4">
           <SendManyButton ownerStxAddress={ownerStxAddress} />
         </div>
-
+        <div className="col-xs-10 col-md-8 mx-auto mb-4 px-4">
+          <SendManyTxList ownerStxAddress={ownerStxAddress} userSession={userSession} />
+        </div>
         <div className="card col-md-8 mx-auto mt-5 mb-5 text-center px-0 border-warning">
           <div className="card-header">
             <h5 className="card-title">Instructions</h5>

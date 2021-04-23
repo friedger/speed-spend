@@ -2,6 +2,7 @@ import { serializeCV, hexToCV as stacksHexToCV } from '@stacks/transactions';
 import { connectWebSocketClient } from '@stacks/blockchain-api-client';
 import React, { useState, useEffect, useRef } from 'react';
 import { mocknet, STACKS_API_WS_URL, STACK_API_URL, transactionsApi } from './constants';
+import { Storage } from '@stacks/storage';
 
 export function resultToStatus(result) {
   if (result && !result.error && result.startsWith('"') && result.length === 66) {
@@ -35,6 +36,41 @@ export function txUrl(txId) {
     return `${STACK_API_URL}/extended/v1/tx/0x${txId}`;
   } else {
     return `https://explorer.stacks.co/txid/0x${txId}?chain=testnet`;
+  }
+}
+
+const indexFileName = 'index.json';
+
+export async function saveTxData(data, userSession) {
+  console.log(JSON.stringify(data));
+  const storage = new Storage({ userSession });
+  let indexArray;
+  try {
+    const indexFile = await storage.getFile(indexFileName);
+    indexArray = JSON.parse(indexFile);
+  } catch (e) {
+    console.log(e);
+    indexArray = [];
+  }
+  indexArray.push(data.txId);
+  await storage.putFile(indexFileName, JSON.stringify(indexArray));
+  await storage.putFile(`txs/${data.txId}.json`, JSON.stringify(data));
+}
+
+export async function getTxs(userSession) {
+  const storage = new Storage({ userSession });
+  let indexArray;
+  try {
+    const indexFile = await storage.getFile(indexFileName);
+    indexArray = JSON.parse(indexFile);
+    return Promise.all(
+      indexArray.map(async txId => {
+        return storage.getFile(`txs/${txId}.json`);
+      })
+    );
+  } catch (e) {
+    console.log(e);
+    return [];
   }
 }
 
