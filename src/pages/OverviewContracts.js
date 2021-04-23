@@ -23,7 +23,7 @@ export default function OverviewContracts(props) {
           <i>It helps to understand how to create and interact with a smart contract.</i>
         </div>
         <div className="col-xs-10 col-md-8 mx-auto mb-3 px-4">
-          <a href="/at-two">Send Many</a> allows you to send stx to many addresses in one tx.
+          <a href="/send-many">Send Many</a> allows you to send stx to many addresses in one tx.
           <br />
           <i>It helps to understand how to create and interact with a smart contract.</i>
         </div>
