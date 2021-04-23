@@ -11,14 +11,14 @@ import {
 } from '@stacks/transactions';
 
 import { NETWORK } from '../lib/constants';
-import { getUserAddress, fetchAccount } from '../lib/account';
-import { putStxAddress } from '../UserSession';
+import { fetchAccount } from '../lib/account';
 import { userSessionState } from '../lib/auth';
 import { useStxAddresses } from '../lib/hooks';
 import { useAtomValue } from 'jotai/utils';
 import { useConnect } from '@stacks/connect-react';
 import { TxStatus } from '../lib/transactions';
 import { c32addressDecode } from 'c32check';
+import BigNum from 'bn.js';
 
 export function SendManyButton({ parts }) {
   const userSession = useAtomValue(userSessionState);
@@ -49,16 +49,21 @@ export function SendManyButton({ parts }) {
     }
   }, [userSession, ownerStxAddress]);
 
-  const updatePreview = async () => {
+  const getParts = () => {
     let parts = textfield.current.value.split('\n');
     parts = parts.map(s => {
-      const lineParts = s.split(';');
+      const lineParts = s.split(';').map(lp => lp.trim());
       return { to: lineParts[0], ustx: Math.floor(parseFloat(lineParts[1]) * 1000000) };
     });
     console.log({ parts });
     parts = parts.filter(p => p.to && p.ustx > 0);
     console.log({ parts });
     const total = parts.reduce((sum, p) => (sum += p.ustx), 0);
+    console.log({ parts, total });
+    return { parts, total };
+  };
+  const updatePreview = async () => {
+    const { parts, total } = getParts();
     setPreview(
       <>
         {parts.map(p => {
@@ -89,17 +94,7 @@ export function SendManyButton({ parts }) {
 
   const sendAction = async () => {
     spinner.current.classList.remove('d-none');
-
-    let parts = textfield.current.value.split('\n');
-    parts = parts.map(s => {
-      const lineParts = s.split(';');
-      return { to: lineParts[0], ustx: Math.floor(parseFloat(lineParts[1]) * 1000000) };
-    });
-    console.log({ parts });
-    parts = parts.filter(p => p.to && p.ustx > 0);
-    console.log({ parts });
-    const total = parts.reduce((sum, p) => (sum += p.ustx), 0);
-
+    const { parts, total } = getParts();
     const contractAddress = 'STR8P3RD1EHA8AA37ERSSSZSWKS9T2GYQFGXNA4C';
     const contractName = 'send-many';
     const functionName = 'send-many';
@@ -126,7 +121,11 @@ export function SendManyButton({ parts }) {
         network: NETWORK,
         postConditionMode: PostConditionMode.Deny,
         postConditions: [
-          makeStandardSTXPostCondition(ownerStxAddress, FungibleConditionCode.Equal, total),
+          makeStandardSTXPostCondition(
+            ownerStxAddress,
+            FungibleConditionCode.Equal,
+            new BigNum(total)
+          ),
         ],
         finished: data => {
           console.log(data);
