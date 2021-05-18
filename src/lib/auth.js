@@ -1,6 +1,5 @@
 import { useCallback } from 'react';
-import { AppConfig, UserSession } from '@stacks/connect-react';
-import { showConnect } from '@stacks/connect';
+import { AppConfig, UserSession, showConnect } from '@stacks/connect';
 import { authOrigin } from './constants';
 import { atom, useAtom } from 'jotai';
 import { useUpdateAtom } from 'jotai/utils';

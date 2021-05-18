@@ -28,6 +28,7 @@ import PoolRegistry from './pages/PoolRegistry';
 import PoolDetails from './pages/PoolDetails';
 import OverviewPox from './pages/OverviewPox';
 import SendMany from './pages/SendMany';
+import PoolAudit from './pages/PoolAudit';
 
 export default function App(props) {
   const { authOptions } = useConnect();
@@ -116,20 +117,75 @@ function Content({ userSession }) {
               <OverviewContracts path="/contracts" />
               <OverviewNFTs path="/nfts" />
               <OverviewPox path="/pox" />
-              <SpeedSpend path="/speed-spend" decentralizedID={decentralizedID} userSession={userSession}  />
+              <SpeedSpend
+                path="/speed-spend"
+                decentralizedID={decentralizedID}
+                userSession={userSession}
+              />
               <Hodl path="/hodl" decentralizedID={decentralizedID} userSession={userSession} />
-              <HodlTokens path="/hodl-tokens" decentralizedID={decentralizedID} userSession={userSession} />
-              <Jackpot path="/jackpot" decentralizedID={decentralizedID} userSession={userSession}  />
+              <HodlTokens
+                path="/hodl-tokens"
+                decentralizedID={decentralizedID}
+                userSession={userSession}
+              />
+              <Jackpot
+                path="/jackpot"
+                decentralizedID={decentralizedID}
+                userSession={userSession}
+              />
               <AtTwo path="/at-two" decentralizedID={decentralizedID} userSession={userSession} />
-              <SendMany path="/send-many" decentralizedID={decentralizedID} userSession={userSession} />
-              <Monsters exact path="/monsters" decentralizedID={decentralizedID} userSession={userSession} />
-              <Marketplace exact path="/openriff" decentralizedID={decentralizedID} userSession={userSession}  />
-              <MonsterDetails path="/monsters/:monsterId" decentralizedID={decentralizedID} userSession={userSession}  />
-              <Rockets path="/rockets" decentralizedID={decentralizedID}userSession={userSession}  />
-              <RocketDetails path="/rockets/:rocketId" decentralizedID={decentralizedID}userSession={userSession}  />
-              <PoolRegistry path="/pools" decentralizedID={decentralizedID} userSession={userSession} />
-              <PoolDetails path="/pools/:poolId" decentralizedID={decentralizedID} userSession={userSession}  />
-              <PoxLite path="/poxlite" decentralizedID={decentralizedID} userSession={userSession} />
+              <SendMany
+                path="/send-many"
+                decentralizedID={decentralizedID}
+                userSession={userSession}
+              />
+              <Monsters
+                exact
+                path="/monsters"
+                decentralizedID={decentralizedID}
+                userSession={userSession}
+              />
+              <Marketplace
+                exact
+                path="/openriff"
+                decentralizedID={decentralizedID}
+                userSession={userSession}
+              />
+              <MonsterDetails
+                path="/monsters/:monsterId"
+                decentralizedID={decentralizedID}
+                userSession={userSession}
+              />
+              <Rockets
+                path="/rockets"
+                decentralizedID={decentralizedID}
+                userSession={userSession}
+              />
+              <RocketDetails
+                path="/rockets/:rocketId"
+                decentralizedID={decentralizedID}
+                userSession={userSession}
+              />
+              <PoolRegistry
+                path="/pools"
+                decentralizedID={decentralizedID}
+                userSession={userSession}
+              />
+              <PoolDetails
+                path="/pools/:poolId"
+                decentralizedID={decentralizedID}
+                userSession={userSession}
+              />
+              <PoolAudit
+                path="/pool-audit"
+                decentralizedID={decentralizedID}
+                userSession={userSessionState}
+              />
+              <PoxLite
+                path="/poxlite"
+                decentralizedID={decentralizedID}
+                userSession={userSession}
+              />
               <MyProfile path="/me" decentralizedID={decentralizedID} userSession={userSession} />
               <ClarityValues path="/cv" />
               <StackingActivies path="/stacking"></StackingActivies>
