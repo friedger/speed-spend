@@ -31,7 +31,8 @@ export const ROCKET_MARKET_CONTRACT_NAME = 'rocket-market-v3';
 export const ROCKET_FACTORY_CONTRACT_NAME = 'rocket-factory-v5';
 export const ROCKET_TOKEN_CONTRACT_NAME = 'rocket-token';
 export const POOL_REGISTRY_CONTRACT_NAME = 'pool-registry-v2';
-export const POOL_AUDIT_CONTRACT_NAME = 'pool-audit-v3';
+export const POOL_AUDIT_CONTRACT_NAME = 'pool-audit-v6';
+export const CLARITY_BITCOIN_CONTRACT_NAME = "clarity-bitcoin-v4"
 export const GENESIS_CONTRACT_ADDRESS = 'ST000000000000000000002AMW42H';
 export const BNS_CONTRACT_NAME = 'bns';
 
