@@ -25,14 +25,14 @@ export const CONTRACT_ADDRESS = mocknet
   ? 'STB44HYPYAT2BB2QE513NSP81HTMYWBJP02HPGK6' //ADDR1 from Stacks.toml
   : 'ST33GW755MQQP6FZ58S423JJ23GBKK5ZKH3MGR55N';
 export const HODL_TOKEN_CONTRACT = 'hodl-token';
-export const MONSTERS_CONTRACT_NAME = 'monsters';
+export const MONSTERS_CONTRACT_NAME = 'monsters-v1';
 export const MARKET_CONTRACT_NAME = 'market-v1';
 export const ROCKET_MARKET_CONTRACT_NAME = 'rocket-market-v3';
 export const ROCKET_FACTORY_CONTRACT_NAME = 'rocket-factory-v5';
 export const ROCKET_TOKEN_CONTRACT_NAME = 'rocket-token';
 export const POOL_REGISTRY_CONTRACT_NAME = 'pool-registry-v2';
-export const POOL_AUDIT_CONTRACT_NAME = 'pool-audit-v6';
-export const CLARITY_BITCOIN_CONTRACT_NAME = "clarity-bitcoin-v4"
+export const POOL_AUDIT_CONTRACT_NAME = 'pool-audit-v6-x';
+export const CLARITY_BITCOIN_CONTRACT_NAME = "clarity-bitcoin-v4-x"
 export const GENESIS_CONTRACT_ADDRESS = 'ST000000000000000000002AMW42H';
 export const BNS_CONTRACT_NAME = 'bns';
 
