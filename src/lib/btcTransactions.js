@@ -176,7 +176,6 @@ export async function verifyBlockHeader(parts, blockHeight) {
   return result;
 }
 
-
 function numberToBuffer(value, size) {
   // increase size by 1 for "too large" numbers
   const buf = Buffer.allocUnsafe(size + 1);
@@ -185,7 +184,7 @@ function numberToBuffer(value, size) {
   return buf.slice(0, size);
 }
 
-export async function paramsFromTx(height, blockHeader, btcTxId) {
+export async function paramsFromTx(btcTxId) {
   const tx = await (
     await fetch(`https://api.blockcypher.com/v1/btc/test3/txs/${btcTxId}?limit=50&includeHex=true`)
   ).json();
@@ -220,8 +219,23 @@ export async function paramsFromTx(height, blockHeader, btcTxId) {
     locktime: bufferCV(Buffer.from(tx.hex.substr(tx.hex.length - 8), 'hex')),
   });
 
-  const blockResponse = await fetch(`https://api.blockcypher.com/v1/btc/test3/blocks/${tx.block_hash}?limit=500`)
+  const stacksBlockHash = tx.outputs[0].data_hex.substr(6, 64);
+  const stacksBlockResponse = await fetch(
+    `https://stacks-node-api.testnet.stacks.co/extended/v1/block/0x${stacksBlockHash}`
+  );
+  const stacksBlock = await stacksBlockResponse.json();
+  const height = stacksBlock.height;
+  console.log({ height });
+
+  const blockResponse = await fetch(
+    `https://api.blockcypher.com/v1/btc/test3/blocks/${tx.block_hash}?limit=500`
+  );
   const block = await blockResponse.json();
+
+  const headerResponse = await fetch(
+    `https://blockstream.info/testnet/api/block/${tx.block_hash}/header`
+  );
+  const header = await headerResponse.text();
 
   // proof cv
   const txIndex = block.txids.findIndex(id => id === btcTxId);
@@ -235,18 +249,18 @@ export async function paramsFromTx(height, blockHeader, btcTxId) {
 
   // block header
   const blockCV = tupleCV({
-    header: bufferCV(Buffer.from(blockHeader, 'hex')),
+    header: bufferCV(Buffer.from(header, 'hex')),
     height: uintCV(height),
   });
 
   // block parts
   const headerParts = [
-    blockHeader.substr(0, 8),
-    blockHeader.substr(8, 64),
-    blockHeader.substr(72, 64),
-    blockHeader.substr(136, 8),
-    blockHeader.substr(144, 8),
-    blockHeader.substr(152, 8),
+    header.substr(0, 8),
+    header.substr(8, 64),
+    header.substr(72, 64),
+    header.substr(136, 8),
+    header.substr(144, 8),
+    header.substr(152, 8),
   ];
 
   const headerPartsCV = tupleCV({
@@ -258,5 +272,15 @@ export async function paramsFromTx(height, blockHeader, btcTxId) {
     nonce: bufferCV(Buffer.from(headerParts[5], 'hex')),
     height: uintCV(height),
   });
-  return { txCV, txPartsCV, proofCV, block, blockCV, headerParts, headerPartsCV };
+  return {
+    txCV,
+    txPartsCV,
+    proofCV,
+    block,
+    blockCV,
+    header,
+    headerParts,
+    headerPartsCV,
+    stacksBlock,
+  };
 }
