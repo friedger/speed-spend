@@ -23,6 +23,12 @@ export default function OverviewPox(props) {
           <br />
           <i>It helps to understand how to what kind of stacking activities happen on testnet.</i>
         </div>
+        <div className="col-xs-10 col-md-8 mx-auto mb-3 px-4">
+          <a href="/pool-audit">Pool Audit</a> shows you a list of bitcoin transactions that have been
+          reported as reward tx for Friedger Pool.
+          <br />
+          <i>It helps to understand the link between bitcoin transactions and stacks transactions.</i>
+        </div>
       </div>
     </main>
   );

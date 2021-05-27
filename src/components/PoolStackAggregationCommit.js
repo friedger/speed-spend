@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 
-import { authOrigin, NETWORK } from '../lib/constants';
+import { authOrigin, infoApi, NETWORK } from '../lib/constants';
 import { TxStatus } from '../lib/transactions';
 import { fetchAccount } from '../lib/account';
 import { useConnect as useStacksJsConnect } from '@stacks/connect-react';
@@ -28,6 +28,7 @@ export function PoolStackAggregationCommit({ ownerStxAddress, userSession }) {
   const [status, setStatus] = useState();
   const [txId, setTxId] = useState();
   const [loading, setLoading] = useState(false);
+  const [rewardCycleId, setRewardCycleId] = useState(860);
 
   useEffect(() => {
     if (ownerStxAddress) {
@@ -44,6 +45,9 @@ export function PoolStackAggregationCommit({ ownerStxAddress, userSession }) {
           console.log({ acc });
         });
     }
+    infoApi.getPoxInfo().then(poxInfo => {
+      setRewardCycleId(poxInfo.reward_cycle_id + 1);
+    });
   }, [ownerStxAddress]);
 
   const commitAction = async () => {
@@ -85,9 +89,12 @@ export function PoolStackAggregationCommit({ ownerStxAddress, userSession }) {
         <input
           type="number"
           ref={cycleId}
-          defaultValue={860}
+          value={rewardCycleId}
           className="form-control"
           placeholder="Next cycle id"
+          onChange={e => {
+            setRewardCycleId(parseInt(e.target.value));
+          }}
           onKeyUp={e => {
             if (e.key === 'Enter') commitAction();
           }}

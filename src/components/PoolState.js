@@ -34,7 +34,7 @@ export function PoolState({ ownerStxAddress, userSession }) {
   return (
     <div>
       <h5>Pool State</h5>
-      {info && JSON.stringify(info)}
+      {info && <>Current cycle: #{info.poxInfo.reward_cycle_id}</>}
       {status && (
         <>
           <div>{status}</div>

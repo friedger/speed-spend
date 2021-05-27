@@ -1,5 +1,6 @@
 import React from 'react';
 import { BtcRewardTxSubmission } from '../components/BtcRewardTxSubmission';
+import { BtcTxList } from '../components/BtcTxList';
 import { PoolStackAggregationCommit } from '../components/PoolStackAggregationCommit';
 import { PoolState } from '../components/PoolState';
 export default function PoolAudit() {
@@ -18,6 +19,9 @@ export default function PoolAudit() {
         </div>
         <div className="col-xs-10 col-md-8 mx-auto mb-4 px-4">
           <BtcRewardTxSubmission />
+        </div>
+        <div className="col-xs-10 col-md-8 mx-auto mb-4 px-4">
+          <BtcTxList />
         </div>
       </div>
     </main>
