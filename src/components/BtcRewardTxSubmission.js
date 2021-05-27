@@ -23,7 +23,6 @@ import {
   wasTxMined,
   wasTxMinedFromHex,
 } from '../lib/btcTransactions';
-import ClarityValues from '../pages/ClarityValues';
 
 export function BtcRewardTxSubmission({ ownerStxAddress, userSession }) {
   const { doContractCall } = useStacksJsConnect();
