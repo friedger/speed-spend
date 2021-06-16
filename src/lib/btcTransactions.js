@@ -18,6 +18,7 @@ import {
   POOL_ADMIN_CONTRACT_NAME,
   POOL_AUDIT_CONTRACT_NAME,
 } from './constants';
+import BN from 'bn.js';
 
 export async function fetchBtcTxList() {
   const response = await accountsApi.getAccountTransactions({
@@ -89,16 +90,21 @@ export async function getValueForPool(txPartsCV) {
 }
 
 export async function getPrice(blockHeight) {
-  const result = await callReadOnlyFunction({
-    contractAddress: CONTRACT_ADDRESS,
-    contractName: POOL_AUDIT_CONTRACT_NAME,
-    functionName: 'wrapped-oracle-get-price-stx-btc',
-    functionArgs: [uintCV(blockHeight)],
-    senderAddress: CONTRACT_ADDRESS,
-    network: NETWORK,
-  });
-  console.log('oracle-get-price-stx-btc', cvToString(result));
-  return result;
+  try {
+    const result = await callReadOnlyFunction({
+      contractAddress: CONTRACT_ADDRESS,
+      contractName: POOL_AUDIT_CONTRACT_NAME,
+      functionName: 'wrapped-oracle-get-price-stx-btc',
+      functionArgs: [uintCV(blockHeight)],
+      senderAddress: CONTRACT_ADDRESS,
+      network: NETWORK,
+    });
+    console.log('oracle-get-price-stx-btc', cvToString(result));
+    return result;
+  } catch (e) {
+    console.log(e);
+    return uintCV(999);
+  }
 }
 
 export async function parseTx(txCV) {
