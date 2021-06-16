@@ -66,7 +66,7 @@ export function OwnerAddressSpendField({ title, path, placeholder, stxAddress })
         amount: new BigNum(1000),
         network: NETWORK,
 
-        finished: data => {
+        onFinish: data => {
           console.log(data);
           setStatus(undefined);
           setTxId(data.txId);

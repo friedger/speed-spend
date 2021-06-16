@@ -20,7 +20,7 @@ export function FlyButton({ rocketId, spinner, setStatus, setTxId }) {
         postConditionMode: PostConditionMode.Allow,
         postConditions: [],
         network: NETWORK,
-        finished: data => {
+        onFinish: data => {
           console.log(data);
           setStatus(undefined);
           setTxId(data.txId);

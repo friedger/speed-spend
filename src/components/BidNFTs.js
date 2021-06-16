@@ -49,7 +49,7 @@ export function BidNFTs({ ownerStxAddress, tradable, tradableId }) {
         postConditionMode: PostConditionMode.Allow,
         postConditions: [],
         network: NETWORK,
-        finished: data => {
+        onFinish: data => {
           console.log(data);
           setStatus(undefined);
           setTxId(data.txId);

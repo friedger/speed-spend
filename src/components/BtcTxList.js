@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { fetchBtcTxList } from '../lib/btcTransactions';
 import { BtcTx } from './BtcTx';
 

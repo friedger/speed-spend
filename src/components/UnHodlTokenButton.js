@@ -74,7 +74,7 @@ export function UnHodlTokenButton({ title, placeholder, ownerStxAddress }) {
         ],
         network: NETWORK,
 
-        finished: data => {
+        onFinish: data => {
           console.log(data);
           setStatus(undefined);
           setTxId(data.txId);

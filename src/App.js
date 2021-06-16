@@ -172,6 +172,11 @@ function Content({ userSession }) {
                 userSession={userSession}
               />
               <PoolDetails
+                path="/pools/join/:poolAddress"
+                decentralizedID={decentralizedID}
+                userSession={userSession}
+              />
+              <PoolDetails
                 path="/pools/:poolId"
                 decentralizedID={decentralizedID}
                 userSession={userSession}

@@ -42,7 +42,7 @@ export function CreateMonsterButton({ ownerStxAddress }) {
         postConditionMode: PostConditionMode.Allow,
         postConditions: [],
         network: NETWORK,
-        finished: data => {
+        onFinish: data => {
           console.log(data);
           setTxId(data.txId);
           spinner.current.classList.add('d-none');

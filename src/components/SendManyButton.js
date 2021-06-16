@@ -125,7 +125,7 @@ export function SendManyButton({ parts }) {
             new BigNum(total)
           ),
         ],
-        finished: data => {
+        onFinish: data => {
           console.log(data);
           setStatus(undefined);
           setTxId(data.txId);

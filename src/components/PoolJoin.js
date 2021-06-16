@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 
-import { authOrigin, NETWORK } from '../lib/constants';
+import { NETWORK } from '../lib/constants';
 import { TxStatus } from '../lib/transactions';
 import { fetchAccount } from '../lib/account';
 import { useConnect as useStacksJsConnect } from '@stacks/connect-react';
@@ -70,7 +70,7 @@ export function PoolJoin({ pool, ownerStxAddress, userSession }) {
   const spinner = useRef();
   const [status, setStatus] = useState();
   const [txId, setTxId] = useState();
-
+  const [availableAmount, setAvailableAmount] = useState();
   useEffect(() => {
     if (ownerStxAddress) {
       fetchAccount(ownerStxAddress)
@@ -81,6 +81,7 @@ export function PoolJoin({ pool, ownerStxAddress, userSession }) {
         .then(async acc => {
           setStatus(undefined);
           console.log({ acc });
+          setAvailableAmount(parseInt(acc.balance) / 1000000);
         });
     }
   }, [ownerStxAddress]);
@@ -123,7 +124,7 @@ export function PoolJoin({ pool, ownerStxAddress, userSession }) {
         postConditions: [],
         userSession,
         network: NETWORK,
-        finished: data => {
+        onFinish: data => {
           console.log(data);
           setStatus(undefined);
           setTxId(data.txId);
@@ -146,7 +147,7 @@ export function PoolJoin({ pool, ownerStxAddress, userSession }) {
         <input
           type="number"
           ref={amount}
-          defaultValue={40000}
+          defaultValue={availableAmount}
           className="form-control"
           placeholder="Amount in STX"
           onKeyUp={e => {
@@ -178,10 +179,10 @@ export function PoolJoin({ pool, ownerStxAddress, userSession }) {
           className="form-control"
           placeholder="Number of cycles"
           disabled={!useExt}
-          readOnly={pool && pool.data["locking-period"].type === ClarityType.List}
+          readOnly={pool && pool.data['locking-period'].type === ClarityType.List}
           defaultValue={
-            pool && pool.data["locking-period"].type === ClarityType.List
-              ? pool.data["locking-period"].list.map(lp => lp.value.toString(10)).join(" - ")
+            pool && pool.data['locking-period'].type === ClarityType.List
+              ? pool.data['locking-period'].list.map(lp => lp.value.toString(10)).join(' - ')
               : ''
           }
           onKeyUp={e => {

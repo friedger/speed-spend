@@ -76,7 +76,7 @@ export function HodlTokenButton({ title, path, placeholder, ownerStxAddress }) {
         ],
         network: NETWORK,
 
-        finished: data => {
+        onFinish: data => {
           console.log(data);
           setTxId(data.txId);
           spinner.current.classList.add('d-none');

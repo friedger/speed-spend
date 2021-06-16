@@ -106,7 +106,7 @@ export function BtcRewardTxSubmission({ ownerStxAddress, userSession }) {
         postConditions: [],
         userSession,
         network: NETWORK,
-        finished: data => {
+        onFinish: data => {
           console.log(data);
           setStatus(undefined);
           setTxId(data.txId);

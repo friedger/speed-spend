@@ -143,7 +143,7 @@ export function BidTransaction({ tx, ownedMonsterIds }) {
         network: NETWORK,
         postConditions: [],
         postConditionMode: PostConditionMode.Allow,
-        finished: result => {
+        onFinish: result => {
           console.log(result);
           spinner.current.classList.add('d-none');
           setTxId(result.txId);
@@ -214,7 +214,7 @@ export function AcceptTransaction({ tx, ownedMonsterIds, ownerStxAddress }) {
         network: NETWORK,
         postConditions: [],
         postConditionMode: PostConditionMode.Allow,
-        finished: result => {
+        onFinish: result => {
           console.log(result);
           spinnerPay.current.classList.add('d-none');
           setTxId(result.txId);
@@ -242,7 +242,7 @@ export function AcceptTransaction({ tx, ownedMonsterIds, ownerStxAddress }) {
         network: NETWORK,
         postConditions: [],
         postConditionMode: PostConditionMode.Allow,
-        finished: result => {
+        onFinish: result => {
           console.log(result);
           spinnerCancel.current.classList.add('d-none');
           setTxId(result.txId);

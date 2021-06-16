@@ -50,7 +50,7 @@ export function SellNFTs({ ownerStxAddress }) {
         postConditionMode: PostConditionMode.Deny,
         postConditions: [],
         network: NETWORK,
-        finished: data => {
+        onFinish: data => {
           console.log(data);
           setStatus(undefined);
           setTxId(data.txId);

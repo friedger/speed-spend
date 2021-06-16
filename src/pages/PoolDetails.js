@@ -2,19 +2,58 @@ import React, { useEffect, useState } from 'react';
 import { useStxAddresses } from '../lib/hooks';
 import { PoolJoin } from '../components/PoolJoin';
 import { fetchPool } from '../lib/pools';
+import { CONTRACT_ADDRESS, GENESIS_CONTRACT_ADDRESS } from '../lib/constants';
+import {
+  contractPrincipalCV,
+  someCV,
+  standardPrincipalCV,
+  tupleCV,
+  uintCV,
+  stringAsciiCV,
+  noneCV,
+  bufferCVFromString,
+  listCV,
+} from '@stacks/transactions';
 
-export default function PoolDetails({ poolId, location, userSession }) {
+export default function PoolDetails({ poolId, poolAddress, userSession }) {
   const { ownerStxAddress } = useStxAddresses(userSession);
   const [poolData, setPoolData] = useState();
   console.log({ poolData });
   useEffect(() => {
-    const fn = async () => {
-      const p = await fetchPool(poolId);
-      console.log(p);
-      setPoolData(p);
-    };
-    fn();
-  }, [poolId]);
+    if (poolId) {
+      const fn = async () => {
+        const p = await fetchPool(poolId);
+        console.log(p);
+        setPoolData(p);
+      };
+      fn();
+    } else if (poolAddress) {
+      const poolAddressParts = poolAddress.split('.');
+      if (poolAddressParts.length === 2) {
+        setPoolData(
+          tupleCV({
+            name: tupleCV({
+              name: bufferCVFromString('test'),
+              namespace: bufferCVFromString('pool'),
+            }),
+            delegatee: contractPrincipalCV(poolAddressParts[0], poolAddressParts[1]),
+            contract: noneCV(),
+            'extended-contract': someCV(
+              contractPrincipalCV(poolAddressParts[0], poolAddressParts[1])
+            ),
+            url: stringAsciiCV('https://example.com'),
+            'locking-period': noneCV(),
+            'minimum-ustx': noneCV(),
+            payout: stringAsciiCV('STX'),
+            'date-of-payout': stringAsciiCV(''),
+            fees: stringAsciiCV(''),
+            'pox-address': listCV([]),
+            status: uintCV(1),
+          })
+        );
+      }
+    }
+  }, [poolId, poolAddress]);
   return (
     <main className="panel-welcome mt-5 container">
       <div className="lead row mt-5">
@@ -24,13 +63,9 @@ export default function PoolDetails({ poolId, location, userSession }) {
 
         <div className="col-xs-10 col-md-8 mx-auto mb-4 px-4">
           {poolData && (
-            <PoolJoin
-              poolId={poolId}
-              pool={poolData}
-              ownerStxAddress={ownerStxAddress}
-              userSession={userSession}
-            />
+            <PoolJoin pool={poolData} ownerStxAddress={ownerStxAddress} userSession={userSession} />
           )}
+          {!poolData && (poolAddress || poolId) && <>Invalid pool.</>}
         </div>
 
         <div className="card col-md-8 mx-auto mt-5 mb-5 text-center px-0 border-warning">

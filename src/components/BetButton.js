@@ -127,7 +127,7 @@ export function BetButton({ jackpot }) {
         network: NETWORK,
         postConditions: postConditions,
         postConditionMode: PostConditionMode.Allow,
-        finished: result => {
+        onFinish: result => {
           console.log(result);
           spinner.current.classList.add('d-none');
           setTxId(result.txId);

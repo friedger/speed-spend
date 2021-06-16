@@ -63,7 +63,7 @@ export function PoxLiteDeposit({ title, path, placeholder, ownerStxAddress, appS
         postConditions: [
           createSTXPostCondition(ownerStxAddress, FungibleConditionCode.Equal, new BN(amount)),
         ],
-        finished: data => {
+        onFinish: data => {
           console.log(data);
           setTxId(data.txId);
           spinner.current.classList.add('d-none');

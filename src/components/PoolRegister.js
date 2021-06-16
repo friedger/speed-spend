@@ -120,7 +120,7 @@ export function PoolRegister({ ownerStxAddress, username }) {
           ),
         ],
         network: NETWORK,
-        finished: data => {
+        onFinish: data => {
           console.log(data);
           setStatus(undefined);
           setTxId(data.txId);

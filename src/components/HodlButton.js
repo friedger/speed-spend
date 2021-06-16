@@ -48,7 +48,7 @@ export function HodlButton({ title, path, placeholder, ownerStxAddress, appStxAd
         recipient: appStxAddress,
         amount: new BigNum(amount),
         network: NETWORK,
-        finished: data => {
+        onFinish: data => {
           console.log(data);
           setTxId(data.txId);
           spinner.current.classList.add('d-none');
