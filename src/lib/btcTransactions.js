@@ -15,6 +15,7 @@ import {
   CLARITY_BITCOIN_CONTRACT_NAME,
   CONTRACT_ADDRESS,
   NETWORK,
+  POOL_ADMIN_CONTRACT_NAME,
   POOL_AUDIT_CONTRACT_NAME,
 } from './constants';
 
@@ -91,7 +92,7 @@ export async function getPrice(blockHeight) {
   const result = await callReadOnlyFunction({
     contractAddress: CONTRACT_ADDRESS,
     contractName: POOL_AUDIT_CONTRACT_NAME,
-    functionName: 'oracle-get-price-stx-btc',
+    functionName: 'wrapped-oracle-get-price-stx-btc',
     functionArgs: [uintCV(blockHeight)],
     senderAddress: CONTRACT_ADDRESS,
     network: NETWORK,

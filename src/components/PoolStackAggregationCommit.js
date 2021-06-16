@@ -94,7 +94,7 @@ export function PoolStackAggregationCommit({ ownerStxAddress, userSession }) {
       const cycleId = poxInfo.reward_cycle_id;
       setMinimum(poxInfo.min_amount_ustx);
       setRewardCycleId(cycleId);
-      getPartialStacked(`${CONTRACT_ADDRESS}.${POOL_ADMIN_CONTRACT_NAME}`, cycleId + 1, {
+      getPartialStacked(`${CONTRACT_ADDRESS}.${POOL_ADMIN_CONTRACT_NAME}`, cycleId, {
         hashBytes: 'c70e1ca5a5ef633fe5464821ca421c173997f388',
         version: '00',
       }).then(r => {
