@@ -9,6 +9,7 @@ import {
   ClarityType,
   contractPrincipalCV,
   cvToString,
+  makeContractCall,
   noneCV,
   PostConditionMode,
   someCV,
@@ -59,8 +60,6 @@ function getPayoutAddressCV(payout, address) {
 }
 
 export function PoolJoin({ pool, ownerStxAddress, userSession }) {
-  console.log(pool);
-  console.log({ ownerStxAddress, userSession });
   const { doContractCall } = useStacksJsConnect();
   const amount = useRef();
   const duration = useRef();
@@ -95,7 +94,8 @@ export function PoolJoin({ pool, ownerStxAddress, userSession }) {
   const parts = delegatee.split('.');
   const delegateeCV =
     parts.length < 2 ? standardPrincipalCV(parts[0]) : contractPrincipalCV(parts[0], parts[1]);
-  const rewardBtcAddressCV = someCV(pool.data['pox-address']);
+  const rewardBtcAddressCV =
+    pool.data['pox-address'].length === 1 ? someCV(pool.data['pox-address'][0]) : noneCV();
   const payout = getPayout(pool);
   const userPayoutAddress = getPayoutAddress(payout, ownerStxAddress);
 
@@ -108,13 +108,12 @@ export function PoolJoin({ pool, ownerStxAddress, userSession }) {
       ? someCV(uintCV(duration.current.value.trim()))
       : noneCV();
     const payoutAddressCV = getPayoutAddressCV(payout, payoutAddress.current.value.trim());
-    const lockingPeriodCV = uintCV(lockingPeriod.current.value.trim);
+    const lockingPeriodCV = uintCV(lockingPeriod.current.value.trim());
     try {
       setStatus(`Sending transaction`);
       const functionArgs = useExt
         ? [amountCV, delegateeCV, durationCV, rewardBtcAddressCV, payoutAddressCV, lockingPeriodCV]
         : [amountCV, delegateeCV, durationCV, rewardBtcAddressCV];
-      console.log({ functionArgs });
       await doContractCall({
         contractAddress,
         contractName,

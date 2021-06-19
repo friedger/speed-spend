@@ -29,6 +29,7 @@ import PoolDetails from './pages/PoolDetails';
 import OverviewPox from './pages/OverviewPox';
 import SendMany from './pages/SendMany';
 import PoolAudit from './pages/PoolAudit';
+import { Gaia } from './pages/Gaia';
 
 export default function App(props) {
   const { authOptions } = useConnect();
@@ -193,6 +194,7 @@ function Content({ userSession }) {
               />
               <MyProfile path="/me" decentralizedID={decentralizedID} userSession={userSession} />
               <ClarityValues path="/cv" />
+              <Gaia path="/gaia" userSession={userSession} />
               <StackingActivies path="/stacking"></StackingActivies>
             </AppBody>
           </Router>

@@ -80,12 +80,12 @@ export async function getValueForPool(txPartsCV) {
   const result = await callReadOnlyFunction({
     contractAddress: CONTRACT_ADDRESS,
     contractName: POOL_AUDIT_CONTRACT_NAME,
-    functionName: 'get-tx-value-for-pool-2',
+    functionName: 'get-tx-value-for-pool',
     functionArgs: [txPartsCV],
     senderAddress: CONTRACT_ADDRESS,
     network: NETWORK,
   });
-  console.log('get-tx-value-for-pool-2', cvToString(result));
+  console.log('get-tx-value-for-pool', cvToString(result));
   return result;
 }
 

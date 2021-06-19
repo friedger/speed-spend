@@ -151,14 +151,14 @@ export function PoolStackAggregationCommit({ ownerStxAddress, userSession }) {
       <div className="NoteField">
         As the user that finalizes the cycle you will be rewarded 1 STX. You can do this only
         <ul>
-          <li>50 blocks before the start of the next cycle and </li>
+          <li>between 40 blocks before and 10 blocks before the start of the next cycle and</li>
           <li>if there are enough stacks locked (&gt; 86m STX)</li>
         </ul>
-        Current block: {burnBlockHeight}
-        <br />
         Blocks until next cycle: {blocksUntilNextCycle}
         <br />
         Current locked STX: {lockedStx}
+        <br />
+        Current block: {burnBlockHeight}
         <br />
         Next cycle id:
         <input
