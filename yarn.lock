@@ -2455,10 +2455,10 @@
     jsontokens "^3.0.0"
     query-string "^6.13.1"
 
-"@stacks/blockchain-api-client@^0.61.0":
-  version "0.61.0"
-  resolved "https://registry.yarnpkg.com/@stacks/blockchain-api-client/-/blockchain-api-client-0.61.0.tgz#969bf18b1d177bf315a529f66d5d93a3945bf823"
-  integrity sha512-BtGivjpe7bE7TBBxv7uLXO2PxWcvxT5mTEwOKPWf7mg0zsUcpBMtVGk+ateupjnAaxF+u41Of8vP9npPHksDfw==
+"@stacks/blockchain-api-client@^0.62.1":
+  version "0.62.1"
+  resolved "https://registry.yarnpkg.com/@stacks/blockchain-api-client/-/blockchain-api-client-0.62.1.tgz#a4ce9b9480d467ac29afb11c063af7106f64c672"
+  integrity sha512-kqPdWsORBbjsTmALBDoZcKbRhip/zZYU1nNGiXtfwRGdca+dOAZFpORT/pqW72LGwjopeHG7DXi+0DQZl+Hh/g==
   dependencies:
     "@stacks/stacks-blockchain-api-types" "*"
     "@types/ws" "^7.4.0"
@@ -2556,6 +2556,13 @@
   integrity sha512-xcWwuRrLJn9qqi3PEBcP2UPZHQztTZd31C0aVlzYHttNMir/sY9SrUqSnw45z2Jo4O9pIYYPIiPRtdV91Ho3fw==
   dependencies:
     "@stacks/common" "^1.2.2"
+
+"@stacks/network@^2.0.0-beta.0":
+  version "2.0.0-beta.0"
+  resolved "https://registry.yarnpkg.com/@stacks/network/-/network-2.0.0-beta.0.tgz#1facdc42ef76ba57448cebf28e022385758e675a"
+  integrity sha512-ZhpHjnmgdHvy28oaUGK66IKMepopFiyhlJ6L3jbe6RJLHJFpupB5Kho6pa+Z4zXg2MsgZuHqBX6CyPaHfw9E4A==
+  dependencies:
+    "@stacks/common" "^2.0.0-beta.0"
 
 "@stacks/prettier-config@0.0.7":
   version "0.0.7"

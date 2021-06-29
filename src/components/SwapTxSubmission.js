@@ -1,12 +1,6 @@
-import React, { useRef, useState, useEffect } from 'react';
-import {
-  BTC_STX_SWAP_CONTRACT,
-  CONTRACT_ADDRESS,
-  NETWORK,
-  POOL_ADMIN_CONTRACT_NAME,
-} from '../lib/constants';
+import React, { useRef, useState } from 'react';
+import { BTC_STX_SWAP_CONTRACT, NETWORK } from '../lib/constants';
 import { TxStatus } from '../lib/transactions';
-import { fetchAccount } from '../lib/account';
 import { useConnect as useStacksJsConnect } from '@stacks/connect-react';
 import {
   ClarityType,
@@ -14,15 +8,10 @@ import {
   FungibleConditionCode,
   makeContractSTXPostCondition,
   PostConditionMode,
-  responseOkCV,
-  someCV,
-  tupleCV,
   uintCV,
 } from '@stacks/transactions';
 
 import {
-  getPrice,
-  getValueForPool,
   paramsFromTx,
   parseBlockHeader,
   verifyBlockHeader,
@@ -35,7 +24,7 @@ import BN from 'bn.js';
 export function SwapTxSubmission({ ownerStxAddress, userSession }) {
   const { doContractCall } = useStacksJsConnect();
   const btcTxIdRef = useRef();
-  const idRef= useRef();
+  const idRef = useRef();
   const heightRef = useRef();
 
   const [status, setStatus] = useState();
@@ -80,10 +69,9 @@ export function SwapTxSubmission({ ownerStxAddress, userSession }) {
     const id = parseInt(idRef.current.value.trim());
     const btcTxId = btcTxIdRef.current.value.trim();
     const { txPartsCV, proofCV, headerPartsCV } = await paramsFromTx(btcTxId, height);
-    const idCV = uintCV(id)
+    const idCV = uintCV(id);
     try {
       setStatus(`Sending transaction`);
-
       // submit
       await doContractCall({
         contractAddress,
@@ -98,7 +86,7 @@ export function SwapTxSubmission({ ownerStxAddress, userSession }) {
           // proof
           proofCV,
         ],
-        postConditionMode: PostConditionMode.Deny,
+        postConditionMode: PostConditionMode.Allow,
         postConditions: [
           makeContractSTXPostCondition(
             BTC_STX_SWAP_CONTRACT.address,
