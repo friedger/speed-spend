@@ -30,6 +30,7 @@ import OverviewPox from './pages/OverviewPox';
 import SendMany from './pages/SendMany';
 import PoolAudit from './pages/PoolAudit';
 import { Gaia } from './pages/Gaia';
+import Swap from './pages/Swap';
 
 export default function App(props) {
   const { authOptions } = useConnect();
@@ -184,6 +185,11 @@ function Content({ userSession }) {
               />
               <PoolAudit
                 path="/pool-audit"
+                decentralizedID={decentralizedID}
+                userSession={userSessionState}
+              />
+              <Swap
+                path="/swap"
                 decentralizedID={decentralizedID}
                 userSession={userSessionState}
               />

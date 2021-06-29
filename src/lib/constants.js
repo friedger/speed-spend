@@ -33,9 +33,14 @@ export const ROCKET_TOKEN_CONTRACT_NAME = 'rocket-token';
 export const POOL_REGISTRY_CONTRACT_NAME = 'pool-registry-v2';
 export const POOL_AUDIT_CONTRACT_NAME = 'pool-audit-v9';
 export const POOL_ADMIN_CONTRACT_NAME = 'pool-admin-v4';
-export const CLARITY_BITCOIN_CONTRACT_NAME = "clarity-bitcoin-v4"
+export const CLARITY_BITCOIN_CONTRACT_NAME = 'clarity-bitcoin-v5';
 export const GENESIS_CONTRACT_ADDRESS = 'ST000000000000000000002AMW42H';
 export const BNS_CONTRACT_NAME = 'bns';
+
+export const BTC_STX_SWAP_CONTRACT = {
+  address: 'ST2PABAF9FTAJYNFZH93XENAJ8FVY99RRM4DF2YCW',
+  name: 'unacceptable-purple-basilisk',
+};
 
 export const STACK_API_URL = localNode
   ? 'http://localhost:3999'

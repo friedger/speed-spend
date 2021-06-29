@@ -1,11 +1,18 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { CONTRACT_ADDRESS, NETWORK, POOL_ADMIN_CONTRACT_NAME } from '../lib/constants';
+import {
+  BTC_STX_SWAP_CONTRACT,
+  CONTRACT_ADDRESS,
+  NETWORK,
+  POOL_ADMIN_CONTRACT_NAME,
+} from '../lib/constants';
 import { TxStatus } from '../lib/transactions';
 import { fetchAccount } from '../lib/account';
 import { useConnect as useStacksJsConnect } from '@stacks/connect-react';
 import {
   ClarityType,
   cvToString,
+  FungibleConditionCode,
+  makeContractSTXPostCondition,
   PostConditionMode,
   responseOkCV,
   someCV,
@@ -23,10 +30,13 @@ import {
   wasTxMined,
   wasTxMinedFromHex,
 } from '../lib/btcTransactions';
+import BN from 'bn.js';
 
-export function BtcRewardTxSubmission({ ownerStxAddress, userSession }) {
+export function SwapTxSubmission({ ownerStxAddress, userSession }) {
   const { doContractCall } = useStacksJsConnect();
   const btcTxIdRef = useRef();
+  const idRef= useRef();
+  const heightRef = useRef();
 
   const [status, setStatus] = useState();
   const [txId, setTxId] = useState();
@@ -34,23 +44,10 @@ export function BtcRewardTxSubmission({ ownerStxAddress, userSession }) {
   const [loadingVerify, setLoadingVerify] = useState(false);
   const [results, setResults] = useState();
 
-  useEffect(() => {
-    if (ownerStxAddress) {
-      fetchAccount(ownerStxAddress)
-        .catch(e => {
-          setStatus('Failed to access your account', e);
-          console.log(e);
-        })
-        .then(async acc => {
-          setStatus(undefined);
-          console.log({ acc });
-        });
-    }
-  }, [ownerStxAddress]);
-
   const verifyAction = async () => {
     setLoadingVerify(true);
     const btcTxId = btcTxIdRef.current.value.trim();
+    const stxHeight = parseInt(heightRef.current.value.trim());
     const {
       txCV,
       txPartsCV,
@@ -61,7 +58,7 @@ export function BtcRewardTxSubmission({ ownerStxAddress, userSession }) {
       headerParts,
       headerPartsCV,
       stacksBlock,
-    } = await paramsFromTx(btcTxId);
+    } = await paramsFromTx(btcTxId, stxHeight);
     const height = stacksBlock.height;
     const results = await Promise.all([
       verifyMerkleProof(btcTxId, block, proofCV),
@@ -69,10 +66,6 @@ export function BtcRewardTxSubmission({ ownerStxAddress, userSession }) {
       parseBlockHeader(header),
       verifyBlockHeader(headerParts, height),
       wasTxMined(headerPartsCV, txCV, proofCV),
-      getValueForPool(txPartsCV),
-      height
-        ? getPrice(height)
-        : Promise.resolve(responseOkCV(someCV(tupleCV({ data: uintCV(0) })))),
     ]);
     setResults(results);
     setLoadingVerify(false);
@@ -80,12 +73,14 @@ export function BtcRewardTxSubmission({ ownerStxAddress, userSession }) {
 
   const submitAction = async () => {
     setLoading(true);
-    const contractAddress = CONTRACT_ADDRESS;
-    const contractName = POOL_ADMIN_CONTRACT_NAME;
+    const contractAddress = BTC_STX_SWAP_CONTRACT.address;
+    const contractName = BTC_STX_SWAP_CONTRACT.name;
 
+    const height = parseInt(heightRef.current.value.trim());
+    const id = parseInt(idRef.current.value.trim());
     const btcTxId = btcTxIdRef.current.value.trim();
-    const { txPartsCV, proofCV, headerPartsCV } = await paramsFromTx(btcTxId);
-
+    const { txPartsCV, proofCV, headerPartsCV } = await paramsFromTx(btcTxId, height);
+    const idCV = uintCV(id)
     try {
       setStatus(`Sending transaction`);
 
@@ -93,8 +88,9 @@ export function BtcRewardTxSubmission({ ownerStxAddress, userSession }) {
       await doContractCall({
         contractAddress,
         contractName,
-        functionName: 'submit-reward-tx',
+        functionName: 'submit-swap',
         functionArgs: [
+          idCV,
           // block
           headerPartsCV,
           // tx
@@ -103,7 +99,14 @@ export function BtcRewardTxSubmission({ ownerStxAddress, userSession }) {
           proofCV,
         ],
         postConditionMode: PostConditionMode.Deny,
-        postConditions: [],
+        postConditions: [
+          makeContractSTXPostCondition(
+            BTC_STX_SWAP_CONTRACT.address,
+            BTC_STX_SWAP_CONTRACT.name,
+            FungibleConditionCode.GreaterEqual,
+            new BN(0)
+          ),
+        ],
         userSession,
         network: NETWORK,
         onFinish: data => {
@@ -122,14 +125,42 @@ export function BtcRewardTxSubmission({ ownerStxAddress, userSession }) {
 
   return (
     <div>
-      <h5>Submit Btc Reward Transaction for Friedger Pool</h5>
+      <h5>Submit Btc Transaction for Swap</h5>
       <div className="NoteField">
         Transaction id of bitcoin transaction
         <input
           type="text"
           ref={btcTxIdRef}
           className="form-control"
-          defaultValue="7ad9187efd4fa01ce8690015a1a711d7958f18c248fb4c47a32d00732cfc4a61"
+          defaultValue="ac9079993724231023e94652e0417413952130b03158c05dff8501321f03ac4e"
+          onKeyUp={e => {
+            if (e.key === 'Enter') verifyAction();
+          }}
+          onBlur={e => {
+            setStatus(undefined);
+          }}
+        />
+        <br />
+        At which Stacks block?
+        <input
+          type="number"
+          ref={heightRef}
+          className="form-control"
+          defaultValue="17215"
+          onKeyUp={e => {
+            if (e.key === 'Enter') verifyAction();
+          }}
+          onBlur={e => {
+            setStatus(undefined);
+          }}
+        />
+        <br />
+        For which swap?
+        <input
+          type="number"
+          ref={idRef}
+          className="form-control"
+          defaultValue="0"
           onKeyUp={e => {
             if (e.key === 'Enter') verifyAction();
           }}
@@ -157,8 +188,6 @@ export function BtcRewardTxSubmission({ ownerStxAddress, userSession }) {
             ) : (
               <>false (error {cvToString(results[4].value)})</>
             )}
-            <br />
-            Value for Pool: {cvToString(results[5].value.value.data.value)}
           </>
         ) : (
           <>Verify, before submitting!</>

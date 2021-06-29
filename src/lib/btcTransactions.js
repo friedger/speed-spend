@@ -12,6 +12,7 @@ import SHA256 from 'crypto-js/sha256';
 
 import {
   accountsApi,
+  BTC_STX_SWAP_CONTRACT,
   CLARITY_BITCOIN_CONTRACT_NAME,
   CONTRACT_ADDRESS,
   NETWORK,
@@ -31,6 +32,23 @@ export async function fetchBtcTxList() {
       tx.tx_status === 'success' &&
       tx.tx_type === 'contract_call' &&
       tx.contract_call.function_name === 'report-btc-tx'
+  );
+
+  console.log(result);
+  return result;
+}
+
+export async function fetchSwapTxList() {
+  const response = await accountsApi.getAccountTransactions({
+    principal: `${BTC_STX_SWAP_CONTRACT.address}.${BTC_STX_SWAP_CONTRACT.name}`,
+  });
+
+  console.log(response);
+  const result = response.results.filter(
+    tx =>
+      tx.tx_status === 'success' &&
+      tx.tx_type === 'contract_call' &&
+      tx.contract_call.function_name === 'submit-swap'
   );
 
   console.log(result);
@@ -67,12 +85,12 @@ export async function wasTxMined(blockPartsCV, txCV, proofCV) {
   const result = await callReadOnlyFunction({
     contractAddress: CONTRACT_ADDRESS,
     contractName: CLARITY_BITCOIN_CONTRACT_NAME,
-    functionName: 'was-tx-mined-2?',
+    functionName: 'was-tx-mined',
     functionArgs: [blockPartsCV, txCV, proofCV],
     senderAddress: CONTRACT_ADDRESS,
     network: NETWORK,
   });
-  console.log('was-tx-mined-2?', cvToString(result));
+  console.log('was-tx-mined', cvToString(result));
   return result;
 }
 
@@ -145,12 +163,12 @@ export async function wasTxMinedFromHex(blockCV, txCV, proofCV) {
   const result = await callReadOnlyFunction({
     contractAddress: CONTRACT_ADDRESS,
     contractName: CLARITY_BITCOIN_CONTRACT_NAME,
-    functionName: 'was-tx-mined?',
+    functionName: 'was-tx-mined-compact',
     functionArgs: [blockCV, txCV, proofCV],
     senderAddress: CONTRACT_ADDRESS,
     network: NETWORK,
   });
-  console.log('was-tx-mined', JSON.stringify(result));
+  console.log('was-tx-mined-compact', JSON.stringify(result));
   return result;
 }
 
@@ -191,10 +209,12 @@ function numberToBuffer(value, size) {
   return buf.slice(0, size);
 }
 
-export async function paramsFromTx(btcTxId) {
+export async function paramsFromTx(btcTxId, stxHeight) {
   const tx = await (
     await fetch(`https://api.blockcypher.com/v1/btc/test3/txs/${btcTxId}?limit=50&includeHex=true`)
   ).json();
+
+  console.log({ out: tx.outputs[0] });
 
   // tx hex
   const txCV = bufferCV(MerkleTree.bufferify(tx.hex));
@@ -226,13 +246,23 @@ export async function paramsFromTx(btcTxId) {
     locktime: bufferCV(Buffer.from(tx.hex.substr(tx.hex.length - 8), 'hex')),
   });
 
-  const stacksBlockHash = tx.outputs[0].data_hex.substr(6, 64);
-  const stacksBlockResponse = await fetch(
-    `https://stacks-node-api.testnet.stacks.co/extended/v1/block/0x${stacksBlockHash}`
-  );
-  const stacksBlock = await stacksBlockResponse.json();
-  const height = stacksBlock.height;
-  console.log({ height });
+  let height;
+  let stacksBlock
+  if (!stxHeight) {
+    const stacksBlockHash = tx.outputs[0].data_hex.substr(6, 64);
+    const stacksBlockResponse = await fetch(
+      `https://stacks-node-api.testnet.stacks.co/extended/v1/block/0x${stacksBlockHash}`
+    );
+    stacksBlock = await stacksBlockResponse.json();
+    height = stacksBlock.height;
+  } else {
+    const stacksBlockResponse = await fetch(
+      `https://stacks-node-api.testnet.stacks.co/extended/v1/block/by_height/${stxHeight}`
+    );
+    stacksBlock = await stacksBlockResponse.json();
+    height = stxHeight;
+  }
+  console.log({ height, stacksBlock });
 
   const blockResponse = await fetch(
     `https://api.blockcypher.com/v1/btc/test3/blocks/${tx.block_hash}?limit=500`
