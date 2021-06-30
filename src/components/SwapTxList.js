@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { fetchSwapTxList } from '../lib/btcTransactions';
-import { BtcTx } from './BtcTx';
+import { SwapTx } from './SwapTx';
 
 export function SwapTxList({ ownerStxAddress }) {
   const [status, setStatus] = useState();
@@ -33,7 +33,7 @@ export function SwapTxList({ ownerStxAddress }) {
       />
       {txs &&
         txs.map((tx, key) => {
-          return <BtcTx key={key} tx={tx} />;
+          return <SwapTx key={key} tx={tx} />;
         })}
       {!txs && <>No transactions yet reported. Report one!</>}
       {status && (

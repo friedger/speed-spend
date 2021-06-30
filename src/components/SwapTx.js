@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { cvToString, hexToCV } from '@stacks/transactions';
 import { concatTransaction, getPrice, getTxId, getValueForPool } from '../lib/btcTransactions';
 import { Amount } from './Amount';
-export function BtcTx({ tx }) {
+export function SwapTx({ tx }) {
   const [valueForPool, setValueForPool] = useState();
   const [oraclePrice, setOraclePrice] = useState();
   const [blockHeight, setBlockHeight] = useState();
   const [txId, setTxId] = useState();
   useEffect(() => {
-    const height = hexToCV(tx.contract_call.function_args[0].hex).data.height.value.toString(10);
-    const txPartsCV = hexToCV(tx.contract_call.function_args[1].hex);
+    const height = hexToCV(tx.contract_call.function_args[1].hex).data.height.value.toString(10);
+    const txPartsCV = hexToCV(tx.contract_call.function_args[2].hex);
 
     setBlockHeight(height);
 
@@ -49,9 +49,9 @@ export function BtcTx({ tx }) {
         </li>
         {valueForPool && (
           <li>
-            Value for{' '}
+            Value of swap on{' '}
             <a href="https://live.blockcypher.com/btc-testnet/address/myfTfju9XSMRusaY2qTitSEMSchsWRA441/">
-              Friedger Pool:
+              btc address
             </a>{' '}
             {valueForPool.toLocaleString(undefined, {
               style: 'decimal',
