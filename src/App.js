@@ -8,6 +8,7 @@ import { Link, Router } from '@reach/router';
 import Jackpot from './pages/Jackpot';
 import AtTwo from './pages/AtTwo';
 import Monsters from './pages/Monsters';
+import StacksPops from './pages/StacksPops';
 import MonsterDetails from './pages/MonsterDetails';
 import ClarityValues from './pages/ClarityValues';
 import MyProfile from './pages/MyProfile';
@@ -144,6 +145,12 @@ function Content({ userSession }) {
               <Monsters
                 exact
                 path="/monsters"
+                decentralizedID={decentralizedID}
+                userSession={userSession}
+              />
+              <StacksPops
+                exact
+                path="/stackspops"
                 decentralizedID={decentralizedID}
                 userSession={userSession}
               />
