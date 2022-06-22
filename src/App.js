@@ -32,6 +32,7 @@ import SendMany from './pages/SendMany';
 import PoolAudit from './pages/PoolAudit';
 import { Gaia } from './pages/Gaia';
 import Swap from './pages/Swap';
+import AddressConversion from './pages/AddressConversion';
 
 export default function App(props) {
   const { authOptions } = useConnect();
@@ -195,11 +196,7 @@ function Content({ userSession }) {
                 decentralizedID={decentralizedID}
                 userSession={userSessionState}
               />
-              <Swap
-                path="/swap"
-                decentralizedID={decentralizedID}
-                userSession={userSessionState}
-              />
+              <Swap path="/swap" decentralizedID={decentralizedID} userSession={userSessionState} />
               <PoxLite
                 path="/poxlite"
                 decentralizedID={decentralizedID}
@@ -207,6 +204,7 @@ function Content({ userSession }) {
               />
               <MyProfile path="/me" decentralizedID={decentralizedID} userSession={userSession} />
               <ClarityValues path="/cv" />
+              <AddressConversion path="/addresses" />
               <Gaia path="/gaia" userSession={userSession} />
               <StackingActivies path="/stacking"></StackingActivies>
             </AppBody>

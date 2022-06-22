@@ -7,7 +7,9 @@ import {
   contractPrincipalCV,
   tupleCV,
   cvToHex,
+  AddressVersion,
 } from '@stacks/transactions';
+import { b58ToC32, c32ToB58, versions } from 'c32check';
 
 export default function ClarityValues(props) {
   const data = useRef();
@@ -24,8 +26,9 @@ export default function ClarityValues(props) {
         cv = intCV(data);
         break;
       case 'principal':
-        if (data.indexOf('.') >= 0) {
-          cv = contractPrincipalCV(data);
+        const dataParts = data.split('.');
+        if (dataParts.length > 1) {
+          cv = contractPrincipalCV(dataParts[0], dataParts[1]);
         } else {
           cv = standardPrincipalCV(data);
         }

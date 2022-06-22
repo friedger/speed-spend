@@ -42,7 +42,7 @@ export function HodlButton({ title, path, placeholder, ownerStxAddress, appStxAd
     }
 
     try {
-      setStatus(`Sending transaction`);
+      setStatus(`Sending stx transfer transaction`);
 
       await doSTXTransfer({
         recipient: appStxAddress,
@@ -85,7 +85,7 @@ export function HodlButton({ title, path, placeholder, ownerStxAddress, appStxAd
               role="status"
               className="d-none spinner-border spinner-border-sm text-info align-text-top mr-2"
             />
-            Hodl
+            Hodl STX
           </button>
         </div>
       </div>

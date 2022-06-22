@@ -39,7 +39,7 @@ export function CreateMonsterButton({ ownerStxAddress }) {
         contractName: 'monsters',
         functionName: 'create-monster',
         functionArgs: [stringAsciiCV(name), uintCV(Math.floor(Math.random() * 109))],
-        postConditionMode: PostConditionMode.Allow,
+        postConditionMode: PostConditionMode.Deny,
         postConditions: [],
         network: NETWORK,
         onFinish: data => {

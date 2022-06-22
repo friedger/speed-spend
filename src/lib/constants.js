@@ -52,8 +52,7 @@ export const STACKS_API_ACCOUNTS_URL = `${STACK_API_URL}/v2/accounts`;
 
 export const STACKSPOPS_CONTRACT_TEST = 'ST2PABAF9FTAJYNFZH93XENAJ8FVY99RRM4DF2YCW';
 
-export const NETWORK = new StacksTestnet();
-NETWORK.coreApiUrl = STACK_API_URL;
+export const NETWORK = new StacksTestnet({ url: STACK_API_URL });
 
 const basePath = STACK_API_URL;
 const config = new Configuration({ basePath });
