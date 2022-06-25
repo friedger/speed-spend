@@ -18,6 +18,7 @@
     "@stacks/stacking": "^4.3.0",
     "@stacks/storage": "^4.3.0",
     "@stacks/transactions": "^4.3.0",
+    "bip39": "^3.0.4",
     "bitcoinjs-lib": "^6.0.1",
     "bn.js": "^5.2.1",
     "buffer-reverse": "^1.0.1",
