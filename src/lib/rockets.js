@@ -2,7 +2,6 @@ import {
   ClarityType,
   cvToString,
   cvToValue,
-  deserializeCV,
   hexToCV,
   standardPrincipalCV,
   uintCV,
@@ -89,7 +88,7 @@ export async function fetchPilots(rocketId) {
   if (result.type === ClarityType.OptionalSome) {
     const pilots = result.value.list;
     console.log(pilots);
-    return pilots.map(cv => cvToString(cv))
+    return pilots.map(cv => cvToString(cv));
   } else {
     return undefined;
   }

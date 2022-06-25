@@ -1,14 +1,8 @@
 import { getUserData } from '@stacks/connect-react';
 import { Person } from '@stacks/profile';
-import {
-  callReadOnlyFunction,
-  cvToString,
-  standardPrincipalCV,
-  uintCV,
-} from '@stacks/transactions';
 import React, { useRef, useState, useCallback, useEffect } from 'react';
 import { fetchAccount } from '../lib/account';
-import { NETWORK, STACK_API_URL } from '../lib/constants';
+import { STACK_API_URL } from '../lib/constants';
 import { fetchHodlTokenBalance, fetchSpendableTokenBalance } from '../lib/holdTokens';
 import { TxStatus } from '../lib/transactions';
 

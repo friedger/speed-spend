@@ -1,6 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
 import {
-  addressToString,
   trueCV,
   falseCV,
   makeStandardSTXPostCondition,

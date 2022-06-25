@@ -1,6 +1,5 @@
 import { AddressHashMode, bufferCV, tupleCV } from '@stacks/transactions';
 import { address } from 'bitcoinjs-lib';
-import BN from 'bn.js';
 import * as c32 from 'c32check';
 
 function getAddressHashMode(btcAddress) {

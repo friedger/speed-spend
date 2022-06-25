@@ -2,13 +2,12 @@ import React, { useRef, useState, useEffect } from 'react';
 
 import { fetchAccount } from '../lib/account';
 import { useConnect } from '@stacks/connect-react';
-import { PostConditionMode, bufferCVFromString, uintCV, stringAsciiCV } from '@stacks/transactions';
+import { PostConditionMode } from '@stacks/transactions';
 import { STACKSPOPS_CONTRACT_TEST, NETWORK } from '../lib/constants';
 import { TxStatus } from '../lib/transactions';
 
 export function MintStacksPopButton({ ownerStxAddress }) {
   const { doContractCall } = useConnect();
-  const textfield = useRef();
   const spinner = useRef();
   const [status, setStatus] = useState();
   const [txId, setTxId] = useState();

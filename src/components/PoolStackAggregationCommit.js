@@ -1,13 +1,11 @@
 import React, { useRef, useState, useEffect } from 'react';
 
 import {
-  authOrigin,
   CONTRACT_ADDRESS,
   GENESIS_CONTRACT_ADDRESS,
   infoApi,
   NETWORK,
   POOL_ADMIN_CONTRACT_NAME,
-  POOL_AUDIT_CONTRACT_NAME,
   smartContractsApi,
 } from '../lib/constants';
 import { TxStatus } from '../lib/transactions';
@@ -72,7 +70,6 @@ export function PoolStackAggregationCommit({ ownerStxAddress, userSession }) {
   const [rewardCycleId, setRewardCycleId] = useState(860);
   const [burnBlockHeight, setBurnBlockHeight] = useState();
   const [blocksUntilNextCycle, setBlocksUntilNextCycle] = useState(100);
-  const [minimum, setMinimum] = useState(10000000);
   const [lockedStx, setLockedStx] = useState(0);
 
   useEffect(() => {
@@ -92,7 +89,6 @@ export function PoolStackAggregationCommit({ ownerStxAddress, userSession }) {
     }
     infoApi.getPoxInfo().then(poxInfo => {
       const cycleId = poxInfo.reward_cycle_id;
-      setMinimum(poxInfo.min_amount_ustx);
       setRewardCycleId(cycleId);
       getPartialStacked(`${CONTRACT_ADDRESS}.${POOL_ADMIN_CONTRACT_NAME}`, cycleId, {
         hashBytes: 'c70e1ca5a5ef633fe5464821ca421c173997f388',

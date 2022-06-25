@@ -11,7 +11,6 @@ import { fetchAccount } from '../../lib/account';
 import { useConnect } from '@stacks/connect-react';
 import { PostConditionMode } from '@stacks/transactions';
 import { fetchOrderBook } from '../../lib/rockets';
-import { RosettaConstructionPayloadResponseToJSON } from '@stacks/blockchain-api-client';
 
 export function ClaimRocket({ ownerStxAddress }) {
   const { doContractCall } = useConnect();
@@ -73,15 +72,17 @@ export function ClaimRocket({ ownerStxAddress }) {
       spinner.current.classList.add('d-none');
     }
   };
-  console.log(blockheight)
-  const canBeClaimed = blockheight && order && blockheight > order.readyAtBlock
+  console.log(blockheight);
+  const canBeClaimed = blockheight && order && blockheight > order.readyAtBlock;
   return (
     <>
       {order && (
         <div>
           <h5>Get your ordered rocket</h5>
           {canBeClaimed && <p>Ready since {blockheight - order.readyAtBlock} blocks</p>}
-          {!canBeClaimed && blockheight && <p>Ready in {order.readyAtBlock -blockheight} blocks</p>}
+          {!canBeClaimed && blockheight && (
+            <p>Ready in {order.readyAtBlock - blockheight} blocks</p>
+          )}
           <div className="NoteField input-group ">
             <div className="input-group-append">
               <button

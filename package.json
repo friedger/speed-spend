@@ -10,22 +10,23 @@
   },
   "dependencies": {
     "@reach/router": "^1.3.4",
-    "@stacks/blockchain-api-client": "0.70.1",
-    "@stacks/connect": "^6.2.0",
-    "@stacks/connect-react": "^13.0.0",
-    "@stacks/network": "^2.0.1",
-    "@stacks/profile": "^2.0.1",
-    "@stacks/stacking": "^2.0.1",
-    "@stacks/storage": "^2.0.1",
-    "@stacks/transactions": "^2.0.1",
-    "bn.js": "^5.2.0",
+    "@stacks/blockchain-api-client": "4.0.4",
+    "@stacks/connect": "^6.8.8",
+    "@stacks/connect-react": "^17.0.8",
+    "@stacks/network": "^4.3.0",
+    "@stacks/profile": "^4.3.0",
+    "@stacks/stacking": "^4.3.0",
+    "@stacks/storage": "^4.3.0",
+    "@stacks/transactions": "^4.3.0",
+    "bitcoinjs-lib": "^6.0.1",
+    "bn.js": "^5.2.1",
     "buffer-reverse": "^1.0.1",
-    "c32check": "^1.1.2",
-    "crypto-js": "^4.0.0",
-    "jotai": "^0.16.0",
-    "merkletreejs": "^0.2.18",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
+    "c32check": "^1.1.3",
+    "crypto-js": "^4.1.1",
+    "jotai": "^1.7.2",
+    "merkletreejs": "^0.2.32",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "react-input-switch": "^2.2.2",
     "react-router-dom": "^5.2.0"
   },
@@ -42,9 +43,9 @@
   },
   "browserslist": {
     "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
     ],
     "development": [
       "last 1 chrome version",
@@ -53,14 +54,11 @@
     ]
   },
   "devDependencies": {
-    "@stacks/prettier-config": "0.0.8",
-    "bootstrap": "^5.1.1",
-    "netlify-cli": "^6.9.9",
-    "prettier": "^2.4.1",
+    "@stacks/prettier-config": "0.0.10",
+    "bootstrap": "^5.1.3",
+    "netlify-cli": "^10.6.2",
+    "prettier": "^2.7.1",
     "react-scripts": "^4.0.3",
-    "react-test-renderer": "^17.0.2"
-  },
-  "engines": {
-    "node": "14"
+    "react-test-renderer": "^18.2.0"
   }
 }

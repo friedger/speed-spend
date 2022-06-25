@@ -16,10 +16,8 @@ import {
   CLARITY_BITCOIN_CONTRACT_NAME,
   CONTRACT_ADDRESS,
   NETWORK,
-  POOL_ADMIN_CONTRACT_NAME,
   POOL_AUDIT_CONTRACT_NAME,
 } from './constants';
-import BN from 'bn.js';
 
 export async function fetchBtcTxList() {
   const response = await accountsApi.getAccountTransactions({
@@ -247,7 +245,7 @@ export async function paramsFromTx(btcTxId, stxHeight) {
   });
 
   let height;
-  let stacksBlock
+  let stacksBlock;
   if (!stxHeight) {
     const stacksBlockHash = tx.outputs[0].data_hex.substr(6, 64);
     const stacksBlockResponse = await fetch(

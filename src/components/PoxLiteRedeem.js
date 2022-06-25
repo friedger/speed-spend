@@ -45,7 +45,11 @@ export function PoxLiteRedeem({ ownerStxAddress, userSession }) {
     // check balance
     const acc = await fetchAccount(ownerStxAddress);
     const balance = acc ? parseInt(acc.balance, 16) : 0;
-
+    if (balance < amount) {
+      setStatus('Not enough funds');
+      spinner.current.classList.add('d-none');
+      return;
+    }
     try {
       setStatus(`Sending transaction`);
       await doContractCall({

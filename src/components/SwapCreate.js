@@ -1,18 +1,10 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
-import {
-  BTC_STX_SWAP_CONTRACT,
-  CONTRACT_ADDRESS,
-  infoApi,
-  NETWORK,
-  POOL_ADMIN_CONTRACT_NAME,
-} from '../lib/constants';
+import { BTC_STX_SWAP_CONTRACT, NETWORK } from '../lib/constants';
 import { TxStatus } from '../lib/transactions';
-import { fetchAccount } from '../lib/account';
 import { useConnect as useStacksJsConnect } from '@stacks/connect-react';
 import {
   bufferCV,
-  bufferCVFromString,
   FungibleConditionCode,
   makeStandardSTXPostCondition,
   PostConditionMode,
@@ -32,7 +24,6 @@ export function SwapCreate({ ownerStxAddress, userSession }) {
   const [ustx, setUstx] = useState(1000000);
   const [btcReceiver, setBtcReceiver] = useState('myEF4iW1eZcwgYsmsSpNA1kwnMwqgyZWMU');
   const [stxReceiver, setStxReceiver] = useState('ST82S7H3DPXG6NN2YGW413DSK5Q83BT59D0RXFZ5');
-  const [expiry, setExpiry] = useState();
 
   const createAction = async () => {
     const satsCV = uintCV(sats);

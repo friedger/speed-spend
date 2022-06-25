@@ -39,7 +39,7 @@ export function SwapTxSubmission({ ownerStxAddress, userSession }) {
     const stxHeight = parseInt(heightRef.current.value.trim());
     const {
       txCV,
-      txPartsCV,
+      // txPartsCV,
       proofCV,
       block,
       blockCV,

@@ -9,7 +9,6 @@ import {
   ClarityType,
   contractPrincipalCV,
   cvToString,
-  makeContractCall,
   noneCV,
   PostConditionMode,
   someCV,

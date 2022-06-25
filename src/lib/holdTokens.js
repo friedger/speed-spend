@@ -1,10 +1,4 @@
-import {
-  callReadOnlyFunction,
-  ClarityType,
-  deserializeCV,
-  serializeCV,
-  standardPrincipalCV,
-} from '@stacks/transactions';
+import { callReadOnlyFunction, ClarityType, standardPrincipalCV } from '@stacks/transactions';
 import { CONTRACT_ADDRESS, HODL_TOKEN_CONTRACT, NETWORK } from './constants';
 
 export function fetchHodlTokenBalance(sender) {

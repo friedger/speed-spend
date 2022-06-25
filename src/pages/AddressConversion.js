@@ -1,13 +1,4 @@
 import React, { useRef, useState } from 'react';
-
-import {
-  uintCV,
-  intCV,
-  standardPrincipalCV,
-  contractPrincipalCV,
-  tupleCV,
-  cvToHex,
-} from '@stacks/transactions';
 import { b58ToC32, c32ToB58 } from 'c32check';
 
 export default function AddressConversion() {

@@ -4,7 +4,7 @@ import { connectToGaiaHub } from '@stacks/storage';
 const fileName = 'aFile.txt';
 
 export function Gaia({ userSession }) {
-  const [gaiaHubUrl, setGaiaHubUrl] = useState('http://172.18.2.2:3000');
+  const [gaiaHubUrl] = useState('http://172.18.2.2:3000');
   const [fileContent, setFileContent] = useState();
 
   const saveFileAction = async () => {

@@ -2,11 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useStxAddresses } from '../lib/hooks';
 import { PoolJoin } from '../components/PoolJoin';
 import { fetchPool } from '../lib/pools';
-import { CONTRACT_ADDRESS, GENESIS_CONTRACT_ADDRESS } from '../lib/constants';
 import {
   contractPrincipalCV,
   someCV,
-  standardPrincipalCV,
   tupleCV,
   uintCV,
   stringAsciiCV,

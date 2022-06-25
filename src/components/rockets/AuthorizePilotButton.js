@@ -1,11 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 
-import {
-  CONTRACT_ADDRESS,
-  NETWORK,
-  ROCKET_FACTORY_CONTRACT_NAME,
-  ROCKET_MARKET_CONTRACT_NAME,
-} from '../../lib/constants';
+import { CONTRACT_ADDRESS, NETWORK, ROCKET_MARKET_CONTRACT_NAME } from '../../lib/constants';
 import { TxStatus } from '../../lib/transactions';
 import { fetchAccount } from '../../lib/account';
 import { useConnect } from '@stacks/connect-react';

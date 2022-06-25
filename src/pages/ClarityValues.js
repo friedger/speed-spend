@@ -7,9 +7,7 @@ import {
   contractPrincipalCV,
   tupleCV,
   cvToHex,
-  AddressVersion,
 } from '@stacks/transactions';
-import { b58ToC32, c32ToB58, versions } from 'c32check';
 
 export default function ClarityValues(props) {
   const data = useRef();
