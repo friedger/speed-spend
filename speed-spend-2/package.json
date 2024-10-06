@@ -51,7 +51,7 @@
   },
   "prettier": "@stacks/prettier-config",
   "engines": {
-    "node": "22"
+    "node": "20"
   },
   "browserslist": {
     "production": [
