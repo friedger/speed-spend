@@ -1,3 +1,4 @@
+import { bytesToAscii } from '@stacks/common';
 import {
   addressFromPublicKeys,
   AddressHashMode,
@@ -8,7 +9,6 @@ import {
   callReadOnlyFunction,
   ClarityType,
   createStacksPrivateKey,
-  cvToString,
   getPublicKey,
   principalCV,
   PrincipalCV,
@@ -16,7 +16,6 @@ import {
   SomeCV,
   TupleCV,
 } from '@stacks/transactions';
-import { bytesToAscii } from '@stacks/common';
 import {
   accountsApi,
   BNSV2_CONTRACT_ADDRESS,

@@ -1,5 +1,5 @@
 import { Spinner, Typography } from '@material-tailwind/react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { STACK_API_URL } from '../lib/constants';
 
 export function TxStatus({ txId, resultPrefix }: { txId: string; resultPrefix: string }) {
