@@ -94,7 +94,6 @@ export function SpendField({
         <Input
           label="Friend's .btc name"
           type="text"
-          defaultValue={''}
           placeholder={placeholder}
           disabled={!account}
           value={username}

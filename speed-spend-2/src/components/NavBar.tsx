@@ -5,19 +5,23 @@ import { ConnectButton } from './ConnectButton';
 import { SignOutButton } from './SignOutButton';
 import { Link } from 'react-router-dom';
 
-function NavList() {
+function NavList({ onClick }: { onClick: () => void }) {
   return (
     <List className="mb-6 mt-4 p-0 lg:mb-0 lg:mt-0 lg:flex-row lg:p-1">
-      <Typography variant="small" color="blue-gray" className="font-medium">
-        <ListItem className="flex items-center gap-2 py-2 pr-4">
-          <Link to={'/send-stx'}>Send STX</Link>
-        </ListItem>
-      </Typography>
-      <Typography variant="small" color="blue-gray" className="font-medium">
-        <ListItem className="flex items-center gap-2 py-2 pr-4">
-          <Link to={'/names'}>Names</Link>
-        </ListItem>
-      </Typography>
+      <ListItem className="flex items-center gap-2 py-2 pr-4">
+        <Typography variant="small" color="blue-gray" className="font-medium">
+          <Link to={'/send-stx'} onClick={onClick}>
+            Send STX
+          </Link>
+        </Typography>
+      </ListItem>
+      <ListItem className="flex items-center gap-2 py-2 pr-4">
+        <Typography variant="small" color="blue-gray" className="font-medium">
+          <Link to={'/names'} onClick={onClick}>
+            Names
+          </Link>
+        </Typography>
+      </ListItem>
     </List>
   );
 }
@@ -42,7 +46,7 @@ export function SpeedSpendNavBar({
           <Link to="/">Speed Spend</Link>
         </Typography>
         <div className="hidden lg:block">
-          <NavList />
+          {loggedIn && <NavList onClick={() => setOpenNav(!openNav)} />}
         </div>
         <div className="hidden gap-2 lg:flex">
           {loggedIn ? <SignOutButton /> : <ConnectButton setLoggedIn={setLoggedIn} />}
@@ -56,9 +60,13 @@ export function SpeedSpendNavBar({
         </IconButton>
       </div>
       <Collapse open={openNav}>
-        <NavList />
+        {loggedIn && <NavList onClick={() => setOpenNav(!openNav)} />}
         <div className="flex w-full flex-nowrap items-center gap-2 lg:hidden">
-          {loggedIn ? <SignOutButton /> : <ConnectButton setLoggedIn={setLoggedIn} />}
+          {loggedIn ? (
+            <SignOutButton />
+          ) : (
+            <ConnectButton setLoggedIn={setLoggedIn} onClick={() => setOpenNav(!openNav)} />
+          )}
         </div>
       </Collapse>
     </Navbar>

@@ -4,8 +4,10 @@ import { authOptions, userSession } from '../user-session';
 
 export function ConnectButton({
   setLoggedIn,
+  onClick,
 }: {
   setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+  onClick?: () => void;
 }) {
   console.log(userSession.isSignInPending());
 
@@ -19,6 +21,9 @@ export function ConnectButton({
             setLoggedIn(true);
           },
         });
+        if (onClick) {
+          onClick();
+        }
       }}
     >
       Connect Wallet

@@ -8,6 +8,7 @@ import ErrorPage from './error-page';
 import SendStx from './routes/send-stx';
 import Names from './routes/names';
 import './output.css';
+import Root from './routes/root';
 
 const router = createBrowserRouter([
   {
@@ -17,6 +18,7 @@ const router = createBrowserRouter([
     children: [
       { path: '/send-stx', element: <SendStx /> },
       { path: '/names', element: <Names /> },
+      { index: true, element: <Root /> },
     ],
   },
 ]);
