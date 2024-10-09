@@ -34,7 +34,6 @@ export const POOL_REGISTRY_CONTRACT_NAME = 'pool-registry-v2';
 export const POOL_AUDIT_CONTRACT_NAME = 'pool-audit-v9';
 export const POOL_ADMIN_CONTRACT_NAME = 'pool-admin-v4';
 export const CLARITY_BITCOIN_CONTRACT_NAME = 'clarity-bitcoin-v5';
-export const GENESIS_CONTRACT_ADDRESS = 'ST000000000000000000002AMW42H';
 export const BNS_CONTRACT_NAME = 'bns';
 
 export const STACK_API_URL = localNode
@@ -42,7 +41,7 @@ export const STACK_API_URL = localNode
   : 'https://api.nakamoto.testnet.hiro.so';
 export const STACKS_API_WS_URL = localNode
   ? 'ws:localhost:3999/'
-  : 'ws://stacks-node-api.testnet.stacks.co/';
+  : 'ws://api.nakamoto.testnet.hiro.so/';
 export const STACKS_API_ACCOUNTS_URL = `${STACK_API_URL}/v2/accounts`;
 
 export const STACKSPOPS_CONTRACT_TEST = 'ST2PABAF9FTAJYNFZH93XENAJ8FVY99RRM4DF2YCW';

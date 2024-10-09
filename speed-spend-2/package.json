@@ -28,6 +28,7 @@
     "@stacks/network": "^6.16.0",
     "@stacks/profile": "^6.16.1",
     "@stacks/stacking": "^6.16.1",
+    "@stacks/stacks-blockchain-api-types": "^7.14.1",
     "@stacks/transactions": "^6.16.1",
     "jotai": "^2.10.0",
     "react": "^18.3.1",
