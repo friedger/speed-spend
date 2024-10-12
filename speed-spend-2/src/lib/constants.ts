@@ -1,10 +1,10 @@
 import {
-  TransactionsApi,
-  SmartContractsApi,
   AccountsApi,
+  BlocksApi,
   Configuration,
   InfoApi,
-  BlocksApi,
+  SmartContractsApi,
+  TransactionsApi,
 } from '@stacks/blockchain-api-client';
 import { StacksTestnet } from '@stacks/network';
 
@@ -36,12 +36,10 @@ export const POOL_ADMIN_CONTRACT_NAME = 'pool-admin-v4';
 export const CLARITY_BITCOIN_CONTRACT_NAME = 'clarity-bitcoin-v5';
 export const BNS_CONTRACT_NAME = 'bns';
 
-export const STACK_API_URL = localNode
-  ? 'http://localhost:3999'
-  : 'https://api.nakamoto.testnet.hiro.so';
-export const STACKS_API_WS_URL = localNode
-  ? 'ws:localhost:3999/'
-  : 'ws://api.nakamoto.testnet.hiro.so/';
+export const STACK_API_URL = localNode ? 'http://localhost:3999' : 'https://api.testnet.hiro.so';
+export const STACKS_API_WS_URL = localNode ? 'ws:localhost:3999/' : 'wss://api.testnet.hiro.so/';
+export const STACKS_SOCKET_URL = 'wss://api.testnet.hiro.so/';
+
 export const STACKS_API_ACCOUNTS_URL = `${STACK_API_URL}/v2/accounts`;
 
 export const STACKSPOPS_CONTRACT_TEST = 'ST2PABAF9FTAJYNFZH93XENAJ8FVY99RRM4DF2YCW';
@@ -56,5 +54,5 @@ export const transactionsApi = new TransactionsApi(config);
 export const infoApi = new InfoApi(config);
 export const blocksApi = new BlocksApi(config);
 
-export const BNSV2_CONTRACT_ADDRESS = 'ST2PABAF9FTAJYNFZH93XENAJ8FVY99RRM4DF2YCW';
-export const BNSV2_CONTRACT_NAME = 'bns-v2';
+export const BNSV2_CONTRACT_ADDRESS = 'ST2QEZ06AGJ3RKJPBV14SY1V5BBFNAW33D9SZJQ0M';
+export const BNSV2_CONTRACT_NAME = 'BNS-V2';

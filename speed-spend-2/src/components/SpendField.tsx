@@ -73,6 +73,7 @@ export function SpendField({
           setLoading(false);
         },
         onCancel: () => {
+          setStatus('');
           setLoading(false);
         },
       });
@@ -113,7 +114,7 @@ export function SpendField({
           Send
         </Button>
       </div>
-      {txId && <TxStatus txId={txId} resultPrefix="Tx id:" />}
+      {txId && <TxStatus txId={txId} resultPrefix="Tx result:" />}
       {status && (
         <>
           <div>{status}</div>

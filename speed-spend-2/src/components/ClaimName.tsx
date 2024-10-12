@@ -48,7 +48,7 @@ export function ClaimName({
 
   const claimAction = async () => {
     setLoading(true);
-    let [name, namespace] = username.split('.');
+    let [name, namespace] = newName.split('.');
     if (!namespace) {
       namespace = 'btc';
     }
@@ -114,7 +114,7 @@ export function ClaimName({
               Claim
             </Button>
           </div>
-          {txId && <TxStatus txId={txId} resultPrefix="Tx id:" />}
+          {txId && <TxStatus txId={txId} resultPrefix="Tx result:" />}
           {status && (
             <>
               <div>{status}</div>

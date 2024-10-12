@@ -8,20 +8,20 @@ import { Link } from 'react-router-dom';
 function NavList({ onClick }: { onClick: () => void }) {
   return (
     <List className="mb-6 mt-4 p-0 lg:mb-0 lg:mt-0 lg:flex-row lg:p-1">
-      <ListItem className="flex items-center gap-2 py-2 pr-4">
-        <Typography variant="small" color="blue-gray" className="font-medium">
-          <Link to={'/send-stx'} onClick={onClick}>
+      <Link to={'/send-stx'} onClick={onClick}>
+        <ListItem className="flex items-center gap-2 py-2 pr-4">
+          <Typography variant="small" color="blue-gray" className="font-medium">
             Send STX
-          </Link>
-        </Typography>
-      </ListItem>
-      <ListItem className="flex items-center gap-2 py-2 pr-4">
-        <Typography variant="small" color="blue-gray" className="font-medium">
-          <Link to={'/names'} onClick={onClick}>
+          </Typography>
+        </ListItem>
+      </Link>
+      <Link to={'/names'} onClick={onClick}>
+        <ListItem className="flex items-center gap-2 py-2 pr-4">
+          <Typography variant="small" color="blue-gray" className="font-medium">
             Names
-          </Link>
-        </Typography>
-      </ListItem>
+          </Typography>
+        </ListItem>
+      </Link>
     </List>
   );
 }

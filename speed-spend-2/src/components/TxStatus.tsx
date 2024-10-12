@@ -1,7 +1,7 @@
 import { Spinner, Typography } from '@material-tailwind/react';
 import { connectWebSocketClient } from '@stacks/blockchain-api-client';
 import { useEffect, useState } from 'react';
-import { STACK_API_URL, STACKS_API_WS_URL, transactionsApi } from '../lib/constants';
+import { STACK_API_URL, STACKS_SOCKET_URL, transactionsApi } from '../lib/constants';
 
 export function TxStatus({ txId, resultPrefix }: { txId: string; resultPrefix: string }) {
   const [processingResult, setProcessingResult] = useState<{ loading: boolean; result: any }>({
@@ -13,31 +13,35 @@ export function TxStatus({ txId, resultPrefix }: { txId: string; resultPrefix: s
     if (!txId) {
       return;
     }
-    console.log(txId);
+    console.log('subscribed to', txId);
     setProcessingResult({ loading: true, result: undefined });
 
     let sub: any;
-    let client;
-    const subscribe = async (txId: string, update: (event: any) => any) => {
-      client = await connectWebSocketClient(STACKS_API_WS_URL);
-      sub = await client.subscribeTxUpdates(txId, update);
-      console.log({ client, sub });
+    const subscribe = async (txId: string, update: (transaction: any) => any) => {
+      let sc = await connectWebSocketClient(STACKS_SOCKET_URL);
+      if (sub) {
+        console.log('unsubscribing ', sub);
+        sub.unsubscribe();
+      }
+      sub = await sc.subscribeTxUpdates(txId, update);
+      console.log({ sub });
     };
 
-    subscribe(txId, async (event: any) => {
-      console.log(event);
+    subscribe(txId, async (transaction: any) => {
+      console.log(transaction);
       let result;
-      if (event.tx_status === 'pending') {
+      if (transaction.tx_status === 'pending') {
         return;
-      } else if (event.tx_status === 'success') {
+      } else if (transaction.tx_status === 'success') {
         const tx: any = await transactionsApi.getTransactionById({ txId });
         console.log(tx);
         result = tx.tx_result;
-      } else if (event.tx_status.startsWith('abort')) {
+      } else if (transaction.tx_status.startsWith('abort')) {
         result = undefined;
       }
       setProcessingResult({ loading: false, result });
       await sub.unsubscribe();
+      sub = undefined;
     });
   }, [txId]);
 
