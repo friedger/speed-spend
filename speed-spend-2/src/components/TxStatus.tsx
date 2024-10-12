@@ -3,14 +3,26 @@ import { connectWebSocketClient } from '@stacks/blockchain-api-client';
 import { useEffect, useState } from 'react';
 import { STACK_API_URL, STACKS_SOCKET_URL, transactionsApi } from '../lib/constants';
 
-function Ticker({ txId }: { txId: string }) {
+function Ticker({
+  txId,
+  onTick,
+}: {
+  txId: string;
+  onTick: React.Dispatch<React.SetStateAction<number>>;
+}) {
   const [startTime, setStartTime] = useState(new Date());
   const [time, setTime] = useState(new Date());
 
   useEffect(() => {
     setStartTime(new Date());
     const interval = setInterval(() => {
-      setTime(new Date());
+      const now = new Date();
+      setTime(now);
+      onTick(
+        now.getTime() - startTime.getTime() < 0
+          ? 0
+          : Math.floor((now.getTime() - startTime.getTime()) / 1000)
+      );
     }, 1000);
 
     return () => {
@@ -41,6 +53,7 @@ export function TxStatus({ txId, resultPrefix }: { txId: string; resultPrefix: s
     loading: false,
     result: undefined,
   });
+  const [duration, setDuration] = useState(0);
 
   useEffect(() => {
     if (!txId) {
@@ -87,7 +100,7 @@ export function TxStatus({ txId, resultPrefix }: { txId: string; resultPrefix: s
     <>
       {processingResult.loading && (
         <>
-          <Ticker txId={txId} />
+          <Ticker txId={txId} onTick={setDuration} />
           <div className="flex">
             <Typography>
               Checking transaction status:{' '}
@@ -103,7 +116,7 @@ export function TxStatus({ txId, resultPrefix }: { txId: string; resultPrefix: s
       {!processingResult.loading && processingResult.result && (
         <Typography>
           {resultPrefix}
-          {processingResult.result.repr}
+          {processingResult.result.repr} (confirmed in {duration} secs)
         </Typography>
       )}
     </>
