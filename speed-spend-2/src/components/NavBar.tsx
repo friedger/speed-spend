@@ -46,7 +46,13 @@ export function SpeedSpendNavBar({
           <Link to="/">Speed Spend</Link>
         </Typography>
         <div className="hidden lg:block">
-          {loggedIn && <NavList onClick={() => setOpenNav(!openNav)} />}
+          {loggedIn && (
+            <NavList
+              onClick={() => {
+                return;
+              }}
+            />
+          )}
         </div>
         <div className="hidden gap-2 lg:flex">
           {loggedIn ? <SignOutButton /> : <ConnectButton setLoggedIn={setLoggedIn} />}
