@@ -1,5 +1,6 @@
 import { Card, CardBody, CardHeader, List, ListItem, Typography } from '@material-tailwind/react';
 import { Explainer } from '../components/Explainer';
+import { Link } from 'react-router-dom';
 
 export default function Root() {
   return (
@@ -13,12 +14,12 @@ export default function Root() {
         </CardHeader>
         <CardBody>
           <List>
-            <a href="/send-stx" className="text-initial">
+            <Link to="/send-stx" className="text-initial">
               <ListItem>Send tSTX to your friends</ListItem>
-            </a>
-            <a href="/names" className="text-initial">
+            </Link>
+            <Link to="/names" className="text-initial">
               <ListItem>Claim BNS v2 name</ListItem>
-            </a>
+            </Link>
           </List>
         </CardBody>
       </Card>
