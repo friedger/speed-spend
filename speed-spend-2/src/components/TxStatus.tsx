@@ -22,13 +22,13 @@ function Ticker({ txId }: { txId: string }) {
     <div className="w-full">
       <div className="mb-2 flex items-center justify-between gap-4">
         <Typography color="blue-gray" variant="h6">
-          {(time.getTime() - startTime.getTime()) / 1000} sec
+          {Math.floor((time.getTime() - startTime.getTime()) / 1000)} sec
         </Typography>
         <Typography color="blue-gray" variant="h6">
           20 sec
         </Typography>
       </div>
-      <Progress value={((time.getTime() - startTime.getTime()) / 1000) * 5} />
+      <Progress value={Math.floor((time.getTime() - startTime.getTime()) / 1000) * 5} />
     </div>
   );
 }
