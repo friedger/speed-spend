@@ -22,7 +22,10 @@ function Ticker({ txId }: { txId: string }) {
     <div className="w-full">
       <div className="mb-2 flex items-center justify-between gap-4">
         <Typography color="blue-gray" variant="h6">
-          {Math.floor((time.getTime() - startTime.getTime()) / 1000)} sec
+          {time.getTime() - startTime.getTime() < 0
+            ? 0
+            : Math.floor((time.getTime() - startTime.getTime()) / 1000)}{' '}
+          sec
         </Typography>
         <Typography color="blue-gray" variant="h6">
           20 sec

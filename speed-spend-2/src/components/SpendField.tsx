@@ -35,6 +35,7 @@ export function SpendField({
   }, [stxAddress]);
 
   const sendAction = async () => {
+    setTxId('');
     setLoading(true);
     var usernameString = username;
     if (username.indexOf('.') < 0) {
