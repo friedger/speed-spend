@@ -40,7 +40,7 @@ function Ticker({
           sec
         </Typography>
         <Typography color="blue-gray" variant="h6">
-          20 sec
+          {Math.floor((time.getTime() - startTime.getTime()) / 1000) <= 20 ? '20 sec' : ''}
         </Typography>
       </div>
       <Progress value={Math.floor((time.getTime() - startTime.getTime()) / 1000) * 5} />
