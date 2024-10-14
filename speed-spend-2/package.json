@@ -1,0 +1,70 @@
+{
+  "name": "speed-spend",
+  "description": "Send STX tokens as quickly as possible",
+  "private": false,
+  "version": "2.0.0",
+  "type": "module",
+  "author": "Friedger Müffke",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/friedger/speed-spend.git"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview",
+    "prestart": "npm run build:tailwind",
+    "prebuild": "npm run build:tailwind",
+    "build:tailwind": "tailwindcss build -i src/input.css -o src/output.css"
+  },
+  "dependencies": {
+    "@heroicons/react": "^2.1.5",
+    "@material-tailwind/react": "^2.1.10",
+    "@stacks/blockchain-api-client": "7.8.1",
+    "@stacks/common": "^6.16.0",
+    "@stacks/connect": "^7.7.1",
+    "@stacks/network": "^6.16.0",
+    "@stacks/profile": "^6.16.1",
+    "@stacks/stacking": "^6.16.1",
+    "@stacks/stacks-blockchain-api-types": "^7.14.1",
+    "@stacks/transactions": "^6.16.1",
+    "jotai": "^2.10.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.2",
+    "socket.io-client": "^4.8.0"
+  },
+  "devDependencies": {
+    "@popperjs/core": "^2.11.8",
+    "@stacks/prettier-config": "^0.0.10",
+    "@types/react": "18.2.19",
+    "@types/react-dom": "^18.3.0",
+    "@typescript-eslint/eslint-plugin": "^8.8.0",
+    "@typescript-eslint/parser": "^8.8.0",
+    "@vitejs/plugin-react": "^4.3.2",
+    "eslint": "^9.12.0",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-react-refresh": "^0.4.12",
+    "tailwindcss": "^3.4.13",
+    "typescript": "^5.6.2",
+    "vite": "^5.4.8"
+  },
+  "prettier": "@stacks/prettier-config",
+  "engines": {
+    "node": "20"
+  },
+  "browserslist": {
+    "production": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
