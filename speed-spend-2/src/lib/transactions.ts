@@ -1,3 +1,4 @@
+import { serializeCV, hexToCV as stacksHexToCV } from '@stacks/transactions';
 export function resultToStatus(result: any) {
   if (
     result &&
@@ -13,4 +14,12 @@ export function resultToStatus(result: any) {
   } else {
     return result.toString();
   }
+}
+
+export function cvToHex(value) {
+  return `0x${serializeCV(value).toString('hex')}`;
+}
+
+export function hexToCV(hexString) {
+  return stacksHexToCV(hexString);
 }
