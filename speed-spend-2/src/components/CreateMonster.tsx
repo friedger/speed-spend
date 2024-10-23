@@ -1,7 +1,7 @@
 import { Button, Input, Typography } from '@material-tailwind/react';
 import { showContractCall } from '@stacks/connect';
 import { PostConditionMode, uintCV, stringAsciiCV, AnchorMode } from '@stacks/transactions';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { CONTRACT_ADDRESS, NETWORK, MONSTERS_CONTRACT_NAME } from '../lib/constants';
 import { resultToStatus } from '../lib/transactions';
 import { TxStatus } from './TxStatus';
@@ -12,15 +12,20 @@ export function CreateMonster({ stxAddress }: { stxAddress: string }) {
   const [status, setStatus] = useState<string>('');
   const [txId, setTxId] = useState<string>('');
   const [newName, setNewName] = useState<string>('');
-  const spinner = useRef<HTMLDivElement>(null);
+
+  const stringifyBigInt = (obj: any) => {
+    return JSON.stringify(obj, (key, value) =>
+      typeof value === 'bigint' ? value.toString() : value
+    );
+  };
 
   useEffect(() => {
     if (stxAddress) {
       fetchAccount(stxAddress)
-        .then(acc => console.log({ acc }))
+        .then(acc => console.log('Account:', stringifyBigInt(acc)))
         .catch(e => {
           setStatus('Failed to access your account');
-          console.log(e);
+          console.error(e);
         });
     }
   }, [stxAddress]);
@@ -31,14 +36,13 @@ export function CreateMonster({ stxAddress }: { stxAddress: string }) {
       return;
     }
 
-    spinner.current?.classList.remove('d-none');
     setLoading(true);
 
     try {
       setStatus('Sending transaction...');
       await showContractCall({
-        contractAddress: 'ST3FFRX7C911PZP5RHE148YDVDD9JWVS6FZRA60VS',
-        contractName: 'monsters',
+        contractAddress: CONTRACT_ADDRESS,
+        contractName: MONSTERS_CONTRACT_NAME,
         functionName: 'create-monster',
         functionArgs: [
           stringAsciiCV(newName.trim()),
@@ -49,16 +53,15 @@ export function CreateMonster({ stxAddress }: { stxAddress: string }) {
         postConditionMode: PostConditionMode.Allow,
         onFinish: result => {
           setTxId(result.txId);
-          setStatus(resultToStatus(result));
+          const readableResult = stringifyBigInt(result);
+          setStatus(`Monster created! Transaction ID: ${result.txId}\nDetails: ${readableResult}`);
           setLoading(false);
-          spinner.current?.classList.add('d-none');
         },
       });
     } catch (e: any) {
       console.error(e);
       setStatus(`Transaction failed: ${e.message}`);
       setLoading(false);
-      spinner.current?.classList.add('d-none');
     }
   };
 
@@ -67,7 +70,7 @@ export function CreateMonster({ stxAddress }: { stxAddress: string }) {
       <Typography variant="h5" className="mb-4">
         Create your Monster on the Nakamoto testnet in seconds!
       </Typography>
-      <div className="input-group mb-2">
+      <div className="w-72 m-1">
         <Input
           label="Monster Name"
           placeholder="Enter a monster name (max 20 characters)"
@@ -76,13 +79,8 @@ export function CreateMonster({ stxAddress }: { stxAddress: string }) {
           onKeyUp={e => {
             if (e.key === 'Enter') claimAction();
           }}
-          disabled={loading}
         />
-        <Button onClick={claimAction} disabled={loading || !newName.trim()} className="ml-2">
-          <div
-            ref={spinner}
-            className="d-none spinner-border spinner-border-sm text-info align-text-top mr-2"
-          />
+        <Button onClick={claimAction} disabled={loading || !newName.trim()} className="m-1">
           {loading ? 'Creating...' : 'Create'}
         </Button>
       </div>

@@ -21,11 +21,10 @@ export const authOrigin = localAuth
     ? 'https://pr-725.app.stacks.engineering/'
     : 'https://api.nakamoto.testnet.hiro.so';
 
-export const CONTRACT_ADDRESS = mocknet
-  ? 'STB44HYPYAT2BB2QE513NSP81HTMYWBJP02HPGK6' //ADDR1 from Stacks.toml
-  : 'ST33GW755MQQP6FZ58S423JJ23GBKK5ZKH3MGR55N';
+export const CONTRACT_ADDRESS = 'ST3FFRX7C911PZP5RHE148YDVDD9JWVS6FZRA60VS';
+
 export const HODL_TOKEN_CONTRACT = 'hodl-token';
-export const MONSTERS_CONTRACT_NAME = 'monsters-v1';
+export const MONSTERS_CONTRACT_NAME = 'monsters';
 export const MARKET_CONTRACT_NAME = 'market-v1';
 export const ROCKET_MARKET_CONTRACT_NAME = 'rocket-market-v3';
 export const ROCKET_FACTORY_CONTRACT_NAME = 'rocket-factory-v5';
