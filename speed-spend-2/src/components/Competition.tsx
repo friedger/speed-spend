@@ -16,12 +16,10 @@ export function CreateMonster({ stxAddress }: { stxAddress: string }) {
 
   useEffect(() => {
     if (stxAddress) {
-      fetchAccount(stxAddress)
-        .then(acc => console.log({ acc }))
-        .catch(e => {
-          setStatus('Failed to access your account');
-          console.log(e);
-        });
+      fetchAccount(stxAddress).catch(e => {
+        setStatus('Failed to access your account');
+        console.log(e);
+      });
     }
   }, [stxAddress]);
 
@@ -42,7 +40,7 @@ export function CreateMonster({ stxAddress }: { stxAddress: string }) {
         functionName: 'create-monster',
         functionArgs: [
           stringAsciiCV(newName.trim()),
-          uintCV(Math.floor(Math.random() * 109)) // Random number for monster characteristics.
+          uintCV(Math.floor(Math.random() * 109)), // Random number for monster characteristics.
         ],
         network: NETWORK,
         anchorMode: AnchorMode.Any,

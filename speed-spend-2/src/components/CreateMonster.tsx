@@ -20,12 +20,10 @@ export function CreateMonster({ stxAddress }: { stxAddress: string }) {
 
   useEffect(() => {
     if (stxAddress) {
-      fetchAccount(stxAddress)
-        .then(acc => console.log('Account:', stringifyBigInt(acc)))
-        .catch(e => {
-          setStatus('Failed to access your account');
-          console.error(e);
-        });
+      fetchAccount(stxAddress).catch(e => {
+        setStatus('Failed to access your account');
+        console.error(e);
+      });
     }
   }, [stxAddress]);
 

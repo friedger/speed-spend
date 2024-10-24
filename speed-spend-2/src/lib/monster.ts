@@ -2,13 +2,11 @@ import {
   ClarityType,
   cvToHex,
   cvToString,
-  deserializeCV,
   hexToCV,
   OptionalCV,
   PrincipalCV,
   ResponseErrorCV,
   ResponseOkCV,
-  tupleCV,
   uintCV,
 } from '@stacks/transactions';
 import {
@@ -35,6 +33,7 @@ export interface MonsterDetails {
     lastMeal: number;
     name: string;
     dateOfBirth: number;
+    id: bigint;
   };
   alive: boolean;
 }
@@ -48,7 +47,6 @@ export async function fetchMonsterIds(stxAddress: string) {
   return accountsApi
     .getAccountAssets({ principal: stxAddress })
     .then(assetList => {
-      console.log({ assetList });
       return assetList;
     })
     .then(assetList =>
@@ -63,11 +61,8 @@ export async function fetchMonsterIds(stxAddress: string) {
     .then(idsHex => [...new Set(idsHex)]);
 }
 
-export async function fetchMonsterDetails(monsterId: number | bigint): Promise<MonsterDetails> {
+export async function fetchMonsterDetails(monsterId: bigint): Promise<MonsterDetails> {
   console.log({ monsterId });
-
-  // Convert monsterId to BigInt if it's not already
-  const monsterIdBigInt = BigInt(monsterId);
 
   const [owner, metaData, alive] = await Promise.all([
     // Fetch the owner of the monster
@@ -78,7 +73,7 @@ export async function fetchMonsterDetails(monsterId: number | bigint): Promise<M
         functionName: 'get-owner',
         readOnlyFunctionArgs: {
           sender: CONTRACT_ADDRESS,
-          arguments: [cvToHex(uintCV(monsterIdBigInt))], // Convert to uintCV with BigInt
+          arguments: [cvToHex(uintCV(monsterId))],
         },
       })
       .then(response => {
@@ -91,11 +86,9 @@ export async function fetchMonsterDetails(monsterId: number | bigint): Promise<M
             if (resultCV.value.type == ClarityType.OptionalSome) {
               return cvToString(resultCV.value.value);
             }
-            throw new Error(`Unexpected result type ${cvToString(resultCV)} for owner.`);
-          } else {
-            throw new Error('Failed to retrieve owner data: result is undefined');
           }
         }
+        return 'no owner found';
       }),
 
     // Fetch monster details from the data map
@@ -104,19 +97,19 @@ export async function fetchMonsterDetails(monsterId: number | bigint): Promise<M
         contractAddress: CONTRACT_ADDRESS,
         contractName: MONSTERS_CONTRACT_NAME,
         mapName: MONSTERS_CONTRACT_NAME,
-        key: cvToHex(uintCV(monsterIdBigInt)), // Convert to uintCV with BigInt
+        key: cvToHex(uintCV(monsterId)),
       })
       .then(dataMap => {
         if (dataMap.data) {
           const metaDataCV = hexToCV(dataMap.data);
           if (metaDataCV.type === ClarityType.OptionalSome) {
             const metaData = (metaDataCV.value as TupleCV).data;
-            console.log({ metaData });
             return {
               image: parseInt(metaData['image'].value), // If values can be larger, consider using BigInt as well
               lastMeal: parseInt(metaData['last-meal'].value),
               name: metaData['name'].data,
               dateOfBirth: parseInt(metaData['date-of-birth'].value),
+              id: monsterId,
             };
           } else {
             throw new Error(`Unexpected data type ${cvToString(metaDataCV)} for monster metadata.`);
@@ -134,7 +127,7 @@ export async function fetchMonsterDetails(monsterId: number | bigint): Promise<M
         functionName: 'is-alive',
         readOnlyFunctionArgs: {
           sender: CONTRACT_ADDRESS,
-          arguments: [cvToHex(uintCV(monsterIdBigInt))], // Convert to uintCV with BigInt
+          arguments: [cvToHex(uintCV(monsterId))],
         },
       })
       .then(response => {
