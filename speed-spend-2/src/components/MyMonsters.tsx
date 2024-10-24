@@ -1,14 +1,14 @@
 import { Card, CardBody, CardHeader, Typography, Button } from '@material-tailwind/react';
 import { getUserName } from '../lib/account';
 import { useState, useEffect } from 'react';
-import { fetchMonsterDetails, fetchMonsterIds } from '../lib/monster';
+import { fetchMonsterDetails, fetchMonsterIds, MonsterDetails } from '../lib/monster';
 import { hexToCV, UIntCV } from '@stacks/transactions';
 
-export function MyMonster({ stxAddress }: { stxAddress: string }) {
+export function MyMonsters({ stxAddress }: { stxAddress: string }) {
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<string>('');
   const [username, setUsername] = useState<string>('');
-  const [monsters, setMonsters] = useState<any[]>([]);
+  const [monsters, setMonsters] = useState<MonsterDetails[]>([]);
 
   // Fetch the BNS name for the user
   useEffect(() => {
@@ -64,6 +64,7 @@ export function MyMonster({ stxAddress }: { stxAddress: string }) {
     }
   }, [stxAddress]);
 
+  console.log({ monsters });
   return (
     <div className="my-monsters-container p-4">
       {/* Display the BNS name */}
@@ -87,14 +88,19 @@ export function MyMonster({ stxAddress }: { stxAddress: string }) {
             >
               <CardHeader className="relative h-32 overflow-hidden">
                 <div className="bg-gray-200 h-full flex items-center justify-center">
+                  <img
+                    className="h-96 w-96 rounded-full object-cover object-center"
+                    src={`/monsters/monster-${monster.metaData.id}.jpg`}
+                    alt="monster"
+                  />
                   <Typography variant="h6" color="gray">
-                    Monster #{index + 1}
+                    Monster #{monster.metaData?.id.toString()}
                   </Typography>
                 </div>
               </CardHeader>
               <CardBody className="text-center">
                 <Typography variant="h5" className="text-blue-gray-800 mb-2">
-                  {monster.metaData?.name || `Monster ${index + 1}`}
+                  {monster.metaData?.name || `Monster ${monster.metaData.id.toString()}`}
                 </Typography>
                 <Typography className="text-gray-500 text-sm mb-4">
                   Owner: {username || stxAddress}
