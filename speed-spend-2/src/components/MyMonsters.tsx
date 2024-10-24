@@ -88,6 +88,11 @@ export function MyMonsters({ stxAddress }: { stxAddress: string }) {
             >
               <CardHeader className="relative h-32 overflow-hidden">
                 <div className="bg-gray-200 h-full flex items-center justify-center">
+                  <img
+                    className="h-96 w-96 rounded-full object-cover object-center"
+                    src={`/monsters/monster-${monster.metaData.id}.jpg`}
+                    alt="monster"
+                  />
                   <Typography variant="h6" color="gray">
                     Monster #{monster.metaData?.id.toString()}
                   </Typography>
