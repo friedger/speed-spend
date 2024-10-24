@@ -1,5 +1,5 @@
+import { Button } from '@material-tailwind/react';
 import React, { useEffect, useState } from 'react';
-import { Button, Input, Typography } from '@material-tailwind/react';
 // Define the types for better TypeScript support
 interface Monster {
   id: string;
@@ -37,7 +37,7 @@ const Competition: React.FC = () => {
 
   useEffect(() => {
     // Fetch competition data when the component mounts
-    getCompetitionData().then((data) => {
+    getCompetitionData().then(data => {
       setCompetitionData(data);
       setLoading(false);
     });
@@ -54,11 +54,9 @@ const Competition: React.FC = () => {
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
       <h1 className="text-3xl font-bold mb-4 text-center">Monster Competition</h1>
-      
+
       <div className="text-center mb-6">
-        <Button className="ml-2">
-          Join Competition
-        </Button>
+        <Button className="ml-2">Join Competition</Button>
       </div>
 
       <div className="bg-white p-4 rounded shadow-md mb-6">
@@ -72,7 +70,7 @@ const Competition: React.FC = () => {
           <p className="text-gray-500">No monsters are currently in the competition.</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {monsters.map((monster) => (
+            {monsters.map(monster => (
               <div
                 key={monster.id}
                 className="card bg-gray-50 p-4 rounded shadow transform transition-transform duration-200 ease-in-out hover:scale-105 hover:shadow-lg"

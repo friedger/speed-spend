@@ -8,7 +8,7 @@ import ErrorPage from './error-page';
 import SendStx from './routes/send-stx';
 import Names from './routes/names';
 import Monsters from './routes/monsters';
-import Competition from './routes/Competition';
+import Competition from './routes/competition';
 import './output.css';
 import Root from './routes/root';
 
@@ -20,8 +20,8 @@ const router = createBrowserRouter([
     children: [
       { path: '/send-stx', element: <SendStx /> },
       { path: '/names', element: <Names /> },
-      { path: '/monsters', element: <Monsters />},
-      { path: '/competition', element: <Competition/>},
+      { path: '/monsters', element: <Monsters /> },
+      { path: '/competition', element: <Competition /> },
       { index: true, element: <Root /> },
     ],
   },
@@ -29,7 +29,7 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <ThemeProvider> 
+    <ThemeProvider>
       <RouterProvider router={router} />
     </ThemeProvider>
   </React.StrictMode>
