@@ -3,7 +3,6 @@ import { showContractCall } from '@stacks/connect';
 import { PostConditionMode, uintCV, stringAsciiCV, AnchorMode } from '@stacks/transactions';
 import { useState, useEffect } from 'react';
 import { CONTRACT_ADDRESS, NETWORK, MONSTERS_CONTRACT_NAME } from '../lib/constants';
-import { resultToStatus } from '../lib/transactions';
 import { TxStatus } from './TxStatus';
 import { fetchAccount } from '../lib/account';
 
@@ -46,7 +45,7 @@ export function CreateMonster({ stxAddress }: { stxAddress: string }) {
         functionName: 'create-monster',
         functionArgs: [
           stringAsciiCV(newName.trim()),
-          uintCV(Math.floor(Math.random() * 109)) // Random number for monster characteristics.
+          uintCV(Math.floor(Math.random() * 109)), // Random number for monster characteristics.
         ],
         network: NETWORK,
         anchorMode: AnchorMode.Any,

@@ -1,7 +1,8 @@
 import { Card, CardBody, CardHeader, Typography, Button } from '@material-tailwind/react';
 import { getUserName } from '../lib/account';
 import { useState, useEffect } from 'react';
-import { fetchMonsterIds, fetchMonsterDetails } from '../lib/monster';
+import { fetchMonsterDetails, fetchMonsterIds } from '../lib/monster';
+import { hexToCV, UIntCV } from '@stacks/transactions';
 
 export function MyMonster({ stxAddress }: { stxAddress: string }) {
   const [loading, setLoading] = useState(false);
@@ -43,7 +44,10 @@ export function MyMonster({ stxAddress }: { stxAddress: string }) {
 
           try {
             const monstersDetails = await Promise.all(
-              monsterIds.map((id) => fetchMonsterDetails(parseInt(id, 16))) // Convert hex to integer
+              monsterIds.map(id => {
+                const idCV = hexToCV(id) as UIntCV;
+                return fetchMonsterDetails(idCV.value);
+              })
             );
             console.log('Fetched Monster Details:', monstersDetails);
             setMonsters(monstersDetails);
@@ -52,7 +56,7 @@ export function MyMonster({ stxAddress }: { stxAddress: string }) {
             setStatus('Failed to fetch monster details.');
           }
         })
-        .catch(fetchError => {
+        .catch((fetchError: any) => {
           console.error('Error fetching monster IDs:', fetchError);
           setStatus(`Failed to fetch monsters for ${stxAddress}`);
         })
@@ -77,7 +81,10 @@ export function MyMonster({ stxAddress }: { stxAddress: string }) {
       <div className="my-monsters-grid grid gap-4 grid-cols-1 md:grid-cols-3 lg:grid-cols-4 justify-items-center">
         {monsters.length > 0 ? (
           monsters.map((monster, index) => (
-            <Card key={index} className="w-60 hover:shadow-lg transform hover:scale-105 transition duration-300">
+            <Card
+              key={index}
+              className="w-60 hover:shadow-lg transform hover:scale-105 transition duration-300"
+            >
               <CardHeader className="relative h-32 overflow-hidden">
                 <div className="bg-gray-200 h-full flex items-center justify-center">
                   <Typography variant="h6" color="gray">
