@@ -115,3 +115,9 @@ export function fetchAccount2(addressAsString: string) {
     return r.json();
   });
 }
+
+export function ellipse(text?: string) {
+  if (text && text.length > 12) {
+    return `${text.substring(0, 4)}...${text.substring(text.length - 4)}`;
+  }
+}

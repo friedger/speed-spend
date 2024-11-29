@@ -20,6 +20,9 @@ export default function Root() {
             <Link to="/names" className="text-initial">
               <ListItem>Claim BNS v2 name</ListItem>
             </Link>
+            <Link to="/monsters" className="text-initial">
+              <ListItem>Create monsters</ListItem>
+            </Link>
           </List>
         </CardBody>
       </Card>

@@ -22,6 +22,20 @@ function NavList({ onClick }: { onClick: () => void }) {
           </Typography>
         </ListItem>
       </Link>
+      <Link to={'/monsters'} onClick={onClick}>
+        <ListItem className="flex items-center gap-2 py-2 pr-4">
+          <Typography variant="small" color="blue-gray" className="font-medium">
+            Monsters
+          </Typography>
+        </ListItem>
+      </Link>
+      <Link to={'/competition'} onClick={onClick}>
+        <ListItem className="flex items-center gap-2 py-2 pr-4">
+          <Typography variant="small" color="blue-gray" className="font-medium">
+            Competition
+          </Typography>
+        </ListItem>
+      </Link>
     </List>
   );
 }

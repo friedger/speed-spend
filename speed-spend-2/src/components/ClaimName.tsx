@@ -35,10 +35,8 @@ export function ClaimName({
           console.log(e);
         })
         .then(async result => {
-          console.log(result);
           if (result) {
             setUsername(result.name);
-            console.log({ name });
           } else {
             setStatus('No name found for ' + stxAddress);
           }
